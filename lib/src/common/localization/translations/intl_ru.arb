@@ -1,0 +1,6 @@
+{
+  "appTitle": "ln_studio",
+  "wardrobeEmpty": "Гардероб пуст",
+  "unknownError": "Неизвестная ошибка: {value}",
+  "exceptionOccurred": "Возникло исключение: {value}"
+}
