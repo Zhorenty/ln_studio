@@ -1,6 +1,6 @@
 {
-  "appTitle": "ln_studio",
-  "wardrobeEmpty": "Гардероб пуст",
+  "appTitle": "LN Studio",
+  "wardrobeEmpty": "У Вас нет записей",
   "unknownError": "Неизвестная ошибка: {value}",
   "exceptionOccurred": "Возникло исключение: {value}"
 }
