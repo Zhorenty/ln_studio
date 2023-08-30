@@ -5,6 +5,8 @@ eq = $(if $(or $(1),$(2)),$(and $(findstring $(1),$(2)),\
 get:
 	flutter pub get
 
+	cd packages/rest_client && flutter pub get
+
 analyze:
 	flutter analyze
 
@@ -13,15 +15,12 @@ format:
 
 runner:
 	flutter pub get
+
 	dart run build_runner build --delete-conflicting-outputs
 
-	cd packages/database && flutter pub get && dart run build_runner build --delete-conflicting-outputs
-
-
+	cd packages/rest_client && flutter pub get
 
 clean:
 	flutter clean
-
-	cd packages/auth_client && flutter clean
 
 	cd packages/rest_client && flutter clean

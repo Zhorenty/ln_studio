@@ -15,11 +15,11 @@ Part of <paste issue/PR reference>
 ## Checklist
 
 - PR Checklist:
-    - [ ] In [draft mode][l:1]
-    - [ ] Name contains issue reference
-    - [ ] Has type and labels applied
-    - [ ] Documentation is updated (if required)
-    - [ ] Tests are updated (if required)
+  - [ ] In [draft mode][l:1]
+  - [ ] Name contains issue reference
+  - [ ] Has type and labels applied
+  - [ ] Documentation is updated (if required)
+  - [ ] Tests are updated (if required)
 
 
 

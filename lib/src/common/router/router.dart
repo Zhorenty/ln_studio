@@ -1,14 +1,14 @@
 import 'package:go_router/go_router.dart';
 
-import '/src/feature/wardrobe/widget/wardrobe_screen.dart';
+import '/src/feature/home/widget/home_screen.dart';
 
 /// Router of this application.
 class AppRouter {
   final router = GoRouter(
-    initialLocation: '/wardrobe',
+    initialLocation: '/home',
     routes: [
       GoRoute(
-        path: '/wardrobe',
+        path: '/home',
         builder: (context, _) => const WardrobeScreen(),
       ),
     ],
