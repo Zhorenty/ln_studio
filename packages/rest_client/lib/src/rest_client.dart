@@ -9,12 +9,14 @@ abstract class RestClient {
     http.Client? client,
   }) = RestClientBase;
 
+  /// Sends a GET request to [path].
   Future<Map<String, Object?>> get(
     String path, {
     Map<String, Object?>? headers,
     Map<String, Object?>? queryParams,
   });
 
+  /// Sends a POST request to [path].
   Future<Map<String, Object?>> post(
     String path, {
     required Map<String, Object?> body,
@@ -22,6 +24,7 @@ abstract class RestClient {
     Map<String, Object?>? queryParams,
   });
 
+  /// Sends a PUT request to [path].
   Future<Map<String, Object?>> put(
     String path, {
     required Map<String, Object?> body,
@@ -29,12 +32,14 @@ abstract class RestClient {
     Map<String, Object?>? queryParams,
   });
 
+  /// Sends a DELETE request to [path].
   Future<Map<String, Object?>> delete(
     String path, {
     Map<String, Object?>? headers,
     Map<String, Object?>? queryParams,
   });
 
+  /// Sends a PATCH request to [path].
   Future<Map<String, Object?>> patch(
     String path, {
     required Map<String, Object?> body,
