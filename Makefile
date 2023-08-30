@@ -18,6 +18,8 @@ runner:
 
 	dart run build_runner build --delete-conflicting-outputs
 
+	cd packages/rest_client && flutter pub get
+
 clean:
 	flutter clean
 
