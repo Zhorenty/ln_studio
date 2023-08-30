@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:rest_client/src/rest_client_base.dart';
 
+/// Abstraction of REST client that makes requests to the provided [baseUrl].
 abstract class RestClient {
   factory RestClient({
     required String baseUrl,

@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:rest_client/src/exception/network_exception.dart';
 import 'package:rest_client/src/rest_client.dart';
 
+/// A REST client that makes requests to the provided [baseUrl].
 @immutable
 class RestClientBase implements RestClient {
   RestClientBase({
