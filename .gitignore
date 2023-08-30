@@ -29,8 +29,8 @@ migrate_working_dir/
 
 # Codegen 
 *.*.dart
-# generated_*
-# lib/src/common/assets/generated/
+generated_*
+lib/src/common/assets/generated/
 
 # Symbolication related
 app.*.symbols
