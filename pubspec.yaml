@@ -62,11 +62,10 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icons/launcher_icon_dark.png"
-  background_color: "#ffffff"
+  image_path: "assets/images/logo_black.png"
 
 flutter_native_splash:
-  image: assets/images/splash_dark.png
+  image: assets/images/logo_black.png
   color: "#ffffff"
 
 flutter:
