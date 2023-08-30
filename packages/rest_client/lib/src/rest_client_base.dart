@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
-import 'package:rest_client/src/exception/network_exception.dart';
-import 'package:rest_client/src/rest_client.dart';
+
+import '/src/exception/network_exception.dart';
+import '/src/rest_client.dart';
 
 /// A REST client that makes requests to the provided [baseUrl].
 @immutable
