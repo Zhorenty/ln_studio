@@ -14,11 +14,7 @@ format:
 	dart format lib --set-exit-if-changed
 
 runner:
-	flutter pub get
-
 	dart run build_runner build --delete-conflicting-outputs
-
-	cd packages/rest_client && flutter pub get
 
 clean:
 	flutter clean

@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import '/src/common/utils/mixin/scope_mixin.dart';
 import 'router.dart';
 
-// TODO(zhorenty):Implement
 /// Widget which is responsible for providing the [AppRouter].
-@Deprecated('Will be implemented later')
 class AppRouterScope extends StatefulWidget with ScopeMixin {
   const AppRouterScope({required this.child, super.key});
 
@@ -21,8 +19,6 @@ class AppRouterScope extends StatefulWidget with ScopeMixin {
 }
 
 /// {@nodoc}
-// TODO(zhorenty): Don't forget to delete "ignore".
-// ignore: deprecated_member_use_from_same_package
 class _AppRouterScopeState extends State<AppRouterScope> {
   /// {@nodoc}
   late final AppRouter _router;
