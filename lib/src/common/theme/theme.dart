@@ -10,6 +10,7 @@ final $lightThemeData = ThemeData(
 /// Dark theme of this application.
 final $darkThemeData = ThemeData(
   colorScheme: darkColorScheme,
+  textTheme: Typography.whiteHelsinki,
   brightness: Brightness.dark,
   useMaterial3: true,
 );
