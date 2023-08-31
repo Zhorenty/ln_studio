@@ -16,17 +16,36 @@ class WardrobeScreen extends StatelessWidget {
       backgroundColor: context.colors.background,
       appBar: AppBar(
         backgroundColor: context.colors.onBackground,
-        title: Text(
-          context.stringOf().appTitle,
-          style: context.fonts.headlineMedium?.copyWith(
-            color: context.colors.secondary,
-            fontFamily: FontFamily.playfair,
+        title: Align(
+          alignment: Alignment.bottomLeft,
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 2, top: 8),
+                child: Text(
+                  'ул. Степана Разина, д. 72',
+                  style: context.fonts.bodyMedium?.copyWith(
+                    color: context.colors.primary,
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(right: 4, top: 8),
+                child: Icon(Icons.arrow_forward_ios, size: 12),
+              )
+            ],
           ),
         ),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: CircleAvatar(backgroundColor: Color(0xFFD9D9D9)),
+            padding: const EdgeInsets.only(right: 8),
+            child: CircleAvatar(
+              backgroundColor: context.colors.primary,
+              child: Icon(
+                Icons.person,
+                color: context.colors.onBackground,
+              ),
+            ),
           ),
         ],
       ),
@@ -34,21 +53,53 @@ class WardrobeScreen extends StatelessWidget {
         child: Text(
           context.stringOf().wardrobeEmpty,
           style: context.fonts.titleMedium?.copyWith(
-            color: context.colors.secondary,
             fontFamily: FontFamily.playfair,
+            color: context.colors.primary,
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         label: Text(
           'Записаться',
-          style: context.fonts.bodyLarge?.copyWith(
+          style: context.fonts.bodyMedium?.copyWith(
             color: context.colors.onBackground,
             fontFamily: FontFamily.playfair,
           ),
         ),
         backgroundColor: context.colors.primary,
         onPressed: () {},
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        currentIndex: 2,
+        showSelectedLabels: false,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, color: context.colors.primary),
+            label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.widgets, color: context.colors.primary),
+            label: 'Card',
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: context.colors.onBackground,
+            icon: CircleAvatar(
+              radius: 20,
+              backgroundColor: context.colors.primary,
+              child: const Icon(Icons.credit_card, color: Colors.black87),
+            ),
+            label: 'Card',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt, color: context.colors.primary),
+            label: 'Settings',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart, color: context.colors.primary),
+            label: 'Basket',
+          ),
+        ],
       ),
     );
   }
