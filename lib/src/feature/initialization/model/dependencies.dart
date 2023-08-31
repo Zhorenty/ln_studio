@@ -1,12 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '/src/common/router/router.dart';
-
 /// Dependencies container.
 abstract interface class Dependencies {
-  /// App router.
-  abstract final AppRouter router;
-
   /// Shared preferences
   abstract final SharedPreferences sharedPreferences;
 
@@ -21,14 +16,10 @@ final class Dependencies$Mutable implements Dependencies {
   Dependencies$Mutable();
 
   @override
-  late AppRouter router;
-
-  @override
   late SharedPreferences sharedPreferences;
 
   @override
   Dependencies freeze() => _Dependencies$Immutable(
-        router: router,
         sharedPreferences: sharedPreferences,
       );
 }
@@ -38,12 +29,8 @@ final class Dependencies$Mutable implements Dependencies {
 /// Used to store dependencies.
 final class _Dependencies$Immutable implements Dependencies {
   const _Dependencies$Immutable({
-    required this.router,
     required this.sharedPreferences,
   });
-
-  @override
-  final AppRouter router;
 
   @override
   final SharedPreferences sharedPreferences;

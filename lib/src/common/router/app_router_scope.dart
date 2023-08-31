@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '/src/common/utils/mixin/scope_mixin.dart';
 import 'router.dart';
@@ -11,7 +12,7 @@ class AppRouterScope extends StatefulWidget with ScopeMixin {
   final Widget child;
 
   /// Returns the [AppRouter] from the closest [AppRouterScope] ancestor.
-  static AppRouter of(BuildContext context, {bool listen = true}) =>
+  static GoRouter of(BuildContext context, {bool listen = true}) =>
       ScopeMixin.scopeOf<_AppRouterInherited>(context, listen: listen).router;
 
   @override
@@ -21,12 +22,12 @@ class AppRouterScope extends StatefulWidget with ScopeMixin {
 /// {@nodoc}
 class _AppRouterScopeState extends State<AppRouterScope> {
   /// {@nodoc}
-  late final AppRouter _router;
+  late final GoRouter _router;
 
   @override
   void initState() {
     super.initState();
-    _router = AppRouter();
+    _router = router;
   }
 
   @override
@@ -41,7 +42,7 @@ class _AppRouterInherited extends InheritedWidget {
   const _AppRouterInherited({required this.router, required super.child});
 
   /// {@nodoc}
-  final AppRouter router;
+  final GoRouter router;
 
   @override
   bool updateShouldNotify(_AppRouterInherited oldWidget) =>

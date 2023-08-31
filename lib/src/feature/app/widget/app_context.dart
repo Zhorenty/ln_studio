@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ln_studio/src/common/router/router_scope.dart';
+import 'package:ln_studio/src/common/router/app_router_scope.dart';
 
 import '/src/common/localization/app_localization.dart';
 import '/src/common/theme/theme.dart';
@@ -20,7 +20,7 @@ class _AppContextState extends State<AppContext> {
   Widget build(BuildContext context) {
     final router = AppRouterScope.of(context);
     return MaterialApp.router(
-      routerConfig: router.router,
+      routerConfig: router,
       supportedLocales: AppLocalization.supportedLocales,
       localizationsDelegates: AppLocalization.localizationsDelegates,
       themeMode: ThemeMode.dark,
