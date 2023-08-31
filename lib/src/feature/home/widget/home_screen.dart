@@ -13,19 +13,20 @@ class WardrobeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD9D9D9),
+      backgroundColor: context.colors.background,
       appBar: AppBar(
+        backgroundColor: context.colors.onBackground,
         title: Text(
           context.stringOf().appTitle,
           style: context.fonts.headlineMedium?.copyWith(
-            color: context.colors.onBackground,
+            color: context.colors.secondary,
             fontFamily: FontFamily.playfair,
           ),
         ),
-        actions: [
+        actions: const [
           Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: CircleAvatar(backgroundColor: context.colors.secondary),
+            padding: EdgeInsets.only(right: 16),
+            child: CircleAvatar(backgroundColor: Color(0xFFD9D9D9)),
           ),
         ],
       ),
@@ -33,12 +34,19 @@ class WardrobeScreen extends StatelessWidget {
         child: Text(
           context.stringOf().wardrobeEmpty,
           style: context.fonts.titleMedium?.copyWith(
+            color: context.colors.secondary,
             fontFamily: FontFamily.playfair,
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        label: const Text('Записаться'),
+        label: Text(
+          'Записаться',
+          style: context.fonts.bodyLarge?.copyWith(
+            color: context.colors.onBackground,
+            fontFamily: FontFamily.playfair,
+          ),
+        ),
         backgroundColor: context.colors.primary,
         onPressed: () {},
       ),

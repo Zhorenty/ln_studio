@@ -22,7 +22,11 @@ final lightColorScheme = ColorScheme.fromSeed(
 );
 
 final darkColorScheme = ColorScheme.fromSeed(
-  /// TODO(zhorenty): Implement dark theme
-  seedColor: Colors.black,
   brightness: Brightness.dark,
+  seedColor: const Color(0xFF000000),
+  primary: const Color(0xFFECD8BD),
+  secondary: const Color(0xFFFFFFFF),
+  secondaryContainer: const Color(0xFFD9D9D9),
+  background: const Color(0xFF101010),
+  onBackground: const Color(0xFF191919),
 );
