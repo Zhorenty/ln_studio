@@ -10,6 +10,7 @@ final $lightThemeData = ThemeData(
 /// Dark theme of this application.
 final $darkThemeData = ThemeData(
   colorScheme: darkColorScheme,
+  bottomNavigationBarTheme: bottomNavigationBarThemeDataDark,
   textTheme: Typography.whiteHelsinki,
   brightness: Brightness.dark,
   useMaterial3: true,
@@ -30,4 +31,8 @@ final darkColorScheme = ColorScheme.fromSeed(
   secondaryContainer: const Color(0xFFD9D9D9),
   background: const Color(0xFF101010),
   onBackground: const Color(0xFF191919),
+);
+
+const bottomNavigationBarThemeDataDark = BottomNavigationBarThemeData(
+  backgroundColor: Colors.black12,
 );

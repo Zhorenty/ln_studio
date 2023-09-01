@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../common/router/app_router_scope.dart';
 import '/src/common/widget/scope_widgets.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/initialization/model/dependencies.dart';
@@ -23,6 +24,11 @@ class App extends StatelessWidget {
           ScopeProvider(
             buildScope: (child) => DependenciesScope(
               dependencies: result.dependencies,
+              child: child,
+            ),
+          ),
+          ScopeProvider(
+            buildScope: (child) => AppRouterScope(
               child: child,
             ),
           ),
