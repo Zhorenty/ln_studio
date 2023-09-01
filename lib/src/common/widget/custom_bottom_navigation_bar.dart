@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 
+import '/src/common/utils/extensions/context_extension.dart';
+
+///
 class CustomBottomNavigationBar extends StatelessWidget {
-  const CustomBottomNavigationBar(this.navigationShell, {Key? key})
-      : super(key: key);
+  const CustomBottomNavigationBar(this.navigationShell, {super.key});
 
+  ///
   final StatefulNavigationShell navigationShell;
 
   @override
@@ -15,6 +17,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: navigationShell.currentIndex,
         onTap: navigationShell.goBranch,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        backgroundColor: context.colors.onBackground,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded, color: context.colors.primary),
@@ -23,7 +28,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               backgroundColor: context.colors.primary,
               child: const Icon(Icons.home_rounded, color: Colors.black87),
             ),
-            label: 'Home',
+            label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.receipt_rounded, color: context.colors.primary),
@@ -32,7 +37,16 @@ class CustomBottomNavigationBar extends StatelessWidget {
               backgroundColor: context.colors.primary,
               child: const Icon(Icons.receipt_rounded, color: Colors.black87),
             ),
-            label: 'Booking',
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings_rounded, color: context.colors.primary),
+            activeIcon: CircleAvatar(
+              radius: 20,
+              backgroundColor: context.colors.primary,
+              child: const Icon(Icons.settings, color: Colors.black87),
+            ),
+            label: '',
           ),
         ],
       ),
