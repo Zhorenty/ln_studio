@@ -70,34 +70,18 @@ class WardrobeScreen extends StatelessWidget {
         onPressed: () {},
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        currentIndex: 2,
+        backgroundColor: context.colors.onBackground,
+        currentIndex: 0,
         showSelectedLabels: false,
+        showUnselectedLabels: false,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home, color: context.colors.primary),
-            label: 'Profile',
+            label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.widgets, color: context.colors.primary),
-            label: 'Card',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: context.colors.onBackground,
-            icon: CircleAvatar(
-              radius: 20,
-              backgroundColor: context.colors.primary,
-              child: const Icon(Icons.credit_card, color: Colors.black87),
-            ),
-            label: 'Card',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt, color: context.colors.primary),
+            icon: Icon(Icons.settings, color: context.colors.primary),
             label: 'Settings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart, color: context.colors.primary),
-            label: 'Basket',
           ),
         ],
       ),
