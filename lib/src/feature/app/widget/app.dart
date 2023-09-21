@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ln_studio/src/common/router/router_scope.dart';
 
+import '/src/common/router/app_router_scope.dart';
 import '/src/common/widget/scope_widgets.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/initialization/model/dependencies.dart';

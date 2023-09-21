@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ln_studio/src/common/router/router_scope.dart';
 
+import '/src/common/router/app_router_scope.dart';
 import '/src/common/localization/app_localization.dart';
 import '/src/common/theme/theme.dart';
 
