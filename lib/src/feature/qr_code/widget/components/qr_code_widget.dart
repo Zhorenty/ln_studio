@@ -3,8 +3,8 @@ import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 
-class QrCodeWidget extends StatelessWidget {
-  const QrCodeWidget({super.key});
+class QRCodeWidget extends StatelessWidget {
+  const QRCodeWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

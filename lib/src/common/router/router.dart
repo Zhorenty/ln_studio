@@ -29,7 +29,7 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: '/qr_code',
-              builder: (context, state) => const QrCodeScreen(),
+              builder: (context, state) => const QRCodeScreen(),
             ),
           ],
         ),

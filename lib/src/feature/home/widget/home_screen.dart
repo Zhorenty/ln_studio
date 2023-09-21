@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/common/widget/custom_app_bar.dart';
 import 'package:ln_studio/src/common/widget/pop_up_button.dart';
 
-import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 
 /// {@template Home_screen}
@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
           bottomChild: PopupButton(
-            label: const Text('blabla'),
+            label: const Text('Тут салон'),
             child: ElevatedButton(
               onPressed: () {},
               child: const Text(''),
@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
         ),
         SliverToBoxAdapter(
           child: Text(
-            context.stringOf().amountOfClients,
+            context.stringOf().employees,
             style: context.textTheme.titleMedium?.copyWith(
               fontFamily: FontFamily.geologica,
               color: context.colorScheme.primary,

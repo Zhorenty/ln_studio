@@ -7,8 +7,8 @@ import 'package:ln_studio/src/common/widget/pop_up_button.dart';
 
 import 'components/qr_code_widget.dart';
 
-class QrCodeScreen extends StatelessWidget {
-  const QrCodeScreen({super.key});
+class QRCodeScreen extends StatelessWidget {
+  const QRCodeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class QrCodeScreen extends StatelessWidget {
         const SliverPadding(
           padding: EdgeInsets.all(16),
           sliver: SliverToBoxAdapter(
-            child: QrCodeWidget(),
+            child: QRCodeWidget(),
           ),
         ),
       ],
