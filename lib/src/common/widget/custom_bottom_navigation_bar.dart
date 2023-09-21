@@ -33,14 +33,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 BottomNavigationBarItem(
                   icon: const AnimatedButton(
                     child: Icon(
-                      Icons.receipt_outlined,
+                      Icons.home_outlined,
                       color: Color(0xFF828282),
                       size: 28,
                     ),
                   ),
                   activeIcon: AnimatedButton(
                     child: Icon(
-                      Icons.receipt_rounded,
+                      Icons.home_rounded,
                       color: context.colorScheme.primary,
                       size: 28,
                     ),
@@ -50,14 +50,31 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 BottomNavigationBarItem(
                   icon: const AnimatedButton(
                     child: Icon(
-                      Icons.settings_outlined,
+                      Icons.qr_code_outlined,
                       color: Color(0xFF828282),
                       size: 28,
                     ),
                   ),
                   activeIcon: AnimatedButton(
                     child: Icon(
-                      Icons.settings_rounded,
+                      Icons.qr_code_rounded,
+                      color: context.colorScheme.primary,
+                      size: 28,
+                    ),
+                  ),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: const AnimatedButton(
+                    child: Icon(
+                      Icons.person_outlined,
+                      color: Color(0xFF828282),
+                      size: 28,
+                    ),
+                  ),
+                  activeIcon: AnimatedButton(
+                    child: Icon(
+                      Icons.person_rounded,
                       color: context.colorScheme.primary,
                       size: 28,
                     ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/widget/custom_bottom_navigation_bar.dart';
+import 'package:ln_studio/src/feature/qr_code/widget/qr_code_screen.dart';
 import 'package:ln_studio/src/feature/home/widget/home_screen.dart';
-import 'package:ln_studio/src/feature/settings/widget/settings_screen.dart';
+import 'package:ln_studio/src/feature/profile/widget/profile_screen.dart';
 
 final _parentKey = GlobalKey<NavigatorState>();
 
@@ -27,8 +28,16 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/settings',
-              builder: (context, state) => const SettingsScreen(),
+              path: '/qr_code',
+              builder: (context, state) => const QrCodeScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/profile',
+              builder: (context, state) => const ProfileScreen(),
             ),
           ],
         ),

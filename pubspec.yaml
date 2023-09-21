@@ -73,6 +73,8 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
 
+  shaders:
+    - assets/shaders/shimmer.frag
   assets:
     - assets/images/
   fonts:
@@ -81,6 +83,12 @@ flutter:
         - asset: assets/fonts/PlayfairDisplay-Regular.ttf
           weight: 400
         - asset: assets/fonts/PlayfairDisplay-Bold.ttf
+          weight: 700
+    - family: Geologica
+      fonts:
+        - asset: assets/fonts/Geologica-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Geologica-Bold.ttf
           weight: 700
 
 flutter_gen:
