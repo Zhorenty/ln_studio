@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_studio/src/common/router/router.dart';
+import 'package:ln_studio/src/common/utils/mixin/scope_mixin.dart';
 
-import '/src/common/utils/mixin/scope_mixin.dart';
-import 'router.dart';
-
-/// Widget which is responsible for providing the [AppRouter].
+/// Widget which is responsible for providing the [AppRouterScope].
 class AppRouterScope extends StatefulWidget with ScopeMixin {
   const AppRouterScope({required this.child, super.key});
 
   @override
   final Widget child;
 
-  /// Returns the [AppRouter] from the closest [AppRouterScope] ancestor.
+  /// Returns the [AppRouterScope] from the closest [AppRouterScope] ancestor.
   static GoRouter of(BuildContext context, {bool listen = true}) =>
       ScopeMixin.scopeOf<_AppRouterInherited>(context, listen: listen).router;
 

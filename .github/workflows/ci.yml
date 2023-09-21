@@ -1,65 +1,44 @@
-name: CI
+name: "Code Analysis"
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
+
   pull_request:
-    branches: ["main"]
+    branches: [main]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-env:
-  FLUTTER_VER: "3.10"
+  workflow_dispatch:
 
 jobs:
+  build:
 
-  ################
-  # Pull Request #
-  ################
-
-  pr:
-    if: ${{ github.event_name == 'pull_request' }}
-    needs:
-      - dartanalyze
-      - dartfmt
     runs-on: ubuntu-latest
+
     steps:
-      - run: true
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v3
 
-
-  ##########################
-  # Linting and formatting #
-  ##########################
-
-  dartanalyze:
-    name: Dart analyzer
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VER }}
+          flutter-version: 3.13.0
           channel: stable
           cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
 
-      - run: make runner
+      - name: 📦 Install Dependencies
+        run: |
+          flutter pub global activate very_good_cli
+          flutter pub global activate intl_utils
+          flutter pub global run intl_utils:generate
+          
 
-      - run: make analyze
-
-  dartfmt:
-    name: Dart formatter
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VER }}
-          channel: stable
-          cache: true
-
-      - run: make format
+      - name: ✨ Check Formatting
+        run: dart format --set-exit-if-changed .
 
 
+      - name: 🕵️ Analyze
+        run: flutter analyze .
 
+      # - name: 🧪 Run Tests
+      #   run: flutter test --test-randomize-ordering-seed=random --concurrency=10

@@ -1,23 +1,14 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
-import 'package:path/path.dart' as p;
+import 'package:rest_client/src/exception/network_exception.dart';
+import 'package:rest_client/src/rest_client.dart';
 
-import '/src/exception/network_exception.dart';
-import '/src/rest_client.dart';
+base class RestClientBase implements RestClient {
+  RestClientBase(this._client);
 
-/// A REST client that makes requests to the provided [baseUrl].
-@immutable
-class RestClientBase implements RestClient {
-  RestClientBase({
-    required String baseUrl,
-    http.Client? client,
-  })  : _client = client ?? http.Client(),
-        _baseUri = Uri.parse(baseUrl);
-
-  final Uri _baseUri;
-  final http.Client _client;
+  final Dio _client;
 
   @override
   Future<Map<String, Object?>> get(
@@ -42,6 +33,7 @@ class RestClientBase implements RestClient {
       _send(
         path,
         method: 'POST',
+        body: body,
         headers: headers,
         queryParams: queryParams,
       );
@@ -56,6 +48,7 @@ class RestClientBase implements RestClient {
       _send(
         path,
         method: 'PUT',
+        body: body,
         headers: headers,
         queryParams: queryParams,
       );
@@ -76,7 +69,7 @@ class RestClientBase implements RestClient {
   @override
   Future<Map<String, Object?>> patch(
     String path, {
-    required Map<String, Object?> body,
+    Map<String, Object?>? body,
     Map<String, Object?>? headers,
     Map<String, Object?>? queryParams,
   }) =>
@@ -102,25 +95,59 @@ class RestClientBase implements RestClient {
         headers: headers,
         body: body,
       );
-      final response =
-          await _client.send(request).then(http.Response.fromStream);
+      final response = await _client.fetch<Map<String, Object?>>(request);
 
-      if (response.statusCode > 199 && response.statusCode < 300) {
+      if (response.statusCode! > 199 && response.statusCode! < 300) {
         return decodeResponse(response);
-      } else if (response.statusCode > 499) {
-        throw InternalServerException(
-          statusCode: response.statusCode,
-          message: response.body,
-        );
-      } else if (response.statusCode > 399) {
-        final decoded = jsonDecode(response.body) as Map<String, Object?>?;
+      }
+
+      throw UnsupportedError('Unsupported statusCode: ${response.statusCode}');
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout ||
+          e.type == DioExceptionType.sendTimeout) {
         throw RestClientException(
-          statusCode: response.statusCode,
-          // TODO(starter): Set there your field which server returns in case of error
-          message: decoded?['message'] as String?,
+          message: 'Connection timeout',
+          statusCode: e.response?.statusCode,
         );
       }
-      throw UnsupportedError('Unsupported statusCode: ${response.statusCode}');
+      final response = e.response;
+
+      if (response == null) {
+        throw RestClientException(
+          message: 'Unknown error',
+          statusCode: e.response?.statusCode,
+        );
+      }
+
+      if (response.statusCode! > 499) {
+        if (response.data case {'error': {'message': final String message}}) {
+          throw InternalServerException(
+            statusCode: response.statusCode,
+            message: message,
+          );
+        }
+        throw InternalServerException(
+          statusCode: response.statusCode,
+          message: 'Internal server error',
+        );
+      } else if (response.statusCode! > 399) {
+        if (response.data case {'error': {'message': final String message}}) {
+          throw RestClientException(
+            statusCode: response.statusCode,
+            message: message,
+          );
+        }
+        throw RestClientException(
+          statusCode: response.statusCode,
+          message: 'Client error',
+        );
+      }
+
+      Error.throwWithStackTrace(
+        UnsupportedError('Unsupported statusCode: ${response.statusCode}'),
+        e.stackTrace,
+      );
     } on Object catch (e, stackTrace) {
       Error.throwWithStackTrace(
         RestClientException(message: 'Unsupported error: $e'),
@@ -131,34 +158,22 @@ class RestClientBase implements RestClient {
 
   @protected
   @visibleForTesting
-  List<int> encodeBody(
-    Map<String, Object?> body,
-  ) {
-    try {
-      return utf8.encode(json.encode(body));
-    } on Object catch (e, stackTrace) {
-      Error.throwWithStackTrace(
-        RestClientException(message: 'Error occured during encoding body $e'),
-        stackTrace,
-      );
-    }
-  }
-
-  @protected
-  @visibleForTesting
-  Map<String, Object?> decodeResponse(http.Response response) {
+  Map<String, Object?> decodeResponse(Response<Map<String, Object?>> response) {
     final contentType =
         response.headers['content-type'] ?? response.headers['Content-Type'];
-    if (contentType?.contains('application/json') ?? false) {
-      final body = response.body;
+    if (contentType.toString().contains('application/json')) {
+      final json = response.data ?? const {};
       try {
-        final json = jsonDecode(body) as Map<String, Object?>;
-        // TODO(starter): Set there your field which server returns in case of error
-        if (json['message'] != null) {
-          throw RestClientException(message: json['message'].toString());
+        if (json case {'error': {'message': final String message}}) {
+          throw RestClientException(
+            message: message,
+            statusCode: response.statusCode,
+          );
         }
-        // TODO(starter): Set there your field which server returns in case of success
-        return json['data']! as Map<String, Object?>;
+        if (json case {'data': final Map<String, Object?> data}) {
+          return data;
+        }
+        return json;
       } on Object catch (error, stackTrace) {
         if (error is NetworkException) rethrow;
 
@@ -168,7 +183,7 @@ class RestClientBase implements RestClient {
           ),
           StackTrace.fromString(
             '$stackTrace\n'
-            'Body: "${body.length > 100 ? '${body.substring(0, 100)}...' : body}"',
+            'Body: "${json.toString().length > 100 ? '${json.toString().substring(0, 100)}...' : json}"',
           ),
         );
       }
@@ -180,7 +195,7 @@ class RestClientBase implements RestClient {
         ),
         StackTrace.fromString(
           '${StackTrace.current}\n'
-          'Headers: "${jsonEncode(response.headers)}"',
+          'Headers: "${jsonEncode(response.headers.map)}"',
         ),
       );
     }
@@ -188,39 +203,24 @@ class RestClientBase implements RestClient {
 
   @protected
   @visibleForTesting
-  Uri buildUri({
-    required String path,
-    Map<String, Object?>? queryParams,
-  }) {
-    final uri = Uri.tryParse(path);
-    if (uri == null) return _baseUri;
-    final queryParameters = <String, Object?>{
-      ..._baseUri.queryParameters,
-      ...uri.queryParameters,
-      ...?queryParams,
-    };
-    return _baseUri.replace(
-      path: p.normalize(p.join(_baseUri.path, uri.path)),
-      queryParameters: queryParameters.isEmpty ? null : queryParameters,
-    );
-  }
-
-  @protected
-  @visibleForTesting
-  http.Request buildRequest({
+  RequestOptions buildRequest({
     required String method,
     required String path,
     Map<String, Object?>? queryParams,
     Map<String, Object?>? body,
     Map<String, Object?>? headers,
   }) {
-    final uri = buildUri(path: path, queryParams: queryParams);
-    final request = http.Request(method, uri);
-    if (body != null) request.bodyBytes = encodeBody(body);
+    final request = RequestOptions(
+      method: method,
+      path: path,
+      baseUrl: _client.options.baseUrl,
+      queryParameters: queryParams,
+      headers: headers,
+      data: jsonEncode(body),
+    );
     request.headers.addAll({
       if (body != null) ...{
         'Content-Type': 'application/json;charset=utf-8',
-        'Content-Length': request.bodyBytes.length.toString(),
       },
       'Connection': 'Keep-Alive',
       // the same as `"Cache-Control": "no-cache"`, but deprecated
