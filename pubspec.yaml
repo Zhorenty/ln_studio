@@ -83,8 +83,6 @@ flutter:
         - asset: assets/fonts/PlayfairDisplay-Bold.ttf
           weight: 700
 
-
-
 flutter_gen:
   output: lib/src/common/assets/generated
   line_length: 80
