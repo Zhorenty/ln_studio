@@ -1,6 +1,22 @@
 {
-  "appTitle": "LN Studio",
-  "wardrobeEmpty": "У Вас нет записей",
+  "@@locale": "ru",
+
+ "@_Exceptions" :{},
   "unknownError": "Неизвестная ошибка: {value}",
-  "exceptionOccurred": "Возникло исключение: {value}"
+  "exceptionOccurred": "Возникло исключение: {value}",
+  "phoneExists": "Данный номер уже занят",
+
+  "@_Summary" :{},
+   "wardrobeEmpty": "Здесь записи",
+
+  "@_Timetable" :{},
+  "workShedule": "График работы",
+
+  "@_Staff" :{},
+  "employees": "Сотрудники",
+  "addEmployee": "Добавить сотрудника",
+
+  "@_Employee" :{},
+  "amountOfClients": "Кол-во клиентов",
+  "daysWorkedOut": "Дней отработано"
 }

@@ -52,6 +52,8 @@ dev_dependencies:
   # Codegen
   build_runner: 2.4.6
   flutter_gen_runner: 5.3.1
+  intl_utils: 2.8.4
+
 
   # Lints
   flutter_lints: ^2.0.0
@@ -81,9 +83,15 @@ flutter:
         - asset: assets/fonts/PlayfairDisplay-Bold.ttf
           weight: 700
 
-  # Enable generation of localized Strings from arb files.
-  generate: true
+
 
 flutter_gen:
   output: lib/src/common/assets/generated
   line_length: 80
+
+flutter_intl:
+  enabled: true
+  class_name: GeneratedLocalization
+  main_locale: ru
+  arb_dir: lib/src/common/localization/translations
+  output_dir: lib/src/common/localization/generated
