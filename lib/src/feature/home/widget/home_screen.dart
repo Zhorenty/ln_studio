@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         CustomSliverAppBar(
-          title: 'Привет, Евгений',
+          title: 'Привет, Хищник',
           actions: [
             AnimatedButton(
               padding: const EdgeInsets.only(right: 8 + 2, top: 2),

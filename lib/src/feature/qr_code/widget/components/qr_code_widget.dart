@@ -60,7 +60,7 @@ class QrCodeWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              const Icon(Icons.star),
+              const Icon(Icons.star_rounded, size: 28),
             ],
           ),
         ],
