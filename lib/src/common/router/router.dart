@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_studio/src/common/widget/custom_bottom_navigation_bar.dart';
-import 'package:ln_studio/src/feature/qr_code/widget/qr_code_screen.dart';
-import 'package:ln_studio/src/feature/home/widget/home_screen.dart';
-import 'package:ln_studio/src/feature/profile/widget/profile_screen.dart';
+
+import '/src/common/widget/custom_bottom_navigation_bar.dart';
+import '/src/feature/qr_code/widget/qr_code_screen.dart';
+import '/src/feature/home/widget/home_screen.dart';
+import '/src/feature/profile/widget/profile_screen.dart';
 
 final _parentKey = GlobalKey<NavigatorState>();
 

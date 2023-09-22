@@ -12,7 +12,11 @@ import '/src/feature/salon/widget/salon_choice_screen.dart';
 
 import 'components/qr_code_widget.dart';
 
+/// {@template qr_code_screen}
+/// QRCodeScreen widget.
+/// {@endtemplate}
 class QRCodeScreen extends StatelessWidget {
+  /// {@macro qr_code_screen}
   const QRCodeScreen({super.key});
 
   @override
@@ -35,9 +39,7 @@ class QRCodeScreen extends StatelessWidget {
             builder: (context, state) => PopupButton(
               label: state.currentSalon != null
                   ? Text(state.currentSalon!.name)
-                  : Shimmer(
-                      backgroundColor: context.colorScheme.onBackground,
-                    ),
+                  : Shimmer(backgroundColor: context.colorScheme.onBackground),
               child: SalonChoiceScreen(currentSalon: state.currentSalon),
             ),
           ),

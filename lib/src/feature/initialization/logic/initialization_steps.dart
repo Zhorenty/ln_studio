@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:ln_studio/src/feature/salon/data/salon_data_provider.dart';
-import 'package:ln_studio/src/feature/salon/data/salon_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/initialization/model/initialization_progress.dart';
+import '/src/feature/salon/data/salon_data_provider.dart';
+import '/src/feature/salon/data/salon_repository.dart';
 
 typedef StepAction = FutureOr<void>? Function(InitializationProgress progress);
 

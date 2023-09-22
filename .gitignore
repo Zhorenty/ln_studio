@@ -31,6 +31,7 @@ migrate_working_dir/
 *.*.dart
 generated_*
 lib/src/common/assets/generated/
+lib/src/common/localization/generated/
 
 # Symbolication related
 app.*.symbols
