@@ -32,6 +32,9 @@ dependencies:
   # Persisting
   shared_preferences: ^2.2.0
 
+  # REST
+  dio: ^5.3.3
+
   # Logging
   logging: ^1.2.0
 
@@ -40,9 +43,10 @@ dependencies:
   path: ^1.8.2
   path_provider: ^2.0.12
 
-  # Local packages
+  # Local packages 
   rest_client:
     path: packages/rest_client
+ 
 
 dev_dependencies:
   # Testing

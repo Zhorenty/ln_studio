@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 
-import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
+import '/src/common/assets/generated/fonts.gen.dart';
+import '/src/common/utils/extensions/context_extension.dart';
 
+/// {@template qr_code_widget}
+/// QRCodeWidget.
+/// {@endtemplate}
 class QRCodeWidget extends StatelessWidget {
+  /// {@macro qr_code_widget}
   const QRCodeWidget({super.key});
 
   @override

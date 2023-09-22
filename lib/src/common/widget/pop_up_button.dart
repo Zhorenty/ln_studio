@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 
+import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/overlay/modal_popup.dart';
 

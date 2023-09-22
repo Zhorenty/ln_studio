@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_studio/src/common/router/router.dart';
-import 'package:ln_studio/src/common/utils/mixin/scope_mixin.dart';
+
+import '/src/common/router/router.dart';
+import '/src/common/utils/mixin/scope_mixin.dart';
 
 /// Widget which is responsible for providing the [AppRouterScope].
 class AppRouterScope extends StatefulWidget with ScopeMixin {
