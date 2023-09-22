@@ -20,10 +20,10 @@ class SalonChoiceScreen extends StatefulWidget {
     this.onChanged,
   });
 
-  ///
+  /// Currently selected salon.
   final Salon? currentSalon;
 
-  ///
+  /// Callback, called when salon selection changes.
   final void Function(Salon?)? onChanged;
 
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-/// Creates a salon with the provided attributes.
+/// Salon with the provided attributes.
 @immutable
 final class Salon {
   const Salon({
