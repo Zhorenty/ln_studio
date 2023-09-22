@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/src/common/router/app_router_scope.dart';
 import '/src/common/widget/scope_widgets.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/initialization/model/dependencies.dart';
+import '/src/feature/salon/bloc/salon_bloc.dart';
+import '/src/feature/salon/bloc/salon_event.dart';
+
 import 'app_context.dart';
 
 /// {@template app}
@@ -19,20 +23,29 @@ class App extends StatelessWidget {
   final InitializationResult result;
 
   @override
-  Widget build(BuildContext context) => ScopesProvider(
+  Widget build(BuildContext context) => MultiBlocProvider(
         providers: [
-          ScopeProvider(
-            buildScope: (child) => DependenciesScope(
-              dependencies: result.dependencies,
-              child: child,
-            ),
-          ),
-          ScopeProvider(
-            buildScope: (child) => AppRouterScope(
-              child: child,
-            ),
+          BlocProvider(
+            create: (context) => SalonBLoC(
+              repository: result.dependencies.salonRepository,
+            )..add(const SalonEvent.fetchAll()),
           ),
         ],
-        child: const AppContext(),
+        child: ScopesProvider(
+          providers: [
+            ScopeProvider(
+              buildScope: (child) => DependenciesScope(
+                dependencies: result.dependencies,
+                child: child,
+              ),
+            ),
+            ScopeProvider(
+              buildScope: (child) => AppRouterScope(
+                child: child,
+              ),
+            ),
+          ],
+          child: const AppContext(),
+        ),
       );
 }

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
-import 'package:ln_studio/src/common/widget/animated_button.dart';
-import 'package:ln_studio/src/common/widget/custom_app_bar.dart';
-import 'package:ln_studio/src/common/widget/pop_up_button.dart';
+import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/animated_button.dart';
+import '/src/common/widget/custom_app_bar.dart';
+import '/src/common/widget/pop_up_button.dart';
+import '/src/common/widget/shimmer.dart';
+import '/src/feature/salon/bloc/salon_bloc.dart';
+import '/src/feature/salon/bloc/salon_state.dart';
+import '/src/feature/salon/widget/salon_choice_screen.dart';
 
 import 'components/qr_code_widget.dart';
 
@@ -26,11 +31,14 @@ class QRCodeScreen extends StatelessWidget {
               onPressed: () {},
             ),
           ],
-          bottomChild: PopupButton(
-            label: const Text('blabla'),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text(''),
+          bottomChild: BlocBuilder<SalonBLoC, SalonState>(
+            builder: (context, state) => PopupButton(
+              label: state.currentSalon != null
+                  ? Text(state.currentSalon!.name)
+                  : Shimmer(
+                      backgroundColor: context.colorScheme.onBackground,
+                    ),
+              child: SalonChoiceScreen(currentSalon: state.currentSalon),
             ),
           ),
         ),

@@ -43,6 +43,7 @@ dependencies:
   # Local packages
   rest_client:
     path: packages/rest_client
+  dio: ^5.3.3
 
 dev_dependencies:
   # Testing
