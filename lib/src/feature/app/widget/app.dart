@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_event.dart';
+import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 
 import '/src/common/router/app_router_scope.dart';
 import '/src/common/widget/scope_widgets.dart';
@@ -31,6 +32,11 @@ class App extends StatelessWidget {
             create: (context) => SalonBLoC(
               repository: result.dependencies.salonRepository,
             )..add(const SalonEvent.fetchAll()),
+          ),
+          BlocProvider(
+            create: (context) => EmployeeBloc(
+              repository: result.dependencies.recordRepository,
+            ),
           ),
           BlocProvider(
             create: (context) => CategoryBloc(

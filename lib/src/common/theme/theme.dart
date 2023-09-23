@@ -33,6 +33,10 @@ final $darkThemeData = ThemeData(
   datePickerTheme: DatePickerThemeData(
     backgroundColor: darkColorScheme.onBackground,
   ),
+  bottomSheetTheme: BottomSheetThemeData(
+    backgroundColor: darkColorScheme.background,
+    modalBackgroundColor: darkColorScheme.background,
+  ),
   extensions: [
     AppColors(
       avatarColors: [

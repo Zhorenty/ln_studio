@@ -25,7 +25,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     Emitter<CategoryState> emit,
   ) async {
     try {
-      final categories = await repository.getCategoryWithServices();
+      final categories = await repository.getCategories();
       emit(CategoryState.loaded(categoryWithServices: categories));
     } on Object catch (e) {
       emit(

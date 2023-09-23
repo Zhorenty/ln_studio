@@ -68,19 +68,31 @@ class HomeScreen extends StatelessWidget {
                       description: 'На услугу',
                       onTap: () => context.go('/home/choice_service'),
                     ),
-                    const RecordTypeCard(
+                    RecordTypeCard(
                       icon: Icons.person,
                       description: 'К мастеру',
+                      onTap: () => context.go('/home/choice_employee'),
                     ),
                     const RecordTypeCard(
                       icon: Icons.cached,
                       description: 'Повторно',
                     ),
-                    const RecordTypeCard(
+                    RecordTypeCard(
                       icon: Icons.home_work_rounded,
                       description: 'На дом',
+                      onTap: () => context.go('/home/record'),
                     ),
                   ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 12, top: 12),
+                child: Text(
+                  'Новости',
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                    color: context.colorScheme.primary,
+                  ),
                 ),
               ),
             ],
@@ -106,8 +118,8 @@ class RecordTypeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    return AnimatedButton(
+      onPressed: onTap,
       child: Container(
         width: 100,
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

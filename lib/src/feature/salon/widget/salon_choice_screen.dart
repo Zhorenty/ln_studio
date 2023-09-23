@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
+import 'package:ln_studio/src/common/utils/extensions/string_extension.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/shimmer.dart';
@@ -45,32 +47,31 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
   Widget build(BuildContext context) => BlocBuilder<SalonBLoC, SalonState>(
         builder: (context, state) {
           return salonBloc.state.hasData
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Выберите салон',
-                        style: context.textTheme.bodyLarge,
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          ...salonBloc.state.data!.map(
+                            (salon) => _SalonChoiceRow(
+                              salon: salon,
+                              currentSalon: widget.currentSalon,
+                              onChanged: (salon) {
+                                if (widget.onChanged == null) {
+                                  salonBloc.add(SalonEvent.saveCurrent(salon!));
+                                } else {
+                                  setState(() => widget.onChanged!(salon));
+                                }
+                                context.pop();
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                      ...salonBloc.state.data!.map(
-                        (salon) => _SalonChoiceRow(
-                          salon: salon,
-                          currentSalon: widget.currentSalon,
-                          onChanged: (salon) {
-                            if (widget.onChanged == null) {
-                              salonBloc.add(SalonEvent.saveCurrent(salon!));
-                            } else {
-                              setState(() => widget.onChanged!(salon));
-                            }
-                            context.pop();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 )
               : const Shimmer();
         },
@@ -98,14 +99,102 @@ class _SalonChoiceRow extends StatelessWidget {
   final void Function(Salon?)? onChanged;
 
   @override
-  Widget build(BuildContext context) => ListTile(
-        contentPadding: EdgeInsets.zero,
-        leading: Radio<Salon>(
-          value: salon,
-          groupValue: currentSalon,
-          onChanged: onChanged,
-        ),
-        title: Text(salon.name),
+  Widget build(BuildContext context) => GestureDetector(
         onTap: () => onChanged?.call(salon),
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          padding: const EdgeInsets.all(4).add(const EdgeInsets.only(left: 12)),
+          decoration: BoxDecoration(
+            color: context.colorScheme.onBackground,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFF272727)),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: salon.name,
+                          style: context.textTheme.bodyLarge?.copyWith(
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "\n${salon.address}",
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: Colors.grey,
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Radio<Salon>(
+                    value: salon,
+                    groupValue: currentSalon,
+                    onChanged: onChanged,
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8, bottom: 8, top: 4),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset('assets/images/oko_lashes.png'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8, bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Время работы',
+                            style: context.textTheme.bodyLarge?.copyWith(
+                              fontFamily: FontFamily.geologica,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "\nпн.-вс.: 10:00 - 21:00",
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: Colors.grey,
+                              fontFamily: FontFamily.geologica,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Телефон',
+                            style: context.textTheme.bodyLarge?.copyWith(
+                              fontFamily: FontFamily.geologica,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "\n${salon.phone.formatPhoneNumber()}",
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: Colors.grey,
+                              fontFamily: FontFamily.geologica,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       );
 }

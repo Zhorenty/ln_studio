@@ -7,9 +7,14 @@ import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_state.dart';
 
-class ServiceChoiceScreen extends StatelessWidget {
+class ServiceChoiceScreen extends StatefulWidget {
   const ServiceChoiceScreen({super.key});
 
+  @override
+  State<ServiceChoiceScreen> createState() => _ServiceChoiceScreenState();
+}
+
+class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +72,7 @@ class ServiceChoiceScreen extends StatelessWidget {
   }
 }
 
+///
 class ServiceCard extends StatefulWidget {
   const ServiceCard({
     super.key,
@@ -74,84 +80,95 @@ class ServiceCard extends StatefulWidget {
     required this.subtitle,
     required this.description,
   });
+
+  ///
   final String title;
+
+  ///
   final (String, String) subtitle;
+
+  ///
   final String description;
+
   @override
   State<ServiceCard> createState() => _ServiceCardState();
 }
 
 class _ServiceCardState extends State<ServiceCard> {
   bool expanded = false;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      padding: const EdgeInsets.all(8),
-      alignment: Alignment.centerLeft,
-      decoration: BoxDecoration(
-        color: context.colorScheme.background,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.radio_button_off),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${widget.title} / Maniqouir',
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontFamily: FontFamily.geologica,
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        padding: const EdgeInsets.all(8),
+        alignment: Alignment.centerLeft,
+        decoration: BoxDecoration(
+          color: context.colorScheme.background,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.radio_button_off),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${widget.title} / Maniqouir',
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontFamily: FontFamily.geologica,
+                    ),
                   ),
-                ),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: widget.subtitle.$1,
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          color: context.colorScheme.primaryContainer,
-                          fontFamily: FontFamily.geologica,
-                        ),
-                      ),
-                      TextSpan(
-                        text: widget.subtitle.$2,
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          color: context.colorScheme.secondary,
-                          fontFamily: FontFamily.geologica,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  child: expanded
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            widget.description,
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontFamily: FontFamily.geologica,
-                              color: context.colorScheme.primaryContainer,
-                            ),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: widget.subtitle.$1,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colorScheme.primaryContainer,
+                            fontFamily: FontFamily.geologica,
                           ),
-                        )
-                      : const SizedBox.shrink(),
-                ),
-              ],
+                        ),
+                        TextSpan(
+                          text: widget.subtitle.$2,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colorScheme.secondary,
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    child: expanded
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              widget.description,
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontFamily: FontFamily.geologica,
+                                color: context.colorScheme.primaryContainer,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                ],
+              ),
             ),
-          ),
-          AnimatedButton(
-            padding: const EdgeInsets.only(left: 8),
-            onPressed: () => setState(() => expanded = !expanded),
-            child: const Icon(Icons.info_outline, size: 18),
-          ),
-        ],
+            AnimatedButton(
+              padding: const EdgeInsets.only(left: 8),
+              onPressed: () => setState(() => expanded = !expanded),
+              child: const Icon(Icons.info_outline, size: 18),
+            ),
+          ],
+        ),
       ),
     );
   }
