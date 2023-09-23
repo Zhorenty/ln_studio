@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:ln_studio/src/feature/record/data/record_data_provider.dart';
+import 'package:ln_studio/src/feature/record/data/record_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,6 +32,13 @@ mixin InitializationSteps {
       );
       final salonRepository = SalonRepositoryImpl(salonDataProvider);
       progress.dependencies.salonRepository = salonRepository;
+    },
+    'Record repository': (progress) async {
+      final recordDataProvider = RecordDataProviderImpl(
+        restClient: progress.dependencies.restClient,
+      );
+      final recordRepository = RecordRepositoryImpl(recordDataProvider);
+      progress.dependencies.recordRepository = recordRepository;
     },
   };
 }
