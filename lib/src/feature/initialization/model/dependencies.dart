@@ -1,3 +1,4 @@
+import 'package:ln_studio/src/feature/record/data/record_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +14,9 @@ abstract interface class Dependencies {
 
   /// Salon  repository.
   abstract final SalonRepository salonRepository;
+
+  /// Record repository.
+  abstract final RecordRepository recordRepository;
 
   /// Freeze dependencies, so they cannot be modified.
   Dependencies freeze();
@@ -34,10 +38,14 @@ final class Dependencies$Mutable implements Dependencies {
   late SalonRepository salonRepository;
 
   @override
+  late RecordRepository recordRepository;
+
+  @override
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
         restClient: restClient,
         salonRepository: salonRepository,
+        recordRepository: recordRepository,
       );
 }
 
@@ -49,6 +57,7 @@ final class _Dependencies$Immutable implements Dependencies {
     required this.sharedPreferences,
     required this.restClient,
     required this.salonRepository,
+    required this.recordRepository,
   });
 
   @override
@@ -59,6 +68,9 @@ final class _Dependencies$Immutable implements Dependencies {
 
   @override
   final SalonRepository salonRepository;
+
+  @override
+  final RecordRepository recordRepository;
 
   @override
   Dependencies freeze() => this;

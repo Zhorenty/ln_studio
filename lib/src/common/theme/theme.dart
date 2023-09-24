@@ -26,11 +26,16 @@ final $darkThemeData = ThemeData(
   appBarTheme: AppBarTheme(
     backgroundColor: darkColorScheme.onBackground,
     // surfaceTintColor: const Color(0x1FFFFFFF),
+    surfaceTintColor: darkColorScheme.onBackground,
   ),
   iconTheme: IconThemeData(color: darkColorScheme.primary),
   scaffoldBackgroundColor: darkColorScheme.background,
   datePickerTheme: DatePickerThemeData(
     backgroundColor: darkColorScheme.onBackground,
+  ),
+  bottomSheetTheme: BottomSheetThemeData(
+    backgroundColor: darkColorScheme.background,
+    modalBackgroundColor: darkColorScheme.background,
   ),
   extensions: [
     AppColors(
