@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
+import 'package:ln_studio/src/feature/record/widget/date_choice_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/employee_choice_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/record_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/sevice_choice_screen.dart';
@@ -96,6 +97,11 @@ final router = GoRouter(
                       ),
                     ),
                   ],
+                ),
+                GoRoute(
+                  path: 'choice_date',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => const DateChoiceScreen(),
                 ),
               ],
             ),

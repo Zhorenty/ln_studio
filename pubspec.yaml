@@ -43,9 +43,13 @@ dependencies:
   path: ^1.8.2
   path_provider: ^2.0.12
 
+  # Widgets
+  table_calendar: ^3.0.9
+
   # Local packages 
   rest_client:
     path: packages/rest_client
+
  
 
 dev_dependencies:
