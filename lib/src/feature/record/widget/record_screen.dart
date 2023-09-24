@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/feature/record/model/category.dart';
+import 'package:ln_studio/src/feature/record/model/employee.dart';
+import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 
 class RecordScreen extends StatelessWidget {
-  const RecordScreen({super.key});
+  const RecordScreen({
+    super.key,
+    this.servicePreset,
+    this.employeePreset,
+  });
+
+  final ServiceModel? servicePreset;
+  final EmployeeModel? employeePreset;
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +44,23 @@ class RecordScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Выберите услугу'),
-                    const CustomContainer(),
+                    CustomContainer(
+                      title: servicePreset?.name ?? 'Выберите услуг',
+                    ),
                     const Text('Выберите мастера'),
-                    const CustomContainer(),
+                    CustomContainer(
+                      title: employeePreset?.fullName ?? 'Выберите мастера',
+                    ),
                     const Text('Выберите дату и время'),
-                    const CustomContainer(),
+                    const CustomContainer(
+                      title: 'Выберите дату и время',
+                    ),
                     const Text('Филиал'),
-                    const CustomContainer(),
+                    CustomContainer(
+                      title:
+                          context.read<SalonBLoC>().state.currentSalon?.name ??
+                              'Выберите филиал на главном экране',
+                    ),
                     const Text('Комментарий к записи'),
                     const HugeTextField(),
                     const Text('Стоимость: 1 700 000 ₽'),
@@ -78,7 +99,12 @@ class RecordScreen extends StatelessWidget {
 
 ///
 class CustomContainer extends StatelessWidget {
-  const CustomContainer({super.key});
+  const CustomContainer({
+    super.key,
+    required this.title,
+  });
+
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +134,7 @@ class CustomContainer extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              'sdkfamds',
+              title,
               style: context.textTheme.bodyLarge?.copyWith(
                 fontFamily: FontFamily.geologica,
               ),

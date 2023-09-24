@@ -114,6 +114,8 @@ final class EmployeeModel {
         'job_place': jobModel.toJson(),
         'salon': salon.toJson(),
       };
+
+  String get fullName => '${userModel.firstName} ${userModel.lastName}';
 }
 
 /// Represents a user model.

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
@@ -37,6 +38,8 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
 
   /// Employees bloc maintaining [EmployeeChoiceScreen] state.
   late final EmployeeBloc employeesBloc;
+
+  EmployeeModel? selectedEmployee;
 
   @override
   void initState() {
@@ -103,7 +106,9 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                       if (employee.isDismiss == false) {
                         return EmployeeCard(
                           employee: employee,
-                          refresh: _refresh,
+                          selectedEmployee: selectedEmployee,
+                          onChanged: (cardEmployee) =>
+                              setState(() => selectedEmployee = cardEmployee),
                         );
                       } else {
                         return const SizedBox.shrink();
@@ -112,32 +117,35 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                   ),
                 ),
               ] else
-                SliverFillRemaining(
-                  child: Center(
-                    child: Text(
-                      context.stringOf().employees,
-                      style: context.textTheme.titleMedium!.copyWith(
+                SliverToBoxAdapter(
+                  child: FilledButton.icon(
+                    icon: const Icon(Icons.plus_one_rounded),
+                    label: Text(
+                      context.stringOf().addEmployee,
+                      style: context.textTheme.bodySmall!.copyWith(
                         fontFamily: FontFamily.geologica,
-                        color: context.colorScheme.primary,
+                        color: context.colorScheme.background,
                       ),
                     ),
+                    onPressed: () {},
                   ),
                 ),
             ],
           ),
-          floatingActionButton: !state.hasEmployee
-              ? FloatingActionButton.extended(
-                  backgroundColor: context.colorScheme.primary,
-                  label: Text(
-                    context.stringOf().addEmployee,
-                    style: context.textTheme.bodySmall!.copyWith(
-                      fontFamily: FontFamily.geologica,
-                      color: context.colorScheme.background,
-                    ),
-                  ),
-                  onPressed: () {},
-                )
-              : const SizedBox.shrink(),
+          floatingActionButton: FloatingActionButton.extended(
+            backgroundColor: context.colorScheme.primary,
+            label: Text(
+              'Далее',
+              style: context.textTheme.bodySmall!.copyWith(
+                fontFamily: FontFamily.geologica,
+                color: context.colorScheme.background,
+              ),
+            ),
+            onPressed: () => context.goNamed(
+              'record_from_employee_choice',
+              extra: selectedEmployee,
+            ),
+          ),
         ),
       ),
     );
@@ -167,64 +175,73 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
 
 ///
 class EmployeeCard extends StatelessWidget {
-  const EmployeeCard({super.key, required this.employee, this.refresh});
+  const EmployeeCard({
+    super.key,
+    required this.employee,
+    required this.selectedEmployee,
+    required this.onChanged,
+  });
 
   ///
   final EmployeeModel employee;
 
-  ///
-  final void Function()? refresh;
+  final EmployeeModel? selectedEmployee;
+
+  final void Function(EmployeeModel?) onChanged;
 
   @override
   Widget build(BuildContext context) {
     final user = employee.userModel;
     final jobPlace = employee.jobModel;
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        color: context.colorScheme.onBackground,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          AvatarWidget(
-            radius: 40,
-            title: '${user.firstName} ${user.lastName}',
-          ),
-          const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: MediaQuery.sizeOf(context).width / 1.9,
-                child: Text(
-                  '${user.firstName} ${user.lastName}',
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontFamily: FontFamily.geologica,
+    return GestureDetector(
+      onTap: () => onChanged(employee),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 6),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: context.colorScheme.onBackground,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AvatarWidget(
+              radius: 40,
+              title: '${user.firstName} ${user.lastName}',
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${user.firstName} ${user.lastName}',
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontFamily: FontFamily.geologica,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                  Text(
+                    jobPlace.name,
+                    style: context.textTheme.labelMedium?.copyWith(
+                      fontFamily: FontFamily.geologica,
+                      color: context.colorScheme.primaryContainer,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  StarRating(initialRating: employee.stars)
+                ],
               ),
-              Text(
-                jobPlace.name,
-                style: context.textTheme.labelMedium?.copyWith(
-                  fontFamily: FontFamily.geologica,
-                  color: context.colorScheme.primaryContainer,
-                ),
-              ),
-              const SizedBox(height: 4),
-              StarRating(initialRating: employee.stars)
-            ],
-          ),
-          Icon(
-            Icons.radio_button_off,
-            size: 32,
-            color: context.colorScheme.primary,
-          ),
-        ],
+            ),
+            Radio<EmployeeModel>(
+              value: employee,
+              groupValue: selectedEmployee,
+              onChanged: onChanged,
+            ),
+          ],
+        ),
       ),
     );
   }

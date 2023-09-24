@@ -6,6 +6,7 @@ import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_state.dart';
+import 'package:ln_studio/src/feature/record/model/category.dart';
 
 class ServiceChoiceScreen extends StatefulWidget {
   const ServiceChoiceScreen({super.key});
@@ -15,6 +16,8 @@ class ServiceChoiceScreen extends StatefulWidget {
 }
 
 class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
+  ServiceModel? selectedService;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,12 +55,11 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                     children: [
                       ...state.categoryWithServices[index].service.map(
                         (service) => ServiceCard(
-                          title: service.name,
-                          subtitle: (
-                            'Стоимость: ',
-                            '${service.price.toString()} ₽',
-                          ),
-                          description: service.description,
+                          service: service,
+                          selectedService: selectedService,
+                          onTap: (cardService) => setState(() {
+                            selectedService = cardService;
+                          }),
                         ),
                       ),
                     ],
@@ -68,6 +70,15 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Продолжить'),
+        onPressed: selectedService != null
+            ? () => context.goNamed(
+                  'record_from_service_choice',
+                  extra: selectedService,
+                )
+            : null,
+      ),
     );
   }
 }
@@ -76,19 +87,17 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
 class ServiceCard extends StatefulWidget {
   const ServiceCard({
     super.key,
-    required this.title,
-    required this.subtitle,
-    required this.description,
+    required this.service,
+    required this.selectedService,
+    required this.onTap,
   });
 
   ///
-  final String title;
+  final ServiceModel service;
 
-  ///
-  final (String, String) subtitle;
+  final ServiceModel? selectedService;
 
-  ///
-  final String description;
+  final void Function(ServiceModel?) onTap;
 
   @override
   State<ServiceCard> createState() => _ServiceCardState();
@@ -100,7 +109,7 @@ class _ServiceCardState extends State<ServiceCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => widget.onTap(widget.service),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         padding: const EdgeInsets.all(8),
@@ -112,14 +121,18 @@ class _ServiceCardState extends State<ServiceCard> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.radio_button_off),
+            Radio<ServiceModel>(
+              value: widget.service,
+              groupValue: widget.selectedService,
+              onChanged: widget.onTap,
+            ),
             const SizedBox(width: 8),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${widget.title} / Maniqouir',
+                    '${widget.service.name} / Maniqouir',
                     style: context.textTheme.titleMedium?.copyWith(
                       fontFamily: FontFamily.geologica,
                     ),
@@ -128,14 +141,14 @@ class _ServiceCardState extends State<ServiceCard> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: widget.subtitle.$1,
+                          text: 'Стоимость: ',
                           style: context.textTheme.bodyMedium?.copyWith(
                             color: context.colorScheme.primaryContainer,
                             fontFamily: FontFamily.geologica,
                           ),
                         ),
                         TextSpan(
-                          text: widget.subtitle.$2,
+                          text: widget.service.price.toString(),
                           style: context.textTheme.bodyMedium?.copyWith(
                             color: context.colorScheme.secondary,
                             fontFamily: FontFamily.geologica,
@@ -150,7 +163,7 @@ class _ServiceCardState extends State<ServiceCard> {
                         ? Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Text(
-                              widget.description,
+                              widget.service.description,
                               style: context.textTheme.bodyMedium!.copyWith(
                                 fontFamily: FontFamily.geologica,
                                 color: context.colorScheme.primaryContainer,

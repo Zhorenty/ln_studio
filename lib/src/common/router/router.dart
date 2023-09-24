@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_studio/src/feature/record/model/category.dart';
+import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/widget/employee_choice_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/record_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/sevice_choice_screen.dart';
@@ -28,6 +30,7 @@ final router = GoRouter(
               builder: (context, state) => const HomeScreen(),
               routes: [
                 GoRoute(
+                  name: 'choice_service',
                   path: 'choice_service',
                   parentNavigatorKey: _parentKey,
                   pageBuilder: (context, state) {
@@ -49,8 +52,19 @@ final router = GoRouter(
                       },
                     );
                   },
+                  routes: [
+                    GoRoute(
+                      name: 'record_from_service_choice',
+                      path: 'record',
+                      parentNavigatorKey: _parentKey,
+                      builder: (context, state) => RecordScreen(
+                        servicePreset: state.extra as ServiceModel?,
+                      ),
+                    ),
+                  ],
                 ),
                 GoRoute(
+                  name: 'choice_employee',
                   path: 'choice_employee',
                   parentNavigatorKey: _parentKey,
                   pageBuilder: (context, state) {
@@ -72,11 +86,16 @@ final router = GoRouter(
                       },
                     );
                   },
-                ),
-                GoRoute(
-                  path: 'record',
-                  parentNavigatorKey: _parentKey,
-                  builder: (context, state) => const RecordScreen(),
+                  routes: [
+                    GoRoute(
+                      name: 'record_from_employee_choice',
+                      path: 'record',
+                      parentNavigatorKey: _parentKey,
+                      builder: (context, state) => RecordScreen(
+                        employeePreset: state.extra as EmployeeModel?,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -100,5 +119,18 @@ final router = GoRouter(
         ),
       ],
     ),
+    // GoRoute(
+    //   name: 'record',
+    //   path: '/record/:serviceId',
+    //   parentNavigatorKey: _parentKey,
+    //   builder: (context, state) => RecordScreen(
+    //     servicePreset: state.extra as ServiceModel?,
+    //     // serviceIdPreset: int.tryParse(
+    //     //     state.pathParameters['serviceId'] ?? '')
+    //     employeePreset: state.extra as EmployeeModel?,
+    //     // employeeIdPreset: int.tryParse(
+    //     //     state.pathParameters['employeeId'] ?? ''),
+    //   ),
+    // ),
   ],
 );
