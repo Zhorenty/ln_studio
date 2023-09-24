@@ -1,4 +1,5 @@
 import 'package:ln_studio/src/feature/record/model/employee.dart';
+import 'package:ln_studio/src/feature/record/model/timetable.dart';
 import 'package:rest_client/rest_client.dart';
 
 import '/src/feature/record/model/category.dart';
@@ -10,6 +11,9 @@ abstract interface class RecordDataProvider {
 
   /// Fetch staff by salon id
   Future<List<EmployeeModel>> fetchSalonEmployees(int salonId);
+
+  ///
+  Future<List<EmployeeTimetable>> fetchEmployeeTimetable(int employeeId);
 }
 
 /// Implementation of Record RecordDataProvider.
@@ -39,5 +43,18 @@ class RecordDataProviderImpl implements RecordDataProvider {
         .toList();
 
     return staff;
+  }
+
+  @override
+  Future<List<EmployeeTimetable>> fetchEmployeeTimetable(int employeeId) async {
+    final response = await restClient.get(
+      '/api/timetable/by_employee_id/$employeeId',
+    );
+
+    final timetables = List.from((response['data'] as List))
+        .map((e) => EmployeeTimetable.fromJson(e))
+        .toList();
+
+    return timetables;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:ln_studio/src/feature/record/model/employee.dart';
+import 'package:ln_studio/src/feature/record/model/timetable.dart';
 
 import '/src/feature/record/data/record_data_provider.dart';
 import '/src/feature/record/model/category.dart';
@@ -10,6 +11,9 @@ abstract interface class RecordRepository {
 
   /// Fetch staff by salon id
   Future<List<EmployeeModel>> getSalonEmployees(int salonId);
+
+  /// Get Record.
+  Future<List<EmployeeTimetable>> getEmployeeTimetable(int employeeId);
 }
 
 /// Implementation of the Record repository.
@@ -26,4 +30,8 @@ final class RecordRepositoryImpl implements RecordRepository {
   @override
   Future<List<EmployeeModel>> getSalonEmployees(int salonId) =>
       _dataProvider.fetchSalonEmployees(salonId);
+
+  @override
+  Future<List<EmployeeTimetable>> getEmployeeTimetable(int employeeId) =>
+      _dataProvider.fetchEmployeeTimetable(employeeId);
 }
