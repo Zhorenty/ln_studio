@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 
 import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_event.dart';
@@ -37,7 +38,6 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
       backgroundColor: context.colorScheme.onBackground,
       body: BlocBuilder<TimetableBloc, TimetableState>(
         builder: (context, state) {
-          final employeeTimetable = state.timetables;
           return CustomScrollView(
             slivers: [
               SliverAppBar(
@@ -56,27 +56,26 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: CustomTableCalendar(
                         onDaySelected: (selectedDay, focusedDay) {
-                          visible = !visible;
-                          setState(() {});
-                          context.read<TimeblockBloc>().add(
-                                TimeblockEvent.fetchEmployeeTimeblocks(
-                                  /// TODO: Fill from choice.
-                                  EmployeeTimeblock$Body(
-                                    dateAt: selectedDay,
-                                    employeeId: 3,
-                                    salonId: 1,
+                          if (selectedDayPredicate(
+                              selectedDay, state.timetables)) {
+                            visible = !visible;
+                            setState(() {});
+
+                            context.read<TimeblockBloc>().add(
+                                  TimeblockEvent.fetchEmployeeTimeblocks(
+                                    EmployeeTimeblock$Body(
+                                      dateAt: selectedDay,
+                                      employeeId: 3,
+                                      salonId: 1,
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                          }
                         },
-                        selectedDayPredicate: (day) {
-                          return employeeTimetable.any(
-                            (timetable) =>
-                                timetable.dateAt.year == day.year &&
-                                timetable.dateAt.month == day.month &&
-                                timetable.dateAt.day == day.day,
-                          );
-                        },
+                        selectedDayPredicate: (day) => selectedDayPredicate(
+                          day,
+                          state.timetables,
+                        ),
                       ),
                     ),
                     Padding(
@@ -91,6 +90,20 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
         },
       ),
     );
+  }
+
+  bool selectedDayPredicate(
+      DateTime day, List<TimetableItem> employeeTimetable) {
+    if (day.isAfterAsNow()) {
+      return employeeTimetable.any(
+        (timetable) =>
+            timetable.dateAt.year == day.year &&
+            timetable.dateAt.month == day.month &&
+            timetable.dateAt.day == day.day,
+      );
+    } else {
+      return false;
+    }
   }
 }
 

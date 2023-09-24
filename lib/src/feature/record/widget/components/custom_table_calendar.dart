@@ -36,32 +36,32 @@ class CustomTableCalendar extends StatelessWidget {
         onDaySelected: onDaySelected,
         selectedDayPredicate: selectedDayPredicate,
         headerStyle: HeaderStyle(
-            formatButtonVisible: false,
-            titleCentered: true,
-            titleTextStyle: context.textTheme.bodyLarge!.copyWith(
-              fontFamily: FontFamily.geologica,
-            ),
-            leftChevronVisible: false,
-            rightChevronVisible: false),
+          formatButtonVisible: false,
+          titleCentered: true,
+          titleTextStyle: context.textTheme.bodyLarge!.copyWith(
+            fontFamily: FontFamily.geologica,
+          ),
+          leftChevronVisible: false,
+          rightChevronVisible: false,
+        ),
         calendarStyle: CalendarStyle(
           // Text styles
-          todayTextStyle: context.textTheme.titleSmall!.copyWith(
-            fontFamily: FontFamily.geologica,
-            fontWeight: FontWeight.bold,
-            color: context.colorScheme.onBackground,
-          ),
           selectedTextStyle: context.textTheme.titleSmall!.copyWith(
             fontFamily: FontFamily.geologica,
             fontWeight: FontWeight.bold,
             color: context.colorScheme.background,
           ),
-          defaultTextStyle: context.textTheme.titleSmall!.copyWith(
+          todayTextStyle: context.textTheme.titleSmall!.copyWith(
             fontFamily: FontFamily.geologica,
             fontWeight: FontWeight.bold,
+            color: context.colorScheme.primaryContainer,
+          ),
+          defaultTextStyle: context.textTheme.titleSmall!.copyWith(
+            fontFamily: FontFamily.geologica,
+            color: context.colorScheme.primaryContainer,
           ),
           holidayTextStyle: context.textTheme.titleSmall!.copyWith(
             fontFamily: FontFamily.geologica,
-            fontWeight: FontWeight.bold,
           ),
           weekendTextStyle: context.textTheme.titleSmall!.copyWith(
             fontFamily: FontFamily.geologica,
@@ -73,37 +73,16 @@ class CustomTableCalendar extends StatelessWidget {
           ),
 
           // Decorations
-          defaultDecoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            color: context.colorScheme.scrim,
-          ),
-          weekendDecoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            color: context.colorScheme.scrim,
-          ),
-          holidayDecoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            color: context.colorScheme.scrim,
-          ),
-          outsideDecoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            color: context.colorScheme.scrim,
-          ),
           selectedDecoration: BoxDecoration(
             shape: BoxShape.rectangle,
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             color: context.colorScheme.primary,
           ),
-          disabledDecoration: const BoxDecoration(),
-          todayDecoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            color: context.colorScheme.secondary,
-          ),
+          defaultDecoration: BoxDecoration(color: context.colorScheme.scrim),
+          weekendDecoration: BoxDecoration(color: context.colorScheme.scrim),
+          holidayDecoration: BoxDecoration(color: context.colorScheme.scrim),
+          outsideDecoration: BoxDecoration(color: context.colorScheme.scrim),
+          todayDecoration: BoxDecoration(color: context.colorScheme.scrim),
         ),
       ),
     );
