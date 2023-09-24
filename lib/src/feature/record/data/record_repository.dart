@@ -12,8 +12,13 @@ abstract interface class RecordRepository {
   /// Fetch staff by salon id
   Future<List<EmployeeModel>> getSalonEmployees(int salonId);
 
-  /// Get Record.
+  ///
   Future<List<EmployeeTimetable>> getEmployeeTimetable(int employeeId);
+
+  ///
+  Future<List<EmployeeTimeblock>> getEmployeeTimeblocks(
+    EmployeeTimeblock timeblock,
+  );
 }
 
 /// Implementation of the Record repository.
@@ -34,4 +39,10 @@ final class RecordRepositoryImpl implements RecordRepository {
   @override
   Future<List<EmployeeTimetable>> getEmployeeTimetable(int employeeId) =>
       _dataProvider.fetchEmployeeTimetable(employeeId);
+
+  @override
+  Future<List<EmployeeTimeblock>> getEmployeeTimeblocks(
+    EmployeeTimeblock timeblock,
+  ) =>
+      _dataProvider.fetchEmployeeTimeblocks(timeblock);
 }

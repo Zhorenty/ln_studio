@@ -1,3 +1,4 @@
+import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
 import 'package:rest_client/rest_client.dart';
@@ -14,6 +15,11 @@ abstract interface class RecordDataProvider {
 
   ///
   Future<List<EmployeeTimetable>> fetchEmployeeTimetable(int employeeId);
+
+  ///
+  Future<List<EmployeeTimeblock>> fetchEmployeeTimeblocks(
+    EmployeeTimeblock timeblock,
+  );
 }
 
 /// Implementation of Record RecordDataProvider.
@@ -56,5 +62,25 @@ class RecordDataProviderImpl implements RecordDataProvider {
         .toList();
 
     return timetables;
+  }
+
+  @override
+  Future<List<EmployeeTimeblock>> fetchEmployeeTimeblocks(
+    EmployeeTimeblock timeblock,
+  ) async {
+    final response = await restClient.post(
+      '/api/timeblock/refresh',
+      body: {
+        'date_at': timeblock.dateAt.jsonFormat(),
+        'employee_id': timeblock.employeeId,
+        'salon_id': timeblock.salonId,
+      },
+    );
+
+    final timeblocks = List.from((response['data'] as List))
+        .map((e) => EmployeeTimeblock.fromJson(e))
+        .toList();
+
+    return timeblocks;
   }
 }

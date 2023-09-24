@@ -73,9 +73,10 @@ class HomeScreen extends StatelessWidget {
                       description: 'К мастеру',
                       onTap: () => context.go('/home/choice_employee'),
                     ),
-                    const RecordTypeCard(
+                    RecordTypeCard(
                       icon: Icons.cached,
                       description: 'Повторно',
+                      onTap: () => context.go('/home/choice_date'),
                     ),
                     RecordTypeCard(
                       icon: Icons.home_work_rounded,

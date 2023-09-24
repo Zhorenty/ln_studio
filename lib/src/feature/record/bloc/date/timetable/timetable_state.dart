@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:ln_studio/src/feature/record/model/Timetable.dart';
+import 'package:ln_studio/src/feature/record/model/timetable.dart';
 
 import '/src/common/utils/pattern_match.dart';
 
