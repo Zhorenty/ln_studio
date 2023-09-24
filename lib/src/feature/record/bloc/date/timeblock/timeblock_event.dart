@@ -10,7 +10,7 @@ sealed class TimeblockEvent extends _$TimeblockEventBase {
 
   /// Factory for fetching Timeblock.
   const factory TimeblockEvent.fetchEmployeeTimeblocks(
-    EmployeeTimeblock timeblock,
+    EmployeeTimeblock$Body timeblock,
   ) = TimeblockEvent$FetchEmployeeTimeblocks;
 }
 
@@ -19,7 +19,7 @@ final class TimeblockEvent$FetchEmployeeTimeblocks extends TimeblockEvent {
   const TimeblockEvent$FetchEmployeeTimeblocks(this.timeblock) : super();
 
   ///
-  final EmployeeTimeblock timeblock;
+  final EmployeeTimeblock$Body timeblock;
 }
 
 /// Timeblock events base class.

@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
+
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 ///
 class CustomTableCalendar extends StatelessWidget {
-  const CustomTableCalendar({super.key, this.onDaySelected});
+  const CustomTableCalendar({
+    super.key,
+    this.onDaySelected,
+    this.selectedDayPredicate,
+  });
 
   ///
   final void Function(DateTime, DateTime)? onDaySelected;
+
+  ///
+  final bool Function(DateTime)? selectedDayPredicate;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +34,7 @@ class CustomTableCalendar extends StatelessWidget {
         focusedDay: DateTime.now(),
         startingDayOfWeek: StartingDayOfWeek.monday,
         onDaySelected: onDaySelected,
+        selectedDayPredicate: selectedDayPredicate,
         headerStyle: HeaderStyle(
             formatButtonVisible: false,
             titleCentered: true,
@@ -35,6 +44,7 @@ class CustomTableCalendar extends StatelessWidget {
             leftChevronVisible: false,
             rightChevronVisible: false),
         calendarStyle: CalendarStyle(
+          // Text styles
           todayTextStyle: context.textTheme.titleSmall!.copyWith(
             fontFamily: FontFamily.geologica,
             fontWeight: FontWeight.bold,
@@ -61,6 +71,8 @@ class CustomTableCalendar extends StatelessWidget {
             fontFamily: FontFamily.geologica,
             color: context.colorScheme.primaryContainer,
           ),
+
+          // Decorations
           defaultDecoration: BoxDecoration(
             shape: BoxShape.rectangle,
             borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -86,6 +98,7 @@ class CustomTableCalendar extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             color: context.colorScheme.primary,
           ),
+          disabledDecoration: const BoxDecoration(),
           todayDecoration: BoxDecoration(
             shape: BoxShape.rectangle,
             borderRadius: const BorderRadius.all(Radius.circular(8)),

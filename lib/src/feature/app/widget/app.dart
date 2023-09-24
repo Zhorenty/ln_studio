@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_event.dart';
+import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_bloc.dart';
+import 'package:ln_studio/src/feature/record/bloc/date/timetable/timetable_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 
 import '/src/common/router/app_router_scope.dart';
@@ -42,6 +44,16 @@ class App extends StatelessWidget {
             create: (context) => CategoryBloc(
               repository: result.dependencies.recordRepository,
             )..add(const CategoryEvent.fetchCategoryWithServices()),
+          ),
+          BlocProvider(
+            create: (context) => TimetableBloc(
+              repository: result.dependencies.recordRepository,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => TimeblockBloc(
+              repository: result.dependencies.recordRepository,
+            ),
           ),
         ],
         child: ScopesProvider(

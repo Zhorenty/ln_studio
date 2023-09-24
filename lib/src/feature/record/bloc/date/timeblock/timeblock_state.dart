@@ -9,13 +9,13 @@ sealed class TimeblockState extends _$TimeblockStateBase {
 
   /// Timeblock is idle.
   const factory TimeblockState.idle({
-    List<EmployeeTimeblock> timeblocks,
+    List<EmployeeTimeblock$Response> timeblocks,
     String? error,
   }) = _TimeblockState$Idle;
 
   /// Timeblock is loaded.
   const factory TimeblockState.loaded({
-    required List<EmployeeTimeblock> timeblocks,
+    required List<EmployeeTimeblock$Response> timeblocks,
     String? error,
   }) = _TimeblockState$Loaded;
 }
@@ -42,7 +42,7 @@ abstract base class _$TimeblockStateBase {
   const _$TimeblockStateBase({required this.timeblocks, this.error});
 
   @nonVirtual
-  final List<EmployeeTimeblock> timeblocks;
+  final List<EmployeeTimeblock$Response> timeblocks;
 
   @nonVirtual
   final String? error;

@@ -9,13 +9,13 @@ sealed class TimetableState extends _$TimetableStateBase {
 
   /// Timetable is idle.
   const factory TimetableState.idle({
-    List<EmployeeTimetable> timetables,
+    List<TimetableItem> timetables,
     String? error,
   }) = _TimetableState$Idle;
 
   /// Timetable is loaded.
   const factory TimetableState.loaded({
-    required List<EmployeeTimetable> timetables,
+    required List<TimetableItem> timetables,
     String? error,
   }) = _TimetableState$Loaded;
 }
@@ -42,7 +42,7 @@ abstract base class _$TimetableStateBase {
   const _$TimetableStateBase({required this.timetables, this.error});
 
   @nonVirtual
-  final List<EmployeeTimetable> timetables;
+  final List<TimetableItem> timetables;
 
   @nonVirtual
   final String? error;

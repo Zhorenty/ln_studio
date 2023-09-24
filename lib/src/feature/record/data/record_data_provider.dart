@@ -14,11 +14,11 @@ abstract interface class RecordDataProvider {
   Future<List<EmployeeModel>> fetchSalonEmployees(int salonId);
 
   ///
-  Future<List<EmployeeTimetable>> fetchEmployeeTimetable(int employeeId);
+  Future<List<TimetableItem>> fetchEmployeeTimetable(int employeeId);
 
   ///
-  Future<List<EmployeeTimeblock>> fetchEmployeeTimeblocks(
-    EmployeeTimeblock timeblock,
+  Future<List<EmployeeTimeblock$Response>> fetchEmployeeTimeblocks(
+    EmployeeTimeblock$Body timeblock,
   );
 }
 
@@ -52,21 +52,21 @@ class RecordDataProviderImpl implements RecordDataProvider {
   }
 
   @override
-  Future<List<EmployeeTimetable>> fetchEmployeeTimetable(int employeeId) async {
+  Future<List<TimetableItem>> fetchEmployeeTimetable(int employeeId) async {
     final response = await restClient.get(
       '/api/timetable/by_employee_id/$employeeId',
     );
 
     final timetables = List.from((response['data'] as List))
-        .map((e) => EmployeeTimetable.fromJson(e))
+        .map((e) => TimetableItem.fromJson(e))
         .toList();
 
     return timetables;
   }
 
   @override
-  Future<List<EmployeeTimeblock>> fetchEmployeeTimeblocks(
-    EmployeeTimeblock timeblock,
+  Future<List<EmployeeTimeblock$Response>> fetchEmployeeTimeblocks(
+    EmployeeTimeblock$Body timeblock,
   ) async {
     final response = await restClient.post(
       '/api/timeblock/refresh',
@@ -78,7 +78,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
     );
 
     final timeblocks = List.from((response['data'] as List))
-        .map((e) => EmployeeTimeblock.fromJson(e))
+        .map((e) => EmployeeTimeblock$Response.fromJson(e))
         .toList();
 
     return timeblocks;
