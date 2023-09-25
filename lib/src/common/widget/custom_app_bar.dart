@@ -10,7 +10,10 @@ class CustomSliverAppBar extends StatelessWidget {
     this.title,
     required this.bottomChild,
     this.actions = const <Widget>[],
+    this.centerTitle = false,
   });
+
+  final bool centerTitle;
 
   /// Primary widget displayed in the [CustomSliverAppBar].
   final String? title;
@@ -24,7 +27,7 @@ class CustomSliverAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      centerTitle: false,
+      centerTitle: centerTitle,
       title: title != null
           ? Text(
               title!,

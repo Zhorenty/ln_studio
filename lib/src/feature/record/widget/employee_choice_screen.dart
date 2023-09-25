@@ -6,19 +6,15 @@ import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
-import 'package:ln_studio/src/common/widget/avatar_widget.dart';
-import 'package:ln_studio/src/common/widget/custom_app_bar.dart';
 import 'package:ln_studio/src/common/widget/overlay/modal_popup.dart';
-import 'package:ln_studio/src/common/widget/pop_up_button.dart';
-import 'package:ln_studio/src/common/widget/shimmer.dart';
-import 'package:ln_studio/src/common/widget/star_rating.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_event.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_state.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
+import 'package:ln_studio/src/feature/record/widget/components/continue_button.dart';
+import 'package:ln_studio/src/feature/record/widget/components/employee_card.dart';
 import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
 import 'package:ln_studio/src/feature/salon/bloc/salon_state.dart';
-import 'package:ln_studio/src/feature/salon/widget/salon_choice_screen.dart';
 
 /// {@template Employees_screen}
 /// Employees screen.
@@ -55,6 +51,8 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
     super.dispose();
   }
 
+  bool visible = false;
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<SalonBLoC, SalonState>(
@@ -69,82 +67,83 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
       },
       child: BlocBuilder<EmployeeBloc, EmployeeState>(
         builder: (context, state) => Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              CustomSliverAppBar(
-                title: context.stringOf().employees,
-                actions: [
-                  AnimatedButton(
-                    padding: const EdgeInsets.only(right: 8 + 2, top: 2),
-                    child: Icon(
-                      Icons.person_search_rounded,
-                      color: context.colorScheme.primary,
-                    ),
-                    onPressed: () {},
-                  ),
-                ],
-                bottomChild: BlocBuilder<SalonBLoC, SalonState>(
-                  builder: (context, state) => PopupButton(
-                    label: state.currentSalon != null
-                        ? Text(state.currentSalon!.name)
-                        : Shimmer(
-                            backgroundColor: context.colorScheme.onBackground,
-                          ),
-                    child: SalonChoiceScreen(currentSalon: state.currentSalon),
-                  ),
-                ),
-              ),
-              CupertinoSliverRefreshControl(onRefresh: _refresh),
-              if (state.hasEmployee) ...[
-                SliverPadding(
-                  padding: const EdgeInsets.all(8),
-                  sliver: SliverList.builder(
-                    itemCount: state.employees.length,
-                    itemBuilder: (context, index) {
-                      final employee = state.employees[index];
-
-                      if (employee.isDismiss == false) {
-                        return EmployeeCard(
-                          employee: employee,
-                          selectedEmployee: selectedEmployee,
-                          onChanged: (cardEmployee) =>
-                              setState(() => selectedEmployee = cardEmployee),
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  ),
-                ),
-              ] else
-                SliverToBoxAdapter(
-                  child: FilledButton.icon(
-                    icon: const Icon(Icons.plus_one_rounded),
-                    label: Text(
-                      context.stringOf().addEmployee,
-                      style: context.textTheme.bodySmall!.copyWith(
+          backgroundColor: context.colorScheme.onBackground,
+          body: Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    title: Text(
+                      'Выберите мастера',
+                      style: context.textTheme.titleLarge!.copyWith(
+                        color: context.colorScheme.secondary,
                         fontFamily: FontFamily.geologica,
-                        color: context.colorScheme.background,
                       ),
                     ),
-                    onPressed: () {},
+                    centerTitle: true,
+                    pinned: true,
+                    actions: [
+                      AnimatedButton(
+                        padding: const EdgeInsets.only(right: 8 + 2, top: 2),
+                        child: Icon(
+                          Icons.person_search_rounded,
+                          color: context.colorScheme.secondary,
+                        ),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                  CupertinoSliverRefreshControl(onRefresh: _refresh),
+                  if (state.hasEmployee) ...[
+                    SliverPadding(
+                      padding: const EdgeInsets.all(8),
+                      sliver: SliverList.builder(
+                        itemCount: state.employees.length,
+                        itemBuilder: (context, index) {
+                          final employee = state.employees[index];
+
+                          return !employee.isDismiss
+                              ? EmployeeCard(
+                                  employee: employee,
+                                  selectedEmployee: selectedEmployee,
+                                  onChanged: (cardEmployee) => setState(() {
+                                    visible = true;
+                                    selectedEmployee = cardEmployee;
+                                    context.goNamed(
+                                      'record_from_employee_choice',
+                                      extra: selectedEmployee,
+                                    );
+                                  }),
+                                )
+                              : const SizedBox.shrink();
+                        },
+                      ),
+                    ),
+                  ] else ...[
+                    const SkeletonEmployeeCard()
+                  ],
+                  SliverToBoxAdapter(
+                    child: visible
+                        ? SizedBox(
+                            height: MediaQuery.sizeOf(context).height / 9,
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                ],
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height / 20,
+                left: 0,
+                right: 0,
+                child: ContinueButton(
+                  visible: visible,
+                  onPressed: () => context.goNamed(
+                    'record_from_employee_choice',
+                    extra: selectedEmployee,
                   ),
                 ),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton.extended(
-            backgroundColor: context.colorScheme.primary,
-            label: Text(
-              'Далее',
-              style: context.textTheme.bodySmall!.copyWith(
-                fontFamily: FontFamily.geologica,
-                color: context.colorScheme.background,
               ),
-            ),
-            onPressed: () => context.goNamed(
-              'record_from_employee_choice',
-              extra: selectedEmployee,
-            ),
+            ],
           ),
         ),
       ),
@@ -173,76 +172,13 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
   }
 }
 
-///
-class EmployeeCard extends StatelessWidget {
-  const EmployeeCard({
-    super.key,
-    required this.employee,
-    required this.selectedEmployee,
-    required this.onChanged,
-  });
-
-  ///
-  final EmployeeModel employee;
-
-  final EmployeeModel? selectedEmployee;
-
-  final void Function(EmployeeModel?) onChanged;
+class SkeletonEmployeeCard extends StatelessWidget {
+  const SkeletonEmployeeCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final user = employee.userModel;
-    final jobPlace = employee.jobModel;
-    return GestureDetector(
-      onTap: () => onChanged(employee),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 6),
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        decoration: BoxDecoration(
-          color: context.colorScheme.onBackground,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AvatarWidget(
-              radius: 40,
-              title: '${user.firstName} ${user.lastName}',
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '${user.firstName} ${user.lastName}',
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    jobPlace.name,
-                    style: context.textTheme.labelMedium?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                      color: context.colorScheme.primaryContainer,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  StarRating(initialRating: employee.stars)
-                ],
-              ),
-            ),
-            Radio<EmployeeModel>(
-              value: employee,
-              groupValue: selectedEmployee,
-              onChanged: onChanged,
-            ),
-          ],
-        ),
-      ),
+    return const SliverToBoxAdapter(
+      child: Placeholder(),
     );
   }
 }

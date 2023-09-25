@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_state.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
+import 'package:ln_studio/src/feature/record/widget/components/continue_button.dart';
 
 class ServiceChoiceScreen extends StatefulWidget {
   const ServiceChoiceScreen({super.key});
@@ -17,67 +19,85 @@ class ServiceChoiceScreen extends StatefulWidget {
 
 class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
   ServiceModel? selectedService;
+  bool visible = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.colorScheme.background,
+      backgroundColor: context.colorScheme.onBackground,
       body: BlocBuilder<CategoryBloc, CategoryState>(
         builder: (context, state) {
-          return CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                backgroundColor: context.colorScheme.background,
-                pinned: true,
-                title: Text(
-                  'Выбор услуги',
-                  style: context.textTheme.titleLarge!.copyWith(
-                    fontFamily: FontFamily.geologica,
-                  ),
-                ),
-                leading: AnimatedButton(
-                  child: const Icon(Icons.arrow_back_ios_new_rounded),
-                  onPressed: () => context.pop(),
-                ),
-              ),
-              SliverList.builder(
-                itemCount: state.categoryWithServices.length,
-                itemBuilder: (context, index) {
-                  return ExpansionTile(
+          return Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  SliverAppBar(
                     backgroundColor: context.colorScheme.onBackground,
-                    collapsedBackgroundColor: context.colorScheme.background,
+                    pinned: true,
                     title: Text(
-                      state.categoryWithServices[index].name,
-                      style: context.textTheme.bodyLarge?.copyWith(
+                      'Выбор услуги',
+                      style: context.textTheme.titleLarge!.copyWith(
                         fontFamily: FontFamily.geologica,
                       ),
                     ),
-                    children: [
-                      ...state.categoryWithServices[index].service.map(
-                        (service) => ServiceCard(
-                          service: service,
-                          selectedService: selectedService,
-                          onTap: (cardService) => setState(() {
-                            selectedService = cardService;
-                          }),
+                    leading: AnimatedButton(
+                      child: const Icon(Icons.arrow_back_ios_new_rounded),
+                      onPressed: () => context.pop(),
+                    ),
+                  ),
+                  SliverList.builder(
+                    itemCount: state.categoryWithServices.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding: const EdgeInsets.all(8),
+                        child: ExpansionTile(
+                          backgroundColor: context.colorScheme.background,
+                          collapsedBackgroundColor:
+                              context.colorScheme.onBackground,
+                          shape: ContinuousRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          title: Text(
+                            state.categoryWithServices[index].name,
+                            style: context.textTheme.bodyLarge?.copyWith(
+                              fontFamily: FontFamily.geologica,
+                            ),
+                          ),
+                          children: [
+                            ...state.categoryWithServices[index].service.map(
+                              (service) => ServiceCard(
+                                service: service,
+                                selectedService: selectedService,
+                                onTap: (cardService) => setState(
+                                  () {
+                                    selectedService = cardService;
+                                    visible = true;
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  );
-                },
+                      );
+                    },
+                  ),
+                ],
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height / 20,
+                left: 0,
+                right: 0,
+                child: ContinueButton(
+                  visible: visible,
+                  onPressed: () => context.goNamed(
+                    'record_from_service_choice',
+                    extra: selectedService,
+                  ),
+                ),
               ),
             ],
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: const Text('Продолжить'),
-        onPressed: selectedService != null
-            ? () => context.goNamed(
-                  'record_from_service_choice',
-                  extra: selectedService,
-                )
-            : null,
       ),
     );
   }
@@ -95,8 +115,10 @@ class ServiceCard extends StatefulWidget {
   ///
   final ServiceModel service;
 
+  ///
   final ServiceModel? selectedService;
 
+  ///
   final void Function(ServiceModel?) onTap;
 
   @override
@@ -118,67 +140,74 @@ class _ServiceCardState extends State<ServiceCard> {
           color: context.colorScheme.background,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
           children: [
-            Radio<ServiceModel>(
-              value: widget.service,
-              groupValue: widget.selectedService,
-              onChanged: widget.onTap,
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${widget.service.name} / Maniqouir',
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Стоимость: ',
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: context.colorScheme.primaryContainer,
-                            fontFamily: FontFamily.geologica,
-                          ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Radio<ServiceModel>(
+                  value: widget.service,
+                  groupValue: widget.selectedService,
+                  onChanged: widget.onTap,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.service.name,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontFamily: FontFamily.geologica,
                         ),
-                        TextSpan(
-                          text: widget.service.price.toString(),
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: context.colorScheme.secondary,
-                            fontFamily: FontFamily.geologica,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  AnimatedSize(
-                    duration: const Duration(milliseconds: 300),
-                    child: expanded
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text(
-                              widget.service.description,
-                              style: context.textTheme.bodyMedium!.copyWith(
-                                fontFamily: FontFamily.geologica,
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Стоимость: ',
+                              style: context.textTheme.bodyMedium?.copyWith(
                                 color: context.colorScheme.primaryContainer,
+                                fontFamily: FontFamily.geologica,
                               ),
                             ),
-                          )
-                        : const SizedBox.shrink(),
+                            TextSpan(
+                              text: widget.service.price.toString(),
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: context.colorScheme.secondary,
+                                fontFamily: FontFamily.geologica,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                AnimatedButton(
+                  padding: const EdgeInsets.only(right: 4, top: 2),
+                  onPressed: () => setState(() => expanded = !expanded),
+                  child: const Icon(Icons.info_outline, size: 18),
+                ),
+              ],
             ),
-            AnimatedButton(
-              padding: const EdgeInsets.only(left: 8),
-              onPressed: () => setState(() => expanded = !expanded),
-              child: const Icon(Icons.info_outline, size: 18),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 750),
+              curve: Curves.linearToEaseOut,
+              alignment: Alignment.topCenter,
+              clipBehavior: Clip.none,
+              child: expanded
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 4, left: 10),
+                      child: Text(
+                        widget.service.description,
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          fontFamily: FontFamily.geologica,
+                          color: context.colorScheme.primaryContainer,
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ),
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_studio/src/common/utils/extensions/color_extension.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
@@ -10,6 +11,7 @@ class CustomTableCalendar extends StatelessWidget {
     super.key,
     this.onDaySelected,
     this.selectedDayPredicate,
+    this.enabledDayPredicate,
   });
 
   ///
@@ -17,6 +19,9 @@ class CustomTableCalendar extends StatelessWidget {
 
   ///
   final bool Function(DateTime)? selectedDayPredicate;
+
+  ///
+  final bool Function(DateTime)? enabledDayPredicate;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +39,6 @@ class CustomTableCalendar extends StatelessWidget {
         focusedDay: DateTime.now(),
         startingDayOfWeek: StartingDayOfWeek.monday,
         onDaySelected: onDaySelected,
-        selectedDayPredicate: selectedDayPredicate,
         headerStyle: HeaderStyle(
           formatButtonVisible: false,
           titleCentered: true,
@@ -44,6 +48,8 @@ class CustomTableCalendar extends StatelessWidget {
           leftChevronVisible: false,
           rightChevronVisible: false,
         ),
+        selectedDayPredicate: selectedDayPredicate,
+        enabledDayPredicate: enabledDayPredicate,
         calendarStyle: CalendarStyle(
           // Text styles
           selectedTextStyle: context.textTheme.titleSmall!.copyWith(
@@ -54,22 +60,23 @@ class CustomTableCalendar extends StatelessWidget {
           todayTextStyle: context.textTheme.titleSmall!.copyWith(
             fontFamily: FontFamily.geologica,
             fontWeight: FontWeight.bold,
-            color: context.colorScheme.primaryContainer,
+            color: context.colorScheme.secondary,
           ),
           defaultTextStyle: context.textTheme.titleSmall!.copyWith(
             fontFamily: FontFamily.geologica,
-            color: context.colorScheme.primaryContainer,
+            fontWeight: FontWeight.bold,
+            color: context.colorScheme.secondary,
           ),
           holidayTextStyle: context.textTheme.titleSmall!.copyWith(
             fontFamily: FontFamily.geologica,
           ),
           weekendTextStyle: context.textTheme.titleSmall!.copyWith(
             fontFamily: FontFamily.geologica,
-            color: context.colorScheme.primaryContainer,
+            color: context.colorScheme.primaryContainer.darken(0.5),
           ),
           outsideTextStyle: context.textTheme.titleSmall!.copyWith(
             fontFamily: FontFamily.geologica,
-            color: context.colorScheme.primaryContainer,
+            color: context.colorScheme.primaryContainer.darken(0.5),
           ),
 
           // Decorations
@@ -78,11 +85,36 @@ class CustomTableCalendar extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             color: context.colorScheme.primary,
           ),
-          defaultDecoration: BoxDecoration(color: context.colorScheme.scrim),
-          weekendDecoration: BoxDecoration(color: context.colorScheme.scrim),
-          holidayDecoration: BoxDecoration(color: context.colorScheme.scrim),
-          outsideDecoration: BoxDecoration(color: context.colorScheme.scrim),
-          todayDecoration: BoxDecoration(color: context.colorScheme.scrim),
+          disabledDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            color: context.colorScheme.scrim,
+          ),
+          defaultDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            color: context.colorScheme.scrim,
+          ),
+          weekendDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            color: context.colorScheme.scrim,
+          ),
+          holidayDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            color: context.colorScheme.scrim,
+          ),
+          outsideDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            color: context.colorScheme.scrim,
+          ),
+          todayDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            color: context.colorScheme.scrim,
+          ),
         ),
       ),
     );
