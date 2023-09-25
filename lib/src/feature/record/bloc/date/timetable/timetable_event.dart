@@ -8,7 +8,7 @@ sealed class TimetableEvent extends _$TimetableEventBase {
   const TimetableEvent();
 
   /// Factory for fetching Timetable.
-  const factory TimetableEvent.fetchEmployeeTimetables(int salonId) =
+  const factory TimetableEvent.fetchEmployeeTimetables(int employeeId) =
       TimetableEvent$FetchEmployeeTimetables;
 }
 

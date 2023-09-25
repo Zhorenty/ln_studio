@@ -53,16 +53,6 @@ final router = GoRouter(
                       },
                     );
                   },
-                  routes: [
-                    GoRoute(
-                      name: 'record_from_service_choice',
-                      path: 'record',
-                      parentNavigatorKey: _parentKey,
-                      builder: (context, state) => RecordScreen(
-                        servicePreset: state.extra as ServiceModel?,
-                      ),
-                    ),
-                  ],
                 ),
                 GoRoute(
                   name: 'choice_employee',
@@ -87,21 +77,91 @@ final router = GoRouter(
                       },
                     );
                   },
+                ),
+                GoRoute(
+                  name: 'record',
+                  path: 'record',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => RecordScreen(
+                    servicePreset: state.extra is ServiceModel
+                        ? state.extra as ServiceModel
+                        : null,
+                    employeePreset: state.extra is EmployeeModel
+                        ? state.extra as EmployeeModel
+                        : null,
+                  ),
                   routes: [
                     GoRoute(
-                      name: 'record_from_employee_choice',
-                      path: 'record',
+                      name: 'choice_service_from_record',
+                      path: 'choice_service',
                       parentNavigatorKey: _parentKey,
-                      builder: (context, state) => RecordScreen(
-                        employeePreset: state.extra as EmployeeModel?,
+                      pageBuilder: (context, state) {
+                        return CustomTransitionPage<void>(
+                          key: state.pageKey,
+                          child: ServiceChoiceScreen(
+                            servicePreset: state.extra as ServiceModel?,
+                          ),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            const begin = Offset(0.0, 1.0);
+                            const end = Offset.zero;
+                            final tween = Tween(begin: begin, end: end);
+                            final offsetAnimation = animation.drive(tween);
+
+                            // TODO(zhorenty): Change animation transition.
+                            return SlideTransition(
+                              position: offsetAnimation,
+                              child: child,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    GoRoute(
+                      name: 'choice_employee_from_record',
+                      path: 'choice_employee',
+                      parentNavigatorKey: _parentKey,
+                      pageBuilder: (context, state) {
+                        return CustomTransitionPage<void>(
+                          key: state.pageKey,
+                          child: const EmployeeChoiceScreen(),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            const begin = Offset(0.0, 1.0);
+                            const end = Offset.zero;
+                            final tween = Tween(begin: begin, end: end);
+                            final offsetAnimation = animation.drive(tween);
+
+                            // TODO(zhorenty): Change animation transition.
+                            return SlideTransition(
+                              position: offsetAnimation,
+                              child: child,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    GoRoute(
+                      name: 'choice_date_from_record',
+                      path: 'choice_date/:employee_id',
+                      parentNavigatorKey: _parentKey,
+                      builder: (context, state) => DateChoiceScreen(
+                        // TODO: Брать дату пресет из extra
+                        employeeId: int.parse(
+                          state.pathParameters['employee_id']!,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 GoRoute(
-                  path: 'choice_date',
+                  name: 'choice_date',
+                  path: 'choice_date/:employee_id',
                   parentNavigatorKey: _parentKey,
-                  builder: (context, state) => const DateChoiceScreen(),
+                  builder: (context, state) => DateChoiceScreen(
+                    // TODO: Брать дату пресет из extra
+                    employeeId: int.parse(state.pathParameters['employee_id']!),
+                  ),
                 ),
               ],
             ),
@@ -125,18 +185,5 @@ final router = GoRouter(
         ),
       ],
     ),
-    // GoRoute(
-    //   name: 'record',
-    //   path: '/record/:serviceId',
-    //   parentNavigatorKey: _parentKey,
-    //   builder: (context, state) => RecordScreen(
-    //     servicePreset: state.extra as ServiceModel?,
-    //     // serviceIdPreset: int.tryParse(
-    //     //     state.pathParameters['serviceId'] ?? '')
-    //     employeePreset: state.extra as EmployeeModel?,
-    //     // employeeIdPreset: int.tryParse(
-    //     //     state.pathParameters['employeeId'] ?? ''),
-    //   ),
-    // ),
   ],
 );

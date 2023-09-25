@@ -11,7 +11,12 @@ import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/widget/components/continue_button.dart';
 
 class ServiceChoiceScreen extends StatefulWidget {
-  const ServiceChoiceScreen({super.key});
+  const ServiceChoiceScreen({
+    super.key,
+    this.servicePreset,
+  });
+
+  final ServiceModel? servicePreset;
 
   @override
   State<ServiceChoiceScreen> createState() => _ServiceChoiceScreenState();
@@ -20,6 +25,12 @@ class ServiceChoiceScreen extends StatefulWidget {
 class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
   ServiceModel? selectedService;
   bool visible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedService = widget.servicePreset;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +101,7 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                 child: ContinueButton(
                   visible: visible,
                   onPressed: () => context.goNamed(
-                    'record_from_service_choice',
+                    'record',
                     extra: selectedService,
                   ),
                 ),
