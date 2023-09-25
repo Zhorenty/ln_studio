@@ -42,12 +42,9 @@ class EmployeeCard extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Hero(
-              tag: 'employee_info',
-              child: AvatarWidget(
-                radius: 40,
-                title: '${user.firstName} ${user.lastName}',
-              ),
+            AvatarWidget(
+              radius: 40,
+              title: '${user.firstName} ${user.lastName}',
             ),
             const SizedBox(width: 16),
             Expanded(
