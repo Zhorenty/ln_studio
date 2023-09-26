@@ -8,6 +8,7 @@ import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 
+///
 class RecordScreen extends StatelessWidget {
   const RecordScreen({
     super.key,
@@ -15,7 +16,10 @@ class RecordScreen extends StatelessWidget {
     this.employeePreset,
   });
 
+  ///
   final ServiceModel? servicePreset;
+
+  ///
   final EmployeeModel? employeePreset;
 
   @override
@@ -65,8 +69,8 @@ class RecordScreen extends StatelessWidget {
                     const HugeTextField(),
                     const Text('Стоимость: 1 700 000 ₽'),
                     const SizedBox(height: 16),
-                    GestureDetector(
-                      onTap: () {},
+                    AnimatedButton(
+                      onPressed: () {},
                       child: Container(
                         height: 32 + 16,
                         margin: const EdgeInsets.symmetric(
@@ -99,11 +103,9 @@ class RecordScreen extends StatelessWidget {
 
 ///
 class CustomContainer extends StatelessWidget {
-  const CustomContainer({
-    super.key,
-    required this.title,
-  });
+  const CustomContainer({super.key, required this.title});
 
+  ///
   final String title;
 
   @override

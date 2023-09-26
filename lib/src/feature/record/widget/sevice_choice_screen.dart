@@ -10,6 +10,7 @@ import 'package:ln_studio/src/feature/record/bloc/category/category_state.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/widget/components/continue_button.dart';
 
+///
 class ServiceChoiceScreen extends StatefulWidget {
   const ServiceChoiceScreen({super.key});
 
@@ -18,7 +19,10 @@ class ServiceChoiceScreen extends StatefulWidget {
 }
 
 class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
+  ///
   ServiceModel? selectedService;
+
+  ///
   bool visible = false;
 
   @override

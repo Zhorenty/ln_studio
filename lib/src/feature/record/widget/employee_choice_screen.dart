@@ -35,7 +35,11 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
   /// Employees bloc maintaining [EmployeeChoiceScreen] state.
   late final EmployeeBloc employeesBloc;
 
+  ///
   EmployeeModel? selectedEmployee;
+
+  ///
+  bool visible = false;
 
   @override
   void initState() {
@@ -50,8 +54,6 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
     controller.dispose();
     super.dispose();
   }
-
-  bool visible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -150,12 +152,14 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
     );
   }
 
+  ///
   void initController() {
     controller = BottomSheet.createAnimationController(this);
     controller.duration = const Duration(milliseconds: 700);
     controller.reverseDuration = const Duration(milliseconds: 350);
   }
 
+  ///
   void _fetchSalonEmployees() {
     final salonBloc = context.read<SalonBLoC>();
     if (salonBloc.state.currentSalon != null) {
@@ -165,20 +169,10 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
     }
   }
 
+  ///
   Future<void> _refresh() async {
     final block = context.read<EmployeeBloc>().stream.first;
     _fetchSalonEmployees();
     await block;
-  }
-}
-
-class SkeletonEmployeeCard extends StatelessWidget {
-  const SkeletonEmployeeCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const SliverToBoxAdapter(
-      child: Placeholder(),
-    );
   }
 }
