@@ -16,7 +16,12 @@ import 'components/custom_table_calendar.dart';
 
 ///
 class DateChoiceScreen extends StatefulWidget {
-  const DateChoiceScreen({super.key});
+  const DateChoiceScreen({
+    super.key,
+    required this.employeeId,
+  });
+
+  final int employeeId;
 
   @override
   State<DateChoiceScreen> createState() => _DateChoiceScreenState();
@@ -36,8 +41,7 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<TimetableBloc>(context).add(
-      /// TODO: Fetch from choice.
-      const TimetableEvent.fetchEmployeeTimetables(3),
+      TimetableEvent.fetchEmployeeTimetables(widget.employeeId),
     );
   }
 

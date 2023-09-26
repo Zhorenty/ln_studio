@@ -1,4 +1,5 @@
 import 'package:ln_studio/src/feature/record/model/employee.dart';
+import 'package:ln_studio/src/feature/record/model/record_create.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
 
 import '/src/feature/record/data/record_data_provider.dart';
@@ -19,6 +20,8 @@ abstract interface class RecordRepository {
   Future<List<EmployeeTimeblock$Response>> getEmployeeTimeblocks(
     EmployeeTimeblock$Body timeblock,
   );
+
+  Future<void> createRecord(RecordModel$Create recordData);
 }
 
 /// Implementation of the Record repository.
@@ -45,4 +48,8 @@ final class RecordRepositoryImpl implements RecordRepository {
     EmployeeTimeblock$Body timeblock,
   ) =>
       _dataProvider.fetchEmployeeTimeblocks(timeblock);
+
+  @override
+  Future<void> createRecord(RecordModel$Create recordData) =>
+      _dataProvider.createRecord(recordData);
 }

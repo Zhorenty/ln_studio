@@ -1,5 +1,6 @@
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
+import 'package:ln_studio/src/feature/record/model/record_create.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
 import 'package:rest_client/rest_client.dart';
 
@@ -20,6 +21,8 @@ abstract interface class RecordDataProvider {
   Future<List<EmployeeTimeblock$Response>> fetchEmployeeTimeblocks(
     EmployeeTimeblock$Body timeblock,
   );
+
+  Future<void> createRecord(RecordModel$Create recordData);
 }
 
 /// Implementation of Record RecordDataProvider.
@@ -83,4 +86,10 @@ class RecordDataProviderImpl implements RecordDataProvider {
 
     return timeblocks;
   }
+
+  @override
+  Future<void> createRecord(RecordModel$Create recordData) => restClient.post(
+        '/api/timeblock/refresh',
+        body: recordData.toJson(),
+      );
 }

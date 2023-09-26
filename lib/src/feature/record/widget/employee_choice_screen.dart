@@ -21,7 +21,12 @@ import 'package:ln_studio/src/feature/salon/bloc/salon_state.dart';
 /// {@endtemplate}
 class EmployeeChoiceScreen extends StatefulWidget {
   /// {@macro Employees_screen}
-  const EmployeeChoiceScreen({super.key});
+  const EmployeeChoiceScreen({
+    super.key,
+    this.employeePreset,
+  });
+
+  final EmployeeModel? employeePreset;
 
   @override
   State<EmployeeChoiceScreen> createState() => _EmployeeChoiceScreenState();
@@ -47,6 +52,7 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
     employeesBloc = context.read<EmployeeBloc>();
     _fetchSalonEmployees();
     initController();
+    selectedEmployee = widget.employeePreset;
   }
 
   @override
