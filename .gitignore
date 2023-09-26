@@ -133,8 +133,8 @@ build/
 # Codegen 
 *.*.dart
 generated_*
-lib/src/core/assets/generated/
-lib/src/core/localization/generated/
+lib/src/common/assets/generated/
+lib/src/common/localization/generated/
 
 pubspec.lock
 .metadata
