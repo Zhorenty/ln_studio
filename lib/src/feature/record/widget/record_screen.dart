@@ -28,7 +28,7 @@ class RecordScreen extends StatefulWidget {
   final EmployeeModel? employeePreset;
 
   ///
-  final DateTime? datePreset;
+  final String? datePreset;
 
   @override
   State<RecordScreen> createState() => _RecordScreenState();
@@ -44,14 +44,18 @@ class _RecordScreenState extends State<RecordScreen> {
   ///
   late final FocusNode commentFocusNode;
 
+  ServiceModel? currentService;
+  EmployeeModel? currentEmployee;
+  String? currentDate;
+
   @override
   void initState() {
     super.initState();
     recordBLoC = RecordBLoC(
       initialState: RecordState$Idle(
-        service: widget.servicePreset,
-        employee: widget.employeePreset,
-        date: widget.datePreset,
+        service: null,
+        employee: null,
+        date: null,
         salon: null,
         timetableItem: null,
         comment: null,
@@ -59,8 +63,24 @@ class _RecordScreenState extends State<RecordScreen> {
       repository: DependenciesScope.of(context).recordRepository,
     );
 
+    currentService = widget.servicePreset;
+    currentEmployee = widget.employeePreset;
+    currentDate = widget.datePreset;
+
     commentController = TextEditingController();
     commentFocusNode = FocusNode();
+  }
+
+  @override
+  void didUpdateWidget(covariant RecordScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.servicePreset != null) {
+      currentService = widget.servicePreset;
+    } else if (widget.employeePreset != null) {
+      currentEmployee = widget.employeePreset;
+    } else if (widget.datePreset != null) {
+      currentDate = widget.datePreset;
+    }
   }
 
   @override
@@ -106,27 +126,27 @@ class _RecordScreenState extends State<RecordScreen> {
                         children: [
                           const Text('Выберите услугу'),
                           CustomContainer(
-                            title: state.service?.name ?? 'Выберите услугу',
+                            title: currentService?.name ?? 'Выберите услугу',
                             onTap: () => context.goNamed(
                               'choice_service_from_record',
-                              extra: state.service,
+                              extra: currentService,
                             ),
                           ),
                           const Text('Выберите мастера'),
                           CustomContainer(
                             title:
-                                state.employee?.fullName ?? 'Выберите мастера',
+                                currentEmployee?.fullName ?? 'Выберите мастера',
                             onTap: () => context.goNamed(
                               'choice_employee_from_record',
-                              extra: state.employee,
+                              extra: currentEmployee,
                             ),
                           ),
                           const Text('Выберите дату и время'),
                           CustomContainer(
-                            title: 'Выберите дату и время',
+                            title: currentDate ?? 'Выберите дату и время',
                             onTap: () => context.goNamed(
                               'choice_date_from_record',
-                              extra: state.date,
+                              extra: currentDate,
                               // TODO: Передавать реальный id
                               pathParameters: {'employee_id': '3'},
                             ),

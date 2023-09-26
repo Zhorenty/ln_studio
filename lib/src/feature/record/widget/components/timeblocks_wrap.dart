@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
@@ -36,14 +37,19 @@ class TimeblocsWrap extends StatelessWidget {
               child: Wrap(
                 children: [
                   ...state.timeblocks.map(
-                    (e) => Padding(
+                    (timeblock) => Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: AnimatedButton(
+                        onPressed: () => context.goNamed(
+                          'record',
+                          extra: timeblock.time,
+                        ),
                         child: Chip(
                           backgroundColor: context.colorScheme.primary,
                           side: const BorderSide(color: Color(0xFF272727)),
                           label: Text(
-                            e.time.substring(0, e.time.length - 3),
+                            timeblock.time
+                                .substring(0, timeblock.time.length - 3),
                             style: context.textTheme.bodySmall?.copyWith(
                               color: context.colorScheme.onBackground,
                               fontFamily: FontFamily.geologica,

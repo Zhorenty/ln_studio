@@ -118,7 +118,7 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                                     visible = true;
                                     selectedEmployee = cardEmployee;
                                     context.goNamed(
-                                      'record_from_employee_choice',
+                                      'record',
                                       extra: selectedEmployee,
                                     );
                                   }),
@@ -146,7 +146,7 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                 child: ContinueButton(
                   visible: visible,
                   onPressed: () => context.goNamed(
-                    'record_from_employee_choice',
+                    'record',
                     extra: selectedEmployee,
                   ),
                 ),

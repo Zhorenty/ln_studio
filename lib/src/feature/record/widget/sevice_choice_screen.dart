@@ -104,10 +104,12 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                 right: 0,
                 child: ContinueButton(
                   visible: visible,
-                  onPressed: () => context.goNamed(
-                    'record',
-                    extra: selectedService,
-                  ),
+                  onPressed: () {
+                    context.goNamed(
+                      'record',
+                      extra: selectedService,
+                    );
+                  },
                 ),
               ),
             ],

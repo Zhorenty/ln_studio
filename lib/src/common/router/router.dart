@@ -91,6 +91,8 @@ final router = GoRouter(
                     employeePreset: state.extra is EmployeeModel
                         ? state.extra as EmployeeModel
                         : null,
+                    datePreset:
+                        state.extra is String ? state.extra as String : null,
                   ),
                   routes: [
                     GoRoute(
