@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
+import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_state.dart';
 
@@ -37,14 +38,16 @@ class TimeblocsWrap extends StatelessWidget {
                   ...state.timeblocks.map(
                     (e) => Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Chip(
-                        backgroundColor: context.colorScheme.primary,
-                        side: const BorderSide(color: Color(0xFF272727)),
-                        label: Text(
-                          e.time.substring(0, e.time.length - 3),
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: context.colorScheme.onBackground,
-                            fontFamily: FontFamily.geologica,
+                      child: AnimatedButton(
+                        child: Chip(
+                          backgroundColor: context.colorScheme.primary,
+                          side: const BorderSide(color: Color(0xFF272727)),
+                          label: Text(
+                            e.time.substring(0, e.time.length - 3),
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: context.colorScheme.onBackground,
+                              fontFamily: FontFamily.geologica,
+                            ),
                           ),
                         ),
                       ),

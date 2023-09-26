@@ -8,6 +8,7 @@ import '/src/common/widget/animated_button.dart';
 import '/src/common/widget/custom_app_bar.dart';
 import '/src/common/widget/pop_up_button.dart';
 import '/src/common/widget/shimmer.dart';
+import '/src/feature/home/widget/components/record_type_card.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/bloc/salon_state.dart';
 import '/src/feature/salon/widget/salon_choice_screen.dart';
@@ -100,49 +101,6 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-///
-class RecordTypeCard extends StatelessWidget {
-  const RecordTypeCard({super.key, this.icon, this.description, this.onTap});
-
-  ///
-  final IconData? icon;
-
-  ///
-  final String? description;
-
-  ///
-  final void Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedButton(
-      onPressed: onTap,
-      child: Container(
-        width: 100,
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: context.colorScheme.onBackground,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Icon(icon, size: 45, color: context.colorScheme.secondary),
-            if (description != null)
-              Text(
-                description!,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colorScheme.primary,
-                  fontFamily: FontFamily.geologica,
-                ),
-              ),
-          ],
-        ),
-      ),
     );
   }
 }

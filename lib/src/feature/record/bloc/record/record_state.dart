@@ -1,8 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
 import 'package:ln_studio/src/feature/salon/models/salon.dart';
-import 'package:meta/meta.dart';
 
 /// {@template record_state}
 /// RecordState.

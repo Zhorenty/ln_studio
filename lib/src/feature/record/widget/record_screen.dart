@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
+import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
+
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_state.dart';
@@ -9,9 +11,7 @@ import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
 
-import '/src/common/assets/generated/fonts.gen.dart';
-import '/src/common/utils/extensions/context_extension.dart';
-
+///
 class RecordScreen extends StatefulWidget {
   const RecordScreen({
     super.key,
@@ -25,6 +25,8 @@ class RecordScreen extends StatefulWidget {
 
   ///
   final EmployeeModel? employeePreset;
+
+  ///
   final DateTime? datePreset;
 
   @override
@@ -33,6 +35,9 @@ class RecordScreen extends StatefulWidget {
 
 class _RecordScreenState extends State<RecordScreen> {
   late final RecordBLoC recordBLoC;
+
+  late final TextEditingController commentController;
+  late final FocusNode commentFocusNode;
 
   @override
   void initState() {
@@ -48,31 +53,47 @@ class _RecordScreenState extends State<RecordScreen> {
       ),
       repository: DependenciesScope.of(context).recordRepository,
     );
+
+    commentController = TextEditingController();
+    commentFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    commentController.dispose();
+    commentFocusNode.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colorScheme.onBackground,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            title: Text(
-              'Запись на маникюр',
-              style: context.textTheme.titleLarge?.copyWith(
-                fontFamily: FontFamily.geologica,
-              ),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(16),
-            sliver: SliverToBoxAdapter(
-              child: DefaultTextStyle(
-                style: context.textTheme.titleMedium!.copyWith(
+      body: GestureDetector(
+        onTap: () {
+          if (commentFocusNode.hasFocus) {
+            commentFocusNode.unfocus();
+          }
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              title: Text(
+                'Запись на маникюр',
+                style: context.textTheme.titleLarge?.copyWith(
                   fontFamily: FontFamily.geologica,
                 ),
-                child: BlocBuilder<RecordBLoC, RecordState>(
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.all(16),
+              sliver: SliverToBoxAdapter(
+                child: DefaultTextStyle(
+                  style: context.textTheme.titleMedium!.copyWith(
+                    fontFamily: FontFamily.geologica,
+                  ),
+                  child: BlocBuilder<RecordBLoC, RecordState>(
                     bloc: recordBLoC,
                     builder: (context, state) {
                       return Column(
@@ -80,7 +101,7 @@ class _RecordScreenState extends State<RecordScreen> {
                         children: [
                           const Text('Выберите услугу'),
                           CustomContainer(
-                            title: state.service?.name ?? 'Выберите услуг',
+                            title: state.service?.name ?? 'Выберите услугу',
                             onTap: () => context.goNamed(
                               'choice_service_from_record',
                               extra: state.service,
@@ -115,7 +136,10 @@ class _RecordScreenState extends State<RecordScreen> {
                                 'Выберите филиал на главном экране',
                           ),
                           const Text('Комментарий к записи'),
-                          const HugeTextField(),
+                          HugeTextField(
+                            controller: commentController,
+                            focusNode: commentFocusNode,
+                          ),
                           const Text('Стоимость: 1 700 000 ₽'),
                           const SizedBox(height: 16),
                           GestureDetector(
@@ -135,17 +159,20 @@ class _RecordScreenState extends State<RecordScreen> {
                                 'Записаться',
                                 style: context.textTheme.bodyLarge?.copyWith(
                                   color: context.colorScheme.onBackground,
+                                  fontFamily: FontFamily.geologica,
                                 ),
                               ),
                             ),
                           ),
                         ],
                       );
-                    }),
+                    },
+                  ),
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -153,15 +180,12 @@ class _RecordScreenState extends State<RecordScreen> {
 
 ///
 class CustomContainer extends StatelessWidget {
-  const CustomContainer({
-    super.key,
-    required this.title,
-    this.onTap,
-  });
+  const CustomContainer({super.key, required this.title, this.onTap});
 
   ///
   final String title;
 
+  /// Callback, called when the container is tapped.
   final void Function()? onTap;
 
   @override
@@ -169,7 +193,7 @@ class CustomContainer extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 35,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         margin: const EdgeInsets.only(top: 10, bottom: 12),
         decoration: BoxDecoration(
           color: context.colorScheme.background,
@@ -177,21 +201,7 @@ class CustomContainer extends StatelessWidget {
           border: Border.all(color: const Color(0xFF272727)),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                width: 5,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    bottomLeft: Radius.circular(8),
-                  ),
-                  color: context.colorScheme.primary,
-                ),
-              ),
-            ),
             Expanded(
               child: Text(
                 title,
@@ -199,10 +209,6 @@ class CustomContainer extends StatelessWidget {
                   fontFamily: FontFamily.geologica,
                 ),
               ),
-            ),
-            const AnimatedButton(
-              padding: EdgeInsets.only(right: 4),
-              child: Icon(Icons.close_rounded),
             ),
           ],
         ),
@@ -213,17 +219,49 @@ class CustomContainer extends StatelessWidget {
 
 /// Large text field for comments.
 class HugeTextField extends StatelessWidget {
-  const HugeTextField({super.key});
+  const HugeTextField({super.key, this.controller, this.focusNode});
+
+  ///
+  final TextEditingController? controller;
+
+  ///
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 150,
-      margin: const EdgeInsets.only(top: 8, bottom: 12),
-      decoration: BoxDecoration(
-        color: context.colorScheme.background,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFF272727)),
+    return AnimatedSize(
+      alignment: Alignment.topCenter,
+      duration: const Duration(milliseconds: 300),
+      child: Container(
+        margin: const EdgeInsets.only(top: 8, bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: context.colorScheme.background,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: const Color(0xFF272727)),
+        ),
+        child: TextFormField(
+          controller: controller,
+          focusNode: focusNode,
+          maxLines: null,
+          keyboardType: TextInputType.multiline,
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontFamily: FontFamily.geologica,
+            letterSpacing: 0.5,
+          ),
+          decoration: InputDecoration(
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: context.colorScheme.scrim,
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: context.colorScheme.scrim,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
