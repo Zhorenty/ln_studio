@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
+import 'package:ln_studio/src/common/widget/animated_button.dart';
 
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_bloc.dart';
@@ -140,10 +141,16 @@ class _RecordScreenState extends State<RecordScreen> {
                             controller: commentController,
                             focusNode: commentFocusNode,
                           ),
-                          const Text('Стоимость: 1 700 000 ₽'),
+                          state.service?.price != null
+                              ? Text('Стоимость: ${state.service?.price} ₽')
+                              : const SizedBox.shrink(),
                           const SizedBox(height: 16),
-                          GestureDetector(
-                            onTap: () {},
+                          AnimatedButton(
+                            onPressed: () =>
+                                // TODO: Wait until asset from
+                                //  CongratilationScreen is loaded.
+                                // if (state.isSuccessful)
+                                context.goNamed('congratulation'),
                             child: Container(
                               height: 32 + 16,
                               margin: const EdgeInsets.symmetric(
@@ -193,7 +200,7 @@ class CustomContainer extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.only(top: 10, bottom: 12),
         decoration: BoxDecoration(
           color: context.colorScheme.background,
