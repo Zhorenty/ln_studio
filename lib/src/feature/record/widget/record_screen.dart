@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
-
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_state.dart';
@@ -35,9 +35,13 @@ class RecordScreen extends StatefulWidget {
 }
 
 class _RecordScreenState extends State<RecordScreen> {
+  ///
   late final RecordBLoC recordBLoC;
 
+  ///
   late final TextEditingController commentController;
+
+  ///
   late final FocusNode commentFocusNode;
 
   @override
@@ -147,8 +151,8 @@ class _RecordScreenState extends State<RecordScreen> {
                           const SizedBox(height: 16),
                           AnimatedButton(
                             onPressed: () =>
-                                // TODO: Wait until asset from
-                                //  CongratilationScreen is loaded.
+                                // TODO: Wait until asset in
+                                //  CongratilationScreen was loaded.
                                 // if (state.isSuccessful)
                                 context.goNamed('congratulation'),
                             child: Container(

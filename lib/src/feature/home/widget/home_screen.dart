@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -97,10 +98,94 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 115,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: const [
+                    NewsCard(),
+                    NewsCard(),
+                    NewsCard(),
+                    NewsCard(),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 12, top: 12),
+                child: Text(
+                  'Магазин',
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                    color: context.colorScheme.primary,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class NewsCard extends StatelessWidget {
+  const NewsCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const double width = 175;
+
+    return Container(
+      width: width,
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Stack(
+        children: [
+          SizedBox(
+            width: width,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Assets.images.congrats.image(fit: BoxFit.fill),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              width: width,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: width,
+                child: Text(
+                  'Акция: скидка 5% при регистрации аккаунта',
+                  style: context.textTheme.bodySmall?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                    color: context.colorScheme.secondary,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
