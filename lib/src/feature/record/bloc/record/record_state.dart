@@ -179,8 +179,18 @@ abstract base class _$RecordStateBase {
   bool get hasError => maybeMap<bool>(orElse: () => false, error: (_) => true);
 
   /// Is in progress state?
-  bool get isProcessing =>
-      maybeMap<bool>(orElse: () => false, processing: (_) => true);
+  bool get isProcessing => maybeMap<bool>(
+        orElse: () => false,
+        processing: (_) => true,
+        successful: (_) => false,
+      );
+
+  /// Is in progress state?
+  bool get isSuccessful => maybeMap<bool>(
+        orElse: () => false,
+        processing: (_) => false,
+        successful: (_) => true,
+      );
 
   /// Is in idle state?
   bool get isIdling => !isProcessing;

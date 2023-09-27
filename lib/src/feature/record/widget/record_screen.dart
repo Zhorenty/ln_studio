@@ -7,6 +7,7 @@ import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_bloc.dart';
+import 'package:ln_studio/src/feature/record/bloc/record/record_event.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_state.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
@@ -52,7 +53,7 @@ class _RecordScreenState extends State<RecordScreen> {
   void initState() {
     super.initState();
     recordBLoC = RecordBLoC(
-      initialState: RecordState$Idle(
+      initialState: const RecordState$Idle(
         service: null,
         employee: null,
         date: null,
@@ -121,6 +122,9 @@ class _RecordScreenState extends State<RecordScreen> {
                   child: BlocBuilder<RecordBLoC, RecordState>(
                     bloc: recordBLoC,
                     builder: (context, state) {
+                      final salon =
+                          context.read<SalonBLoC>().state.currentSalon;
+
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -148,16 +152,14 @@ class _RecordScreenState extends State<RecordScreen> {
                               'choice_date_from_record',
                               extra: currentDate,
                               // TODO: Передавать реальный id
-                              pathParameters: {'employee_id': '3'},
+                              pathParameters: {
+                                'employee_id': currentEmployee!.id.toString(),
+                              },
                             ),
                           ),
                           const Text('Филиал'),
                           CustomContainer(
-                            title: context
-                                    .read<SalonBLoC>()
-                                    .state
-                                    .currentSalon
-                                    ?.name ??
+                            title: salon?.name ??
                                 'Выберите филиал на главном экране',
                           ),
                           const Text('Комментарий к записи'),
@@ -170,11 +172,25 @@ class _RecordScreenState extends State<RecordScreen> {
                               : const SizedBox.shrink(),
                           const SizedBox(height: 16),
                           AnimatedButton(
-                            onPressed: () =>
-                                // TODO: Wait until asset in
-                                //  CongratilationScreen was loaded.
-                                // if (state.isSuccessful)
-                                context.goNamed('congratulation'),
+                            onPressed: () {
+                              // TODO: Wait until asset in
+                              //  CongratilationScreen was loaded.
+                              recordBLoC.add(
+                                RecordEvent.create(
+                                  dateAt: DateTime.now(),
+                                  salonId: salon?.id ?? 1,
+                                  clientId: 1,
+                                  serviceId: currentService!.id,
+                                  employeeId: currentEmployee!.id,
+                                  timeblockId: 1,
+                                  price: currentService!.price,
+                                  comment: commentController.text,
+                                ),
+                              );
+                              if (state.isSuccessful) {
+                                context.goNamed('congratulation');
+                              }
+                            },
                             child: Container(
                               height: 32 + 16,
                               margin: const EdgeInsets.symmetric(
@@ -281,6 +297,7 @@ class HugeTextField extends StatelessWidget {
             letterSpacing: 0.5,
           ),
           decoration: InputDecoration(
+            isDense: true,
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(
                 color: context.colorScheme.scrim,

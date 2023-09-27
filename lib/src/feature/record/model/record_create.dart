@@ -11,7 +11,7 @@ final class RecordModel$Create {
     required this.employeeId,
     required this.salonId,
     required this.clientId,
-    required this.timeTableItemId,
+    required this.timeblockId,
     required this.date,
     this.comment,
   });
@@ -24,7 +24,7 @@ final class RecordModel$Create {
 
   final int clientId;
 
-  final int timeTableItemId;
+  final int timeblockId;
 
   final DateTime date;
 
@@ -36,7 +36,7 @@ final class RecordModel$Create {
         'salon_id': salonId,
         'client_id': clientId,
         'service_id': serviceId,
-        'timeblock_id': timeTableItemId,
+        'timeblock_id': timeblockId,
         'comment': comment,
       };
 }

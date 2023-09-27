@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_studio/src/feature/record/data/record_repository.dart';
+import 'package:ln_studio/src/feature/record/model/record_create.dart';
 
 import 'record_event.dart';
 import 'record_state.dart';
@@ -10,7 +11,7 @@ import 'record_state.dart';
 class RecordBLoC extends Bloc<RecordEvent, RecordState>
     implements EventSink<RecordEvent> {
   RecordBLoC({
-    required final RecordRepository repository,
+    required this.repository,
     final RecordState? initialState,
   }) : super(
           initialState ??
@@ -31,6 +32,9 @@ class RecordBLoC extends Bloc<RecordEvent, RecordState>
     );
   }
 
+  /// Repository for Employee data.
+  final RecordRepository repository;
+
   /// Fetch event handler
   Future<void> _create(
       RecordEvent$Create event, Emitter<RecordState> emit) async {
@@ -43,6 +47,16 @@ class RecordBLoC extends Bloc<RecordEvent, RecordState>
         timetableItem: state.timetableItem,
         comment: state.comment,
       ));
+      repository.createRecord(
+        RecordModel$Create(
+          date: event.dateAt,
+          serviceId: event.serviceId,
+          employeeId: event.employeeId,
+          salonId: event.salonId,
+          clientId: event.clientId,
+          timeblockId: event.timeblockId,
+        ),
+      );
       emit(RecordState.successful(
         service: state.service,
         employee: state.employee,
@@ -61,15 +75,6 @@ class RecordBLoC extends Bloc<RecordEvent, RecordState>
         comment: state.comment,
       ));
       rethrow;
-    } finally {
-      emit(RecordState.idle(
-        service: state.service,
-        employee: state.employee,
-        date: state.date,
-        salon: state.salon,
-        timetableItem: state.timetableItem,
-        comment: state.comment,
-      ));
     }
   }
 }
