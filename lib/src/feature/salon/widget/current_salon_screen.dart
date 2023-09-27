@@ -14,8 +14,8 @@ class CurrentSalonScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now().toLocal();
-    bool isClosed = now.hour > 21;
+    final DateTime now = DateTime.now().toLocal();
+    final bool isClosed = now.hour > 21;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Column(

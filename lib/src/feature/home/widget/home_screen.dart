@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
+import 'package:ln_studio/src/feature/home/widget/components/news_card.dart';
 import 'package:ln_studio/src/feature/salon/widget/current_salon_screen.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -26,7 +27,7 @@ class HomeScreen extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         CustomSliverAppBar(
-          title: context.stringOf().employees,
+          title: 'Здравствуйте, Евгений',
           actions: [
             AnimatedButton(
               padding: const EdgeInsets.only(right: 8 + 2, top: 2),
@@ -41,9 +42,15 @@ class HomeScreen extends StatelessWidget {
             builder: (context, state) => PopupButton(
               smoothAnimate: false,
               label: state.currentSalon != null
-                  ? Text(state.currentSalon!.name)
+                  ? Text(
+                      state.currentSalon!.name,
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        fontSize: 17,
+                        fontFamily: FontFamily.geologica,
+                        color: context.colorScheme.onBackground,
+                      ),
+                    )
                   : Shimmer(backgroundColor: context.colorScheme.onBackground),
-              // child: SalonChoiceScreen(currentSalon: state.currentSalon),
               child: CurrentSalonScreen(currentSalon: state.currentSalon),
             ),
           ),
@@ -52,54 +59,36 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 12, top: 12),
-                child: Text(
-                  'Записаться',
-                  style: context.textTheme.bodyLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                    color: context.colorScheme.primary,
-                  ),
-                ),
-              ),
+              const CustomHeader(label: 'Записаться'),
               SizedBox(
                 height: 105,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
                     RecordTypeCard(
-                      icon: Icons.brush,
+                      image: Assets.images.serviceIcon.image(scale: 10),
                       description: 'На услугу',
                       onTap: () => context.go('/home/choice_service'),
                     ),
                     RecordTypeCard(
-                      icon: Icons.person,
+                      image: Assets.images.employeeIcon.image(scale: 10),
                       description: 'К мастеру',
                       onTap: () => context.go('/home/choice_employee'),
                     ),
                     RecordTypeCard(
-                      icon: Icons.cached,
+                      image: Assets.images.repeatIcon.image(scale: 10),
                       description: 'Повторно',
                       onTap: () => context.go('/home/choice_date'),
                     ),
                     RecordTypeCard(
-                      icon: Icons.home_work_rounded,
+                      image: Assets.images.serviceIcon.image(scale: 10),
                       description: 'На дом',
                       onTap: () => context.go('/home/record'),
                     ),
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12, top: 12),
-                child: Text(
-                  'Новости',
-                  style: context.textTheme.bodyLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                    color: context.colorScheme.primary,
-                  ),
-                ),
-              ),
+              const CustomHeader(label: 'Новости'),
               SizedBox(
                 height: 115,
                 child: ListView(
@@ -107,7 +96,7 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     NewsCard(
                       label: 'Осенний уход за волосами',
-                      asset: Assets.images.placeholder1.image(
+                      asset: Assets.images.congrats.image(
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -132,16 +121,7 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12, top: 12),
-                child: Text(
-                  'Магазин',
-                  style: context.textTheme.bodyLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                    color: context.colorScheme.primary,
-                  ),
-                ),
-              ),
+              const CustomHeader(label: 'Магазин'),
             ],
           ),
         ),
@@ -150,67 +130,34 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class NewsCard extends StatelessWidget {
-  const NewsCard({super.key, required this.asset, this.label});
+///
+class CustomHeader extends StatelessWidget {
+  const CustomHeader({super.key, required this.label});
 
-  final Image? asset;
-
-  final String? label;
+  ///
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    const double width = 175;
-
-    return Container(
-      width: width,
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: context.colorScheme.onBackground,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF272727)),
-      ),
-      child: Stack(
+    return Padding(
+      padding: const EdgeInsets.only(left: 12, top: 12, bottom: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: width,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: asset,
+          Text(
+            label,
+            style: context.textTheme.bodyLarge?.copyWith(
+              fontFamily: FontFamily.geologica,
+              color: context.colorScheme.primary,
             ),
           ),
-          Positioned(
-            bottom: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.3),
-                    Colors.black.withOpacity(0.3),
-                    Colors.black.withOpacity(0.3),
-                  ],
-                ),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(12),
-                  bottomRight: Radius.circular(12),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: width - 15,
-                  child: Text(
-                    label ?? '',
-                    style: context.textTheme.bodySmall?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                      color: context.colorScheme.secondary,
-                    ),
-                  ),
-                ),
-              ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: context.colorScheme.primary,
             ),
+            height: 3.3,
+            width: 50,
           ),
         ],
       ),

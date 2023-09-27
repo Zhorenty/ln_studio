@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 
 ///
 class RecordTypeCard extends StatelessWidget {
-  const RecordTypeCard({super.key, this.icon, this.description, this.onTap});
+  const RecordTypeCard(
+      {super.key, required this.image, this.description, this.onTap});
 
-  ///
-  final IconData? icon;
+  final Image image;
 
   ///
   final String? description;
@@ -24,18 +25,20 @@ class RecordTypeCard extends StatelessWidget {
         width: 100,
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-            color: context.colorScheme.onBackground,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFF272727))),
+          color: context.colorScheme.onBackground,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFF272727)),
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 45, color: context.colorScheme.secondary),
+            image,
+            const SizedBox(height: 4),
             if (description != null)
               Text(
                 description!,
                 style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colorScheme.primary,
+                  color: context.colorScheme.secondary,
                   fontFamily: FontFamily.geologica,
                 ),
               ),
