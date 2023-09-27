@@ -153,7 +153,8 @@ class _RecordScreenState extends State<RecordScreen> {
                               extra: currentDate,
                               // TODO: Передавать реальный id
                               pathParameters: {
-                                'employee_id': currentEmployee!.id.toString(),
+                                'employee_id':
+                                    currentEmployee?.id.toString() ?? '3',
                               },
                             ),
                           ),
