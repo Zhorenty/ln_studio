@@ -45,37 +45,49 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<SalonBLoC, SalonState>(
-        builder: (context, state) {
-          return salonBloc.state.hasData
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          ...salonBloc.state.data!.map(
-                            (salon) => _SalonChoiceRow(
-                              salon: salon,
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: context.colorScheme.onBackground,
+        body: BlocBuilder<SalonBLoC, SalonState>(
+          builder: (context, state) {
+            return salonBloc.state.hasData
+                ? CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        title: Text(
+                          'Выберите салон',
+                          style: context.textTheme.titleLarge!.copyWith(
+                            color: context.colorScheme.secondary,
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                      ),
+                      SliverPadding(
+                        padding: const EdgeInsets.all(8),
+                        sliver: SliverList.builder(
+                          itemCount: state.data?.length,
+                          itemBuilder: (context, index) {
+                            return _SalonChoiceRow(
+                              salon: state.data![index],
                               currentSalon: widget.currentSalon,
                               onChanged: (salon) {
                                 if (widget.onChanged == null) {
-                                  salonBloc.add(SalonEvent.saveCurrent(salon!));
+                                  salonBloc.add(
+                                    SalonEvent.saveCurrent(salon!),
+                                  );
                                 } else {
                                   setState(() => widget.onChanged!(salon));
                                 }
                                 context.pop();
                               },
-                            ),
-                          ),
-                        ],
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              : const Shimmer();
-        },
+                    ],
+                  )
+                : const Shimmer();
+          },
+        ),
       );
 }
 
@@ -106,7 +118,7 @@ class _SalonChoiceRow extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 4),
           padding: const EdgeInsets.all(4).add(const EdgeInsets.only(left: 12)),
           decoration: BoxDecoration(
-            color: context.colorScheme.onBackground,
+            color: context.colorScheme.background,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: const Color(0xFF272727)),
           ),

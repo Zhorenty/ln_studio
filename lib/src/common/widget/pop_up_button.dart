@@ -6,13 +6,20 @@ import '/src/common/widget/overlay/modal_popup.dart';
 
 /// Container with [ModalPopup.show] method.
 class PopupButton extends StatefulWidget {
-  const PopupButton({super.key, required this.child, this.label});
+  const PopupButton({
+    super.key,
+    required this.child,
+    this.label,
+    this.smoothAnimate = true,
+  });
 
   /// Label of this [PopupButton].
   final Widget? label;
 
   /// Widget of this [PopupButton].
   final Widget child;
+
+  final bool smoothAnimate;
 
   @override
   State<PopupButton> createState() => _PopupButtonState();
@@ -41,7 +48,7 @@ class _PopupButtonState extends State<PopupButton>
       onTap: () => ModalPopup.show(
         context: context,
         child: widget.child,
-        transitionAnimationController: controller,
+        transitionAnimationController: widget.smoothAnimate ? controller : null,
       ),
       child: Container(
         margin: EdgeInsets.symmetric(

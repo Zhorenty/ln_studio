@@ -7,6 +7,8 @@ import 'package:ln_studio/src/feature/record/widget/date_choice_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/employee_choice_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/record_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/sevice_choice_screen.dart';
+import 'package:ln_studio/src/feature/salon/models/salon.dart';
+import 'package:ln_studio/src/feature/salon/widget/salon_choice_screen.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
 import '/src/feature/qr_code/widget/qr_code_screen.dart';
@@ -32,6 +34,14 @@ final router = GoRouter(
               name: 'home',
               builder: (context, state) => const HomeScreen(),
               routes: [
+                GoRoute(
+                  name: 'salon_choice',
+                  path: 'salon_choice',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => SalonChoiceScreen(
+                    currentSalon: state.extra as Salon?,
+                  ),
+                ),
                 GoRoute(
                   name: 'choice_service',
                   path: 'choice_service',

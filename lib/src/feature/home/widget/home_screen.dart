@@ -1,9 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
+import 'package:ln_studio/src/feature/salon/widget/current_salon_screen.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -14,7 +13,6 @@ import '/src/common/widget/shimmer.dart';
 import '/src/feature/home/widget/components/record_type_card.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/bloc/salon_state.dart';
-import '/src/feature/salon/widget/salon_choice_screen.dart';
 
 /// {@template Home_screen}
 /// Home screen.
@@ -41,10 +39,12 @@ class HomeScreen extends StatelessWidget {
           ],
           bottomChild: BlocBuilder<SalonBLoC, SalonState>(
             builder: (context, state) => PopupButton(
+              smoothAnimate: false,
               label: state.currentSalon != null
                   ? Text(state.currentSalon!.name)
                   : Shimmer(backgroundColor: context.colorScheme.onBackground),
-              child: SalonChoiceScreen(currentSalon: state.currentSalon),
+              // child: SalonChoiceScreen(currentSalon: state.currentSalon),
+              child: CurrentSalonScreen(currentSalon: state.currentSalon),
             ),
           ),
         ),

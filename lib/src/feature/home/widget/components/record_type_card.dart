@@ -24,9 +24,9 @@ class RecordTypeCard extends StatelessWidget {
         width: 100,
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: context.colorScheme.onBackground,
-          borderRadius: BorderRadius.circular(16),
-        ),
+            color: context.colorScheme.onBackground,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFF272727))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

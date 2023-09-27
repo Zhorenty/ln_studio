@@ -63,35 +63,41 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                   SliverList.builder(
                     itemCount: state.categoryWithServices.length,
                     itemBuilder: (context, index) {
-                      return Container(
+                      return Padding(
                         padding: const EdgeInsets.all(8),
-                        child: ExpansionTile(
-                          backgroundColor: context.colorScheme.background,
-                          collapsedBackgroundColor:
-                              context.colorScheme.onBackground,
-                          shape: ContinuousRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                        child: Card(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(color: Color(0xFF272727)),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          title: Text(
-                            state.categoryWithServices[index].name,
-                            style: context.textTheme.bodyLarge?.copyWith(
-                              fontFamily: FontFamily.geologica,
-                            ),
-                          ),
-                          children: [
-                            ...state.categoryWithServices[index].service.map(
-                              (service) => ServiceCard(
-                                service: service,
-                                selectedService: selectedService,
-                                onTap: (cardService) => setState(
-                                  () {
-                                    selectedService = cardService;
-                                    visible = true;
-                                  },
-                                ),
+                          clipBehavior: Clip.antiAlias,
+                          margin: EdgeInsets.zero,
+                          child: ExpansionTile(
+                            backgroundColor: context.colorScheme.background,
+                            collapsedBackgroundColor:
+                                context.colorScheme.background,
+                            title: Text(
+                              state.categoryWithServices[index].name,
+                              style: context.textTheme.bodyLarge?.copyWith(
+                                fontFamily: FontFamily.geologica,
                               ),
                             ),
-                          ],
+                            children: [
+                              ...state.categoryWithServices[index].service.map(
+                                (service) => ServiceCard(
+                                  service: service,
+                                  selectedService: selectedService,
+                                  onTap: (cardService) => setState(
+                                    () {
+                                      selectedService = cardService;
+                                      visible = true;
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
