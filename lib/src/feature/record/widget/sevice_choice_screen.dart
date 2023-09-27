@@ -66,7 +66,6 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                       return Padding(
                         padding: const EdgeInsets.all(8),
                         child: Card(
-                          elevation: 0,
                           shape: RoundedRectangleBorder(
                             side: const BorderSide(color: Color(0xFF272727)),
                             borderRadius: BorderRadius.circular(8),
@@ -156,7 +155,9 @@ class _ServiceCardState extends State<ServiceCard> {
     return GestureDetector(
       onTap: () => widget.onTap(widget.service),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        margin: const EdgeInsets.symmetric(vertical: 8).add(
+          const EdgeInsets.only(right: 8),
+        ),
         padding: const EdgeInsets.all(8),
         alignment: Alignment.centerLeft,
         decoration: BoxDecoration(

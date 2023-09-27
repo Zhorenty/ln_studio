@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
           title: 'Здравствуйте, Евгений',
           actions: [
             AnimatedButton(
-              padding: const EdgeInsets.only(right: 8 + 2, top: 2),
+              padding: const EdgeInsets.only(right: 8 + 2, bottom: 2),
               child: Icon(
                 Icons.notifications_rounded,
                 color: context.colorScheme.primary,
@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
               smoothAnimate: false,
               label: state.currentSalon != null
                   ? Text(
-                      state.currentSalon!.name,
+                      state.currentSalon!.address,
                       style: context.textTheme.bodyLarge?.copyWith(
                         fontSize: 17,
                         fontFamily: FontFamily.geologica,
@@ -61,7 +61,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               const CustomHeader(label: 'Записаться'),
               SizedBox(
-                height: 105,
+                height: 100,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
@@ -95,33 +95,33 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   children: [
                     NewsCard(
+                      label: 'Секреты маникюра\nв ЛН Студии',
+                      asset: Assets.images.placeholder2.image(
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    NewsCard(
                       label: 'Осенний уход за волосами',
-                      asset: Assets.images.congrats.image(
+                      asset: Assets.images.placeholder.image(
                         fit: BoxFit.cover,
                       ),
                     ),
                     NewsCard(
-                      label: 'Осенний\nуход за кожей',
-                      asset: Assets.images.congrats.image(
+                      label: 'Макияж как искусство:\nтехники и трюки',
+                      asset: Assets.images.placeholder31.image(
                         fit: BoxFit.cover,
                       ),
                     ),
                     NewsCard(
-                      label: '',
-                      asset: Assets.images.congrats.image(
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    NewsCard(
-                      label: '',
-                      asset: Assets.images.congrats.image(
+                      label: 'Важность посещения салона для мужчин',
+                      asset: Assets.images.placeholder4.image(
                         fit: BoxFit.cover,
                       ),
                     ),
                   ],
                 ),
               ),
-              const CustomHeader(label: 'Магазин'),
+              // const CustomHeader(label: 'Магазин'),
             ],
           ),
         ),
@@ -148,7 +148,7 @@ class CustomHeader extends StatelessWidget {
             label,
             style: context.textTheme.bodyLarge?.copyWith(
               fontFamily: FontFamily.geologica,
-              color: context.colorScheme.primary,
+              color: context.colorScheme.secondary,
             ),
           ),
           Container(

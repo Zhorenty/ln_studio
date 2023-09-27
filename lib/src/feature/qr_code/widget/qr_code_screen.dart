@@ -38,7 +38,7 @@ class QRCodeScreen extends StatelessWidget {
           bottomChild: BlocBuilder<SalonBLoC, SalonState>(
             builder: (context, state) => PopupButton(
               label: state.currentSalon != null
-                  ? Text(state.currentSalon!.name)
+                  ? Text(state.currentSalon!.address)
                   : Shimmer(backgroundColor: context.colorScheme.onBackground),
               child: SalonChoiceScreen(currentSalon: state.currentSalon),
             ),

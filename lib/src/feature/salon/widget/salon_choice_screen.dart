@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/string_extension.dart';
+import 'package:ln_studio/src/common/widget/animated_button.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/shimmer.dart';
@@ -59,6 +60,11 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
                             color: context.colorScheme.secondary,
                             fontFamily: FontFamily.geologica,
                           ),
+                        ),
+                        leading: AnimatedButton(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: const Icon(Icons.arrow_back_ios_new_rounded),
+                          onPressed: () => context.pop(),
                         ),
                       ),
                       SliverPadding(
