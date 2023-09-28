@@ -42,7 +42,7 @@ class TimeblocsWrap extends StatelessWidget {
                       child: AnimatedButton(
                         onPressed: () => context.goNamed(
                           'record',
-                          extra: timeblock.time,
+                          extra: timeblock,
                         ),
                         child: Chip(
                           backgroundColor: context.colorScheme.primary,

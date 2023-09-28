@@ -88,8 +88,11 @@ class RecordDataProviderImpl implements RecordDataProvider {
   }
 
   @override
-  Future<void> createRecord(RecordModel$Create recordData) => restClient.post(
-        '/api/timeblock/refresh',
-        body: recordData.toJson(),
-      );
+  Future<void> createRecord(RecordModel$Create recordData) async {
+    final body = recordData.toJson();
+    await restClient.post(
+      '/api/service_sale/book_service',
+      body: body,
+    );
+  }
 }

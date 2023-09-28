@@ -11,6 +11,7 @@ import 'package:ln_studio/src/feature/record/bloc/record/record_event.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_state.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
+import 'package:ln_studio/src/feature/record/model/timetable.dart';
 import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
 
 ///
@@ -29,7 +30,7 @@ class RecordScreen extends StatefulWidget {
   final EmployeeModel? employeePreset;
 
   ///
-  final String? datePreset;
+  final EmployeeTimeblock$Response? datePreset;
 
   @override
   State<RecordScreen> createState() => _RecordScreenState();
@@ -47,7 +48,7 @@ class _RecordScreenState extends State<RecordScreen> {
 
   ServiceModel? currentService;
   EmployeeModel? currentEmployee;
-  String? currentDate;
+  EmployeeTimeblock$Response? currentDate;
 
   @override
   void initState() {
@@ -119,7 +120,10 @@ class _RecordScreenState extends State<RecordScreen> {
                   style: context.textTheme.titleMedium!.copyWith(
                     fontFamily: FontFamily.geologica,
                   ),
-                  child: BlocBuilder<RecordBLoC, RecordState>(
+                  child: BlocConsumer<RecordBLoC, RecordState>(
+                    listener: (context, state) => state.mapOrNull(
+                      successful: (state) => context.goNamed('congratulation'),
+                    ),
                     bloc: recordBLoC,
                     builder: (context, state) {
                       final salon =
@@ -147,14 +151,14 @@ class _RecordScreenState extends State<RecordScreen> {
                           ),
                           const Text('Выберите дату и время'),
                           CustomContainer(
-                            title: currentDate ?? 'Выберите дату и время',
+                            title: currentDate?.time ?? 'Выберите дату и время',
                             onTap: () => context.goNamed(
                               'choice_date_from_record',
                               extra: currentDate,
-                              // TODO: Передавать реальный id
+                              // TODO: Делать валидацию
                               pathParameters: {
                                 'employee_id':
-                                    currentEmployee?.id.toString() ?? '3',
+                                    currentEmployee?.id.toString() ?? '25',
                               },
                             ),
                           ),
@@ -183,14 +187,11 @@ class _RecordScreenState extends State<RecordScreen> {
                                   clientId: 1,
                                   serviceId: currentService!.id,
                                   employeeId: currentEmployee!.id,
-                                  timeblockId: 1,
+                                  timeblockId: currentDate!.id,
                                   price: currentService!.price,
                                   comment: commentController.text,
                                 ),
                               );
-                              if (state.isSuccessful) {
-                                context.goNamed('congratulation');
-                              }
                             },
                             child: Container(
                               height: 32 + 16,

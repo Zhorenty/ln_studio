@@ -38,5 +38,7 @@ final class RecordModel$Create {
         'service_id': serviceId,
         'timeblock_id': timeblockId,
         'comment': comment,
+        // TODO: Заменить на реальные данные
+        'price': 0,
       };
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
+import 'package:ln_studio/src/feature/record/model/timetable.dart';
 import 'package:ln_studio/src/feature/record/widget/congratulation_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/date_choice_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/employee_choice_screen.dart';
@@ -101,8 +102,9 @@ final router = GoRouter(
                     employeePreset: state.extra is EmployeeModel
                         ? state.extra as EmployeeModel
                         : null,
-                    datePreset:
-                        state.extra is String ? state.extra as String : null,
+                    datePreset: state.extra is EmployeeTimeblock$Response
+                        ? state.extra as EmployeeTimeblock$Response
+                        : null,
                   ),
                   routes: [
                     GoRoute(

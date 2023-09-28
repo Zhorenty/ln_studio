@@ -47,7 +47,7 @@ class RecordBLoC extends Bloc<RecordEvent, RecordState>
         timetableItem: state.timetableItem,
         comment: state.comment,
       ));
-      repository.createRecord(
+      await repository.createRecord(
         RecordModel$Create(
           date: event.dateAt,
           serviceId: event.serviceId,

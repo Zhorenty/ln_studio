@@ -9,6 +9,7 @@ import 'package:ln_studio/src/feature/record/bloc/date/timetable/timetable_event
 import 'package:ln_studio/src/feature/record/bloc/date/timetable/timetable_state.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
 import 'package:ln_studio/src/feature/record/widget/components/timeblocks_wrap.dart';
+import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -112,8 +113,8 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
             TimeblockEvent.fetchEmployeeTimeblocks(
               EmployeeTimeblock$Body(
                 dateAt: selectedDay,
-                employeeId: 3,
-                salonId: 1,
+                employeeId: widget.employeeId,
+                salonId: context.read<SalonBLoC>().state.currentSalon!.id,
               ),
             ),
           );
