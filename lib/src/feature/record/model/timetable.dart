@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 
 /// Timetable element.
 @immutable
@@ -34,6 +35,15 @@ final class TimetableItem {
         salary: json['salary'] as int?,
         onWork: json['on_work'] as bool,
       );
+
+  /// Converts [TimetableItem] to a JSON object.
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'date_at': dateAt.jsonFormat(),
+        'salon_id': salonId,
+        'salary': salary,
+        'on_work': onWork,
+      };
 }
 
 ///
@@ -62,6 +72,13 @@ final class EmployeeTimeblock$Body {
       salonId: json['salon_id'] as int,
     );
   }
+
+  /// Converts [EmployeeTimeblock$Body] to a JSON object.
+  Map<String, dynamic> toJson() => {
+        'date_at': dateAt.jsonFormat(),
+        'employee_id': employeeId,
+        'salon_id': salonId,
+      };
 }
 
 ///
@@ -84,4 +101,10 @@ final class EmployeeTimeblock$Response {
       time: json['time'] as String,
     );
   }
+
+  /// Converts [EmployeeTimeblock$Response] to a JSON object.
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'time': time,
+      };
 }

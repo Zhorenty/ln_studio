@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/string_extension.dart';
+import 'package:ln_studio/src/common/widget/animated_button.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/shimmer.dart';
@@ -44,37 +46,54 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<SalonBLoC, SalonState>(
-        builder: (context, state) {
-          return salonBloc.state.hasData
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          ...salonBloc.state.data!.map(
-                            (salon) => _SalonChoiceRow(
-                              salon: salon,
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: context.colorScheme.onBackground,
+        body: BlocBuilder<SalonBLoC, SalonState>(
+          builder: (context, state) {
+            return salonBloc.state.hasData
+                ? CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        title: Text(
+                          'Выберите салон',
+                          style: context.textTheme.titleLarge!.copyWith(
+                            color: context.colorScheme.secondary,
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                        leading: AnimatedButton(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: const Icon(Icons.arrow_back_ios_new_rounded),
+                          onPressed: () => context.pop(),
+                        ),
+                      ),
+                      SliverPadding(
+                        padding: const EdgeInsets.all(8),
+                        sliver: SliverList.builder(
+                          itemCount: state.data?.length,
+                          itemBuilder: (context, index) {
+                            return _SalonChoiceRow(
+                              salon: state.data![index],
                               currentSalon: widget.currentSalon,
                               onChanged: (salon) {
                                 if (widget.onChanged == null) {
-                                  salonBloc.add(SalonEvent.saveCurrent(salon!));
+                                  salonBloc.add(
+                                    SalonEvent.saveCurrent(salon!),
+                                  );
                                 } else {
                                   setState(() => widget.onChanged!(salon));
                                 }
                                 context.pop();
                               },
-                            ),
-                          ),
-                        ],
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              : const Shimmer();
-        },
+                    ],
+                  )
+                : const Shimmer();
+          },
+        ),
       );
 }
 
@@ -105,7 +124,7 @@ class _SalonChoiceRow extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 4),
           padding: const EdgeInsets.all(4).add(const EdgeInsets.only(left: 12)),
           decoration: BoxDecoration(
-            color: context.colorScheme.onBackground,
+            color: context.colorScheme.background,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: const Color(0xFF272727)),
           ),
@@ -144,7 +163,7 @@ class _SalonChoiceRow extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 8, bottom: 8, top: 4),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.asset('assets/images/oko_lashes.png'),
+                  child: Assets.images.okoLashes.image(),
                 ),
               ),
               Padding(

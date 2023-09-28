@@ -81,6 +81,8 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
 
+  generate: false
+
   shaders:
     - assets/shaders/shimmer.frag
   assets:

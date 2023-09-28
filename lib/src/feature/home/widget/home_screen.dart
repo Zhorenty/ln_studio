@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
+import 'package:ln_studio/src/feature/home/widget/components/news_card.dart';
+import 'package:ln_studio/src/feature/salon/widget/current_salon_screen.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -8,9 +11,9 @@ import '/src/common/widget/animated_button.dart';
 import '/src/common/widget/custom_app_bar.dart';
 import '/src/common/widget/pop_up_button.dart';
 import '/src/common/widget/shimmer.dart';
+import '/src/feature/home/widget/components/record_type_card.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/bloc/salon_state.dart';
-import '/src/feature/salon/widget/salon_choice_screen.dart';
 
 /// {@template Home_screen}
 /// Home screen.
@@ -24,10 +27,10 @@ class HomeScreen extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         CustomSliverAppBar(
-          title: context.stringOf().employees,
+          title: 'Здравствуйте, Евгений',
           actions: [
             AnimatedButton(
-              padding: const EdgeInsets.only(right: 8 + 2, top: 2),
+              padding: const EdgeInsets.only(right: 8 + 2, bottom: 2),
               child: Icon(
                 Icons.notifications_rounded,
                 color: context.colorScheme.primary,
@@ -37,10 +40,18 @@ class HomeScreen extends StatelessWidget {
           ],
           bottomChild: BlocBuilder<SalonBLoC, SalonState>(
             builder: (context, state) => PopupButton(
+              smoothAnimate: false,
               label: state.currentSalon != null
-                  ? Text(state.currentSalon!.name)
+                  ? Text(
+                      state.currentSalon!.address,
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        fontSize: 17,
+                        fontFamily: FontFamily.geologica,
+                        color: context.colorScheme.onBackground,
+                      ),
+                    )
                   : Shimmer(backgroundColor: context.colorScheme.onBackground),
-              child: SalonChoiceScreen(currentSalon: state.currentSalon),
+              child: CurrentSalonScreen(currentSalon: state.currentSalon),
             ),
           ),
         ),
@@ -48,54 +59,69 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 12, top: 12),
-                child: Text(
-                  'Записаться',
-                  style: context.textTheme.bodyLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                    color: context.colorScheme.primary,
-                  ),
-                ),
-              ),
+              const CustomHeader(label: 'Записаться'),
               SizedBox(
-                height: 105,
+                height: 100,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
                     RecordTypeCard(
-                      icon: Icons.brush,
+                      image: Assets.images.serviceIcon.image(scale: 10),
                       description: 'На услугу',
                       onTap: () => context.go('/home/choice_service'),
                     ),
                     RecordTypeCard(
-                      icon: Icons.person,
+                      image: Assets.images.employeeIcon.image(scale: 10),
                       description: 'К мастеру',
                       onTap: () => context.go('/home/choice_employee'),
                     ),
                     RecordTypeCard(
-                      icon: Icons.cached,
+                      image: Assets.images.repeatIcon.image(scale: 10),
                       description: 'Повторно',
                       onTap: () => context.go('/home/choice_date'),
                     ),
                     RecordTypeCard(
-                      icon: Icons.home_work_rounded,
+                      image: Assets.images.serviceIcon.image(scale: 10),
                       description: 'На дом',
                       onTap: () => context.go('/home/record'),
                     ),
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12, top: 12),
-                child: Text(
-                  'Новости',
-                  style: context.textTheme.bodyLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                    color: context.colorScheme.primary,
-                  ),
+              const CustomHeader(label: 'Новости'),
+              SizedBox(
+                height: 115,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    NewsCard(
+                      label: 'Секреты маникюра\nв ЛН Студии',
+                      asset: Assets.images.placeholder2.image(
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    NewsCard(
+                      label: 'Осенний уход за волосами',
+                      asset: Assets.images.placeholder.image(
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    NewsCard(
+                      label: 'Макияж как искусство:\nтехники и трюки',
+                      asset: Assets.images.placeholder31.image(
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    NewsCard(
+                      label: 'Важность посещения салона для мужчин',
+                      asset: Assets.images.placeholder4.image(
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+              // const CustomHeader(label: 'Магазин'),
             ],
           ),
         ),
@@ -105,43 +131,35 @@ class HomeScreen extends StatelessWidget {
 }
 
 ///
-class RecordTypeCard extends StatelessWidget {
-  const RecordTypeCard({super.key, this.icon, this.description, this.onTap});
+class CustomHeader extends StatelessWidget {
+  const CustomHeader({super.key, required this.label});
 
   ///
-  final IconData? icon;
-
-  ///
-  final String? description;
-
-  ///
-  final void Function()? onTap;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedButton(
-      onPressed: onTap,
-      child: Container(
-        width: 100,
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: context.colorScheme.onBackground,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Icon(icon, size: 45, color: context.colorScheme.secondary),
-            if (description != null)
-              Text(
-                description!,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colorScheme.primary,
-                  fontFamily: FontFamily.geologica,
-                ),
-              ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(left: 12, top: 12, bottom: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: context.textTheme.bodyLarge?.copyWith(
+              fontFamily: FontFamily.geologica,
+              color: context.colorScheme.secondary,
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: context.colorScheme.primary,
+            ),
+            height: 3.3,
+            width: 50,
+          ),
+        ],
       ),
     );
   }
