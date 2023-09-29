@@ -10,8 +10,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   CategoryBloc({required this.repository}) : super(const CategoryState.idle()) {
     on<CategoryEvent>(
       (event, emit) => event.map(
-        fetchCategoryWithServices: (event) =>
-            _fetchCategoryWithServices(event, emit),
+        fetchServiceCategories: (event) => _fetchServiceCategories(event, emit),
       ),
     );
   }
@@ -20,12 +19,17 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final RecordRepository repository;
 
   /// Fetch record from repository.
-  Future<void> _fetchCategoryWithServices(
-    CategoryEvent$FetchCategoryWithServices event,
+  Future<void> _fetchServiceCategories(
+    CategoryEvent$FetchServiceCategories event,
     Emitter<CategoryState> emit,
   ) async {
     try {
-      final categories = await repository.getCategories();
+      final categories = await repository.getServiceCategories(
+        salonId: event.salonId,
+        employeeId: event.employeeId,
+        timeblockId: event.timetableItemId,
+        dateAt: event.dateAt,
+      );
       emit(CategoryState.loaded(categoryWithServices: categories));
     } on Object catch (e) {
       emit(

@@ -23,10 +23,18 @@ class EmployeeChoiceScreen extends StatefulWidget {
   /// {@macro Employees_screen}
   const EmployeeChoiceScreen({
     super.key,
-    this.employeePreset,
+    required this.employeePreset,
+    required this.salonId,
+    required this.serviceId,
+    required this.timeblockId,
+    required this.dateAt,
   });
 
   final EmployeeModel? employeePreset;
+  final int salonId;
+  final int? serviceId;
+  final int? timeblockId;
+  final String? dateAt;
 
   @override
   State<EmployeeChoiceScreen> createState() => _EmployeeChoiceScreenState();
@@ -68,7 +76,12 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
       listenWhen: (previous, current) {
         if (previous.currentSalon?.id != current.currentSalon?.id) {
           employeesBloc.add(
-            EmployeeEvent.fetchSalonEmployees(current.currentSalon!.id),
+            EmployeeEvent.fetchEmployees(
+              salonId: widget.salonId,
+              serviceId: widget.serviceId,
+              timeblockId: widget.timeblockId,
+              dateAt: widget.dateAt,
+            ),
           );
         }
         return false;
@@ -170,7 +183,12 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
     final salonBloc = context.read<SalonBLoC>();
     if (salonBloc.state.currentSalon != null) {
       employeesBloc.add(
-        EmployeeEvent.fetchSalonEmployees(salonBloc.state.currentSalon!.id),
+        EmployeeEvent.fetchEmployees(
+          salonId: widget.salonId,
+          serviceId: widget.serviceId,
+          timeblockId: widget.timeblockId,
+          dateAt: widget.dateAt,
+        ),
       );
     }
   }

@@ -50,7 +50,7 @@ final router = GoRouter(
                   pageBuilder: (context, state) {
                     return CustomTransitionPage<void>(
                       key: state.pageKey,
-                      child: const ServiceChoiceScreen(),
+                      child:  ServiceChoiceScreen(salonId: state.,),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         const begin = Offset(0.0, 1.0);

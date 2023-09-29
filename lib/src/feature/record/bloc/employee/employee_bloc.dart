@@ -11,7 +11,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   EmployeeBloc({required this.repository}) : super(const EmployeeState.idle()) {
     on<EmployeeEvent>(
       (event, emit) => event.map(
-        fetchSalonEmployees: (event) => _fetchSalonEmployees(event, emit),
+        fetchEmployees: (event) => _fetchEmployees(event, emit),
       ),
     );
   }
@@ -20,12 +20,17 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   final RecordRepository repository;
 
   /// Fetch Employee from repository.
-  Future<void> _fetchSalonEmployees(
-    EmployeeEvent$FetchSalonEmployees event,
+  Future<void> _fetchEmployees(
+    EmployeeEvent$FetchEmployees event,
     Emitter<EmployeeState> emit,
   ) async {
     try {
-      final employees = await repository.getSalonEmployees(event.salonId);
+      final employees = await repository.getEmployees(
+        salonId: event.salonId,
+        serviceId: event.serviceId,
+        timeblockId: event.timeblockId,
+        dateAt: event.dateAt,
+      );
       emit(EmployeeState.loaded(employees: employees));
     } on Object catch (e) {
       emit(

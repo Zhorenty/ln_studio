@@ -8,13 +8,27 @@ sealed class CategoryEvent extends _$CategoryEventBase {
   const CategoryEvent();
 
   /// Factory for fetching Category.
-  const factory CategoryEvent.fetchCategoryWithServices() =
-      CategoryEvent$FetchCategoryWithServices;
+  const factory CategoryEvent.fetchServiceCategories({
+    required int salonId,
+    required int? employeeId,
+    required int? timetableItemId,
+    required String? dateAt,
+  }) = CategoryEvent$FetchServiceCategories;
 }
 
-/// [CategoryEvent.fetchCategoryWithServices] event.
-final class CategoryEvent$FetchCategoryWithServices extends CategoryEvent {
-  const CategoryEvent$FetchCategoryWithServices() : super();
+/// [CategoryEvent.fetchServiceCategories] event.
+final class CategoryEvent$FetchServiceCategories extends CategoryEvent {
+  const CategoryEvent$FetchServiceCategories({
+    required this.salonId,
+    required this.employeeId,
+    required this.timetableItemId,
+    required this.dateAt,
+  });
+
+  final int salonId;
+  final int? employeeId;
+  final int? timetableItemId;
+  final String? dateAt;
 }
 
 /// Category events base class.
@@ -23,31 +37,31 @@ abstract base class _$CategoryEventBase {
 
   /// Map over state union.
   R map<R>({
-    required PatternMatch<R, CategoryEvent$FetchCategoryWithServices>
-        fetchCategoryWithServices,
+    required PatternMatch<R, CategoryEvent$FetchServiceCategories>
+        fetchServiceCategories,
   }) =>
       switch (this) {
-        final CategoryEvent$FetchCategoryWithServices s =>
-          fetchCategoryWithServices(s),
+        final CategoryEvent$FetchServiceCategories s =>
+          fetchServiceCategories(s),
         _ => throw AssertionError(),
       };
 
   /// Map over state union or return default if no match.
   R maybeMap<R>({
     required R Function() orElse,
-    PatternMatch<R, CategoryEvent$FetchCategoryWithServices>?
-        fetchCategoryWithServices,
+    PatternMatch<R, CategoryEvent$FetchServiceCategories>?
+        fetchServiceCategories,
   }) =>
       map<R>(
-        fetchCategoryWithServices: fetchCategoryWithServices ?? (_) => orElse(),
+        fetchServiceCategories: fetchServiceCategories ?? (_) => orElse(),
       );
 
   /// Map over state union or return null if no match.
   R? mapOrNull<R>({
-    PatternMatch<R, CategoryEvent$FetchCategoryWithServices>?
-        fetchCategoryWithServices,
+    PatternMatch<R, CategoryEvent$FetchServiceCategories>?
+        fetchServiceCategories,
   }) =>
       map<R?>(
-        fetchCategoryWithServices: fetchCategoryWithServices ?? (_) => null,
+        fetchServiceCategories: fetchServiceCategories ?? (_) => null,
       );
 }

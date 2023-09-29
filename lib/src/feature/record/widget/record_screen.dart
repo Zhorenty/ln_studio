@@ -160,6 +160,11 @@ class _RecordScreenState extends State<RecordScreen> {
                                 'employee_id':
                                     currentEmployee?.id.toString() ?? '25',
                               },
+                              queryParameters: {
+                                'salon_id': salon!.id,
+                                'service_id': currentService?.id,
+                                'employee_id': currentEmployee?.id,
+                              },
                             ),
                           ),
                           const Text('Филиал'),

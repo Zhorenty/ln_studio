@@ -9,7 +9,6 @@ import 'package:ln_studio/src/feature/record/bloc/date/timetable/timetable_event
 import 'package:ln_studio/src/feature/record/bloc/date/timetable/timetable_state.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
 import 'package:ln_studio/src/feature/record/widget/components/timeblocks_wrap.dart';
-import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -19,10 +18,14 @@ import 'components/custom_table_calendar.dart';
 class DateChoiceScreen extends StatefulWidget {
   const DateChoiceScreen({
     super.key,
+    required this.salonId,
+    required this.serviceId,
     required this.employeeId,
   });
 
-  final int employeeId;
+  final int salonId;
+  final int? serviceId;
+  final int? employeeId;
 
   @override
   State<DateChoiceScreen> createState() => _DateChoiceScreenState();
@@ -42,7 +45,11 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<TimetableBloc>(context).add(
-      TimetableEvent.fetchEmployeeTimetables(widget.employeeId),
+      TimetableEvent.fetchTimetables(
+        salonId: widget.salonId,
+        serviceId: widget.serviceId,
+        employeeId: widget.employeeId,
+      ),
     );
   }
 
@@ -101,21 +108,22 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
   void onDaySelected(
     DateTime selectedDay,
     DateTime focusedDay,
-    List<TimetableItem> timetables,
+    List<TimetableItem> timetableItems,
   ) {
-    if (enabledDayPredicate(selectedDay, timetables)) {
+    if (enabledDayPredicate(selectedDay, timetableItems)) {
       visible = true;
       expanded = !expanded;
       _selectedDay = selectedDay;
       setState(() {});
 
       context.read<TimeblockBloc>().add(
-            TimeblockEvent.fetchEmployeeTimeblocks(
-              EmployeeTimeblock$Body(
-                dateAt: selectedDay,
-                employeeId: widget.employeeId,
-                salonId: context.read<SalonBLoC>().state.currentSalon!.id,
-              ),
+            TimeblockEvent.fetchTimeblocks(
+              salonId: widget.salonId,
+              serviceId: widget.serviceId,
+              employeeId: widget.employeeId,
+              timetableItemId: timetableItems
+                  .firstWhere((item) => selectedDay == item.dateAt)
+                  .id,
             ),
           );
     }

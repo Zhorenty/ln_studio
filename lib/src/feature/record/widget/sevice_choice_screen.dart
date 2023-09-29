@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_bloc.dart';
+import 'package:ln_studio/src/feature/record/bloc/category/category_event.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_state.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/widget/components/continue_button.dart';
@@ -15,9 +17,17 @@ class ServiceChoiceScreen extends StatefulWidget {
   const ServiceChoiceScreen({
     super.key,
     this.servicePreset,
+    this.salonId,
+    this.employeeId,
+    this.timetableItemId,
+    this.dateAt,
   });
 
   final ServiceModel? servicePreset;
+  final int salonId;
+  final int? employeeId;
+  final int? timetableItemId;
+  final String? dateAt;
 
   @override
   State<ServiceChoiceScreen> createState() => _ServiceChoiceScreenState();
@@ -40,86 +50,99 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colorScheme.onBackground,
-      body: BlocBuilder<CategoryBloc, CategoryState>(
-        builder: (context, state) {
-          return Stack(
-            children: [
-              CustomScrollView(
-                slivers: [
-                  SliverAppBar(
-                    backgroundColor: context.colorScheme.onBackground,
-                    pinned: true,
-                    title: Text(
-                      'Выбор услуги',
-                      style: context.textTheme.titleLarge!.copyWith(
-                        fontFamily: FontFamily.geologica,
+      body: BlocProvider(
+        create: (context) => CategoryBloc(
+          repository: DependenciesScope.of(context).recordRepository,
+        )..add(
+            CategoryEvent.fetchServiceCategories(
+              salonId: widget.salonId,
+              employeeId: widget.employeeId,
+              timetableItemId: widget.timetableItemId,
+              dateAt: widget.dateAt,
+            ),
+          ),
+        child: BlocBuilder<CategoryBloc, CategoryState>(
+          builder: (context, state) {
+            return Stack(
+              children: [
+                CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      backgroundColor: context.colorScheme.onBackground,
+                      pinned: true,
+                      title: Text(
+                        'Выбор услуги',
+                        style: context.textTheme.titleLarge!.copyWith(
+                          fontFamily: FontFamily.geologica,
+                        ),
+                      ),
+                      leading: AnimatedButton(
+                        child: const Icon(Icons.arrow_back_ios_new_rounded),
+                        onPressed: () => context.pop(),
                       ),
                     ),
-                    leading: AnimatedButton(
-                      child: const Icon(Icons.arrow_back_ios_new_rounded),
-                      onPressed: () => context.pop(),
-                    ),
-                  ),
-                  SliverList.builder(
-                    itemCount: state.categoryWithServices.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(color: Color(0xFF272727)),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          margin: EdgeInsets.zero,
-                          child: ExpansionTile(
-                            backgroundColor: context.colorScheme.background,
-                            collapsedBackgroundColor:
-                                context.colorScheme.background,
-                            title: Text(
-                              state.categoryWithServices[index].name,
-                              style: context.textTheme.bodyLarge?.copyWith(
-                                fontFamily: FontFamily.geologica,
-                              ),
+                    SliverList.builder(
+                      itemCount: state.categoryWithServices.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(color: Color(0xFF272727)),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            children: [
-                              ...state.categoryWithServices[index].service.map(
-                                (service) => ServiceCard(
-                                  service: service,
-                                  selectedService: selectedService,
-                                  onTap: (cardService) => setState(
-                                    () {
-                                      selectedService = cardService;
-                                      visible = true;
-                                    },
-                                  ),
+                            clipBehavior: Clip.antiAlias,
+                            margin: EdgeInsets.zero,
+                            child: ExpansionTile(
+                              backgroundColor: context.colorScheme.background,
+                              collapsedBackgroundColor:
+                                  context.colorScheme.background,
+                              title: Text(
+                                state.categoryWithServices[index].name,
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  fontFamily: FontFamily.geologica,
                                 ),
                               ),
-                            ],
+                              children: [
+                                ...state.categoryWithServices[index].service
+                                    .map(
+                                  (service) => ServiceCard(
+                                    service: service,
+                                    selectedService: selectedService,
+                                    onTap: (cardService) => setState(
+                                      () {
+                                        selectedService = cardService;
+                                        visible = true;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                Positioned(
+                  bottom: MediaQuery.of(context).size.height / 20,
+                  left: 0,
+                  right: 0,
+                  child: ContinueButton(
+                    visible: visible,
+                    onPressed: () {
+                      context.goNamed(
+                        'record',
+                        extra: selectedService,
                       );
                     },
                   ),
-                ],
-              ),
-              Positioned(
-                bottom: MediaQuery.of(context).size.height / 20,
-                left: 0,
-                right: 0,
-                child: ContinueButton(
-                  visible: visible,
-                  onPressed: () {
-                    context.goNamed(
-                      'record',
-                      extra: selectedService,
-                    );
-                  },
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }
