@@ -1,8 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
-import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
-import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
-import 'package:ln_studio/src/common/widget/custom_divider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ln_studio/src/common/widget/animated_button.dart';
+
+import '/src/common/assets/generated/assets.gen.dart';
+import '/src/common/assets/generated/fonts.gen.dart';
+import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/custom_divider.dart';
+import 'components/category_list_tile.dart';
+import 'components/header_list_tile.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -23,83 +29,93 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
           ),
+          const CupertinoSliverRefreshControl(),
           SliverList.list(
             children: [
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 4,
-                  horizontal: 12,
-                ),
-                decoration: BoxDecoration(
-                  color: context.colorScheme.onBackground,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    'Евгений Логинов',
-                    style: context.textTheme.headlineSmall?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                      color: context.colorScheme.secondary,
-                    ),
-                  ),
-                  subtitle: Text(
-                    '+7 (960) 487-53-29',
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                      color: context.colorScheme.primary,
-                    ),
-                  ),
-                  trailing: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 12,
-                    ),
-                    decoration: ShapeDecoration(
-                      shape: const CircleBorder(),
-                      color: context.colorScheme.primary,
-                    ),
-                    child: Icon(
-                      Icons.edit,
-                      color: context.colorScheme.onBackground,
-                      size: 20,
-                    ),
-                  ),
-                ),
+              const HeaderListTile(),
+              const CustomDivider(),
+              CategoryListTile(
+                icon: Icons.history_rounded,
+                title: 'Мои записи',
+                size: 23,
+                onTap: () => context.pushNamed('booking_history'),
               ),
               const CustomDivider(),
-              const CategoryListTile(title: 'История записей'),
+              const CategoryListTile(
+                icon: Icons.settings_rounded,
+                title: 'Настройки',
+              ),
               const CustomDivider(),
-              const CategoryListTile(title: 'Настройки'),
+              const CategoryListTile(
+                icon: Icons.loyalty_rounded,
+                title: 'Персональные скидки',
+              ),
               const CustomDivider(),
-              const CategoryListTile(title: 'Поддержка'),
+              const CategoryListTile(
+                icon: Icons.payment_rounded,
+                title: 'Способы оплаты',
+                size: 23,
+              ),
               const CustomDivider(),
-              const CategoryListTile(title: 'Работать с нами'),
+              const CategoryListTile(
+                icon: Icons.help_outline_rounded,
+                title: 'Поддержка',
+                size: 23.5,
+              ),
               const CustomDivider(),
-              const CategoryListTile(title: 'Выйти'),
+              const CategoryListTile(
+                icon: Icons.work_rounded,
+                title: 'Работать с нами',
+              ),
+              const CustomDivider(),
+              const CategoryListTile(
+                icon: Icons.exit_to_app,
+                title: 'Выйти',
+                size: 23,
+              ),
               const CustomDivider(),
               SizedBox(
                 height: 150,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleWidget(
-                      child: Assets.images.vkIcon.image(
-                        scale: 20,
-                        color: context.colorScheme.primary,
+                    AnimatedButton(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircleAvatar(
+                          radius: 21,
+                          backgroundColor: context.colorScheme.onBackground,
+                          child: Assets.images.vkIcon.image(
+                            scale: 20,
+                            color: context.colorScheme.secondary,
+                          ),
+                        ),
                       ),
                     ),
-                    CircleWidget(
-                      child: Assets.images.whatsappIcon.image(
-                        scale: 20,
-                        color: context.colorScheme.primary,
+                    AnimatedButton(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircleAvatar(
+                          radius: 21,
+                          backgroundColor: context.colorScheme.onBackground,
+                          child: Assets.images.whatsappIcon.image(
+                            scale: 20,
+                            color: context.colorScheme.secondary,
+                          ),
+                        ),
                       ),
                     ),
-                    CircleWidget(
-                      child: Assets.images.telegramIcon.image(
-                        scale: 25,
-                        color: context.colorScheme.primary,
+                    AnimatedButton(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircleAvatar(
+                          radius: 21,
+                          backgroundColor: context.colorScheme.onBackground,
+                          child: Assets.images.telegramIcon.image(
+                            scale: 25,
+                            color: context.colorScheme.secondary,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -108,54 +124,6 @@ class ProfileScreen extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-///
-class CircleWidget extends StatelessWidget {
-  const CircleWidget({super.key, this.child});
-
-  ///
-  final Widget? child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: ShapeDecoration(
-        shape: const CircleBorder(),
-        color: context.colorScheme.onBackground,
-      ),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      padding: const EdgeInsets.all(10),
-      child: child,
-    );
-  }
-}
-
-///
-class CategoryListTile extends StatelessWidget {
-  const CategoryListTile({super.key, required this.title});
-
-  ///
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: context.colorScheme.background,
-      title: Text(
-        title,
-        style: context.textTheme.bodyLarge?.copyWith(
-          fontFamily: FontFamily.geologica,
-          color: context.colorScheme.secondary,
-        ),
-      ),
-      trailing: Icon(
-        Icons.arrow_forward_ios_rounded,
-        color: context.colorScheme.primaryContainer,
-        size: 22,
       ),
     );
   }
