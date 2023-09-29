@@ -29,7 +29,7 @@ class BookingHistoryScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 color: context.colorScheme.background,
-                border: Border.all(color: context.colorScheme.onBackground),
+                border: Border.all(color: const Color(0xFF272727)),
               ),
               child: TabBar(
                 indicatorSize: TabBarIndicatorSize.tab,
