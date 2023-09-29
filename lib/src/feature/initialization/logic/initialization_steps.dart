@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:ln_studio/src/feature/profile/data/profile_data_provider.dart';
+import 'package:ln_studio/src/feature/profile/data/profile_repository.dart';
 import 'package:ln_studio/src/feature/record/data/record_data_provider.dart';
 import 'package:ln_studio/src/feature/record/data/record_repository.dart';
 import 'package:rest_client/rest_client.dart';
@@ -39,6 +41,13 @@ mixin InitializationSteps {
       );
       final recordRepository = RecordRepositoryImpl(recordDataProvider);
       progress.dependencies.recordRepository = recordRepository;
+    },
+    'Profile repository': (progress) async {
+      final profileDataProvider = ProfileDataProviderImpl(
+        restClient: progress.dependencies.restClient,
+      );
+      final profileRepository = ProfileRepositoryImpl(profileDataProvider);
+      progress.dependencies.profileRepository = profileRepository;
     },
   };
 }
