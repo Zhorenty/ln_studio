@@ -32,7 +32,7 @@ class CustomSliverAppBar extends StatelessWidget {
           ? Text(
               title!,
               style: context.textTheme.titleLarge!.copyWith(
-                color: context.colorScheme.primary,
+                color: context.colorScheme.secondary,
                 fontFamily: FontFamily.geologica,
               ),
             )

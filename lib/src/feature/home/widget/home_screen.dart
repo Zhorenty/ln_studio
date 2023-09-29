@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8 + 2, bottom: 2),
               child: Icon(
                 Icons.notifications_rounded,
-                color: context.colorScheme.primary,
+                color: context.colorScheme.secondary,
               ),
               onPressed: () {},
             ),
