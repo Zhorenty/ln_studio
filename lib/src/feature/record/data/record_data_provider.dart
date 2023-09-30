@@ -56,7 +56,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
     String? dateAt,
   }) async {
     final response = await restClient.get(
-      '/api/category/with_services',
+      '/api/book/get_services',
       queryParams: {
         'salon_id': salonId,
         if (employeeId != null) 'employee_id': employeeId,
@@ -80,9 +80,10 @@ class RecordDataProviderImpl implements RecordDataProvider {
     String? dateAt,
   }) async {
     final response = await restClient.get(
-      '/api/employee/by_salon_id/$salonId',
+      '/api/book/get_employees',
       queryParams: {
         'salon_id': salonId,
+        if (serviceId != null) 'service_id': serviceId,
         if (timeblockId != null) 'timeblock_id': timeblockId,
         if (dateAt != null) 'date_at': dateAt,
       },
@@ -102,7 +103,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
     int? employeeId,
   }) async {
     final response = await restClient.get(
-      '/api/timetable/by_employee_id/$employeeId',
+      '/api/book/get_timetables',
       queryParams: {
         'salon_id': salonId,
         if (serviceId != null) 'service_id': serviceId,

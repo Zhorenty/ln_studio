@@ -9,7 +9,14 @@ import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_state
 
 ///
 class TimeblocsWrap extends StatelessWidget {
-  const TimeblocsWrap({super.key, this.visible = false, this.expanded = false});
+  const TimeblocsWrap({
+    super.key,
+    required this.dateAt,
+    this.visible = false,
+    this.expanded = false,
+  });
+
+  final String dateAt;
 
   ///
   final bool visible;
@@ -42,7 +49,7 @@ class TimeblocsWrap extends StatelessWidget {
                       child: AnimatedButton(
                         onPressed: () => context.goNamed(
                           'record',
-                          extra: timeblock,
+                          extra: (timeblock, dateAt),
                         ),
                         child: Chip(
                           backgroundColor: context.colorScheme.primary,

@@ -17,7 +17,7 @@ class ServiceChoiceScreen extends StatefulWidget {
   const ServiceChoiceScreen({
     super.key,
     this.servicePreset,
-    this.salonId,
+    required this.salonId,
     this.employeeId,
     this.timetableItemId,
     this.dateAt,
@@ -135,6 +135,11 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                       context.goNamed(
                         'record',
                         extra: selectedService,
+                        // queryParameters: {
+                        //   'salon_id': widget.salonId,
+                        //   'service_id': selectedService?.id,
+                        //   'employee_id': widget.employeeId,
+                        // },
                       );
                     },
                   ),

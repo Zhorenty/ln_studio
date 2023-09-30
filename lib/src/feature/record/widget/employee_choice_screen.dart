@@ -23,11 +23,11 @@ class EmployeeChoiceScreen extends StatefulWidget {
   /// {@macro Employees_screen}
   const EmployeeChoiceScreen({
     super.key,
-    required this.employeePreset,
+    this.employeePreset,
     required this.salonId,
-    required this.serviceId,
-    required this.timeblockId,
-    required this.dateAt,
+    this.serviceId,
+    this.timeblockId,
+    this.dateAt,
   });
 
   final EmployeeModel? employeePreset;

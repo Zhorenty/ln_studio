@@ -1,8 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
-import 'package:ln_studio/src/feature/record/model/timetable.dart';
 import 'package:ln_studio/src/feature/record/widget/congratulation_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/date_choice_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/employee_choice_screen.dart';
@@ -48,9 +49,13 @@ final router = GoRouter(
                   path: 'choice_service',
                   parentNavigatorKey: _parentKey,
                   pageBuilder: (context, state) {
+                    log(state.uri.queryParameters.toString());
                     return CustomTransitionPage<void>(
                       key: state.pageKey,
-                      child:  ServiceChoiceScreen(salonId: state.,),
+                      child: ServiceChoiceScreen(
+                        salonId:
+                            int.parse(state.uri.queryParameters['salon_id']!),
+                      ),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         const begin = Offset(0.0, 1.0);
@@ -74,7 +79,11 @@ final router = GoRouter(
                   pageBuilder: (context, state) {
                     return CustomTransitionPage<void>(
                       key: state.pageKey,
-                      child: const EmployeeChoiceScreen(),
+                      child: EmployeeChoiceScreen(
+                        salonId: int.parse(
+                          state.uri.queryParameters['salon_id']!,
+                        ),
+                      ),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         const begin = Offset(0.0, 1.0);
@@ -92,6 +101,17 @@ final router = GoRouter(
                   },
                 ),
                 GoRoute(
+                  name: 'choice_date',
+                  path: 'choice_date',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => DateChoiceScreen(
+                    // TODO: Брать дату пресет из extra
+                    salonId: int.parse(
+                      state.uri.queryParameters['salon_id']!,
+                    ),
+                  ),
+                ),
+                GoRoute(
                   name: 'record',
                   path: 'record',
                   parentNavigatorKey: _parentKey,
@@ -102,8 +122,8 @@ final router = GoRouter(
                     employeePreset: state.extra is EmployeeModel
                         ? state.extra as EmployeeModel
                         : null,
-                    datePreset: state.extra is EmployeeTimeblock$Response
-                        ? state.extra as EmployeeTimeblock$Response
+                    datePreset: state.extra is TimeblockWithDate
+                        ? state.extra as TimeblockWithDate
                         : null,
                   ),
                   routes: [
@@ -116,6 +136,15 @@ final router = GoRouter(
                           key: state.pageKey,
                           child: ServiceChoiceScreen(
                             servicePreset: state.extra as ServiceModel?,
+                            salonId: int.parse(
+                                state.uri.queryParameters['salon_id']!),
+                            employeeId: int.tryParse(
+                              state.pathParameters['employee_id'] ?? '',
+                            ),
+                            timetableItemId: int.tryParse(
+                              state.pathParameters['timetable_item_id'] ?? '',
+                            ),
+                            dateAt: state.uri.queryParameters['date_at'],
                           ),
                           transitionsBuilder:
                               (context, animation, secondaryAnimation, child) {
@@ -140,7 +169,18 @@ final router = GoRouter(
                       pageBuilder: (context, state) {
                         return CustomTransitionPage<void>(
                           key: state.pageKey,
-                          child: const EmployeeChoiceScreen(),
+                          child: EmployeeChoiceScreen(
+                            employeePreset: state.extra as EmployeeModel?,
+                            salonId: int.parse(
+                                state.uri.queryParameters['salon_id']!),
+                            serviceId: int.tryParse(
+                              state.pathParameters['service_id'] ?? '',
+                            ),
+                            timeblockId: int.tryParse(
+                              state.pathParameters['timeblock_id'] ?? '',
+                            ),
+                            dateAt: state.pathParameters['date_at'],
+                          ),
                           transitionsBuilder:
                               (context, animation, secondaryAnimation, child) {
                             const begin = Offset(0.0, 1.0);
@@ -159,12 +199,18 @@ final router = GoRouter(
                     ),
                     GoRoute(
                       name: 'choice_date_from_record',
-                      path: 'choice_date/:employee_id',
+                      path: 'choice_date',
                       parentNavigatorKey: _parentKey,
                       builder: (context, state) => DateChoiceScreen(
                         // TODO: Брать дату пресет из extra
-                        employeeId: int.parse(
-                          state.pathParameters['employee_id']!,
+                        salonId: int.parse(
+                          state.pathParameters['salon_id']!,
+                        ),
+                        serviceId: int.tryParse(
+                          state.pathParameters['service_id'] ?? '',
+                        ),
+                        employeeId: int.tryParse(
+                          state.pathParameters['employee_id'] ?? '',
                         ),
                       ),
                     ),
@@ -175,15 +221,6 @@ final router = GoRouter(
                       builder: (context, state) => const CongratulationScreen(),
                     ),
                   ],
-                ),
-                GoRoute(
-                  name: 'choice_date',
-                  path: 'choice_date/:employee_id',
-                  parentNavigatorKey: _parentKey,
-                  builder: (context, state) => DateChoiceScreen(
-                    // TODO: Брать дату пресет из extra
-                    employeeId: int.parse(state.pathParameters['employee_id']!),
-                  ),
                 ),
               ],
             ),

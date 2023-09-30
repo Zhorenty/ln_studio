@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 
 import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_bloc.dart';
@@ -19,8 +20,8 @@ class DateChoiceScreen extends StatefulWidget {
   const DateChoiceScreen({
     super.key,
     required this.salonId,
-    required this.serviceId,
-    required this.employeeId,
+    this.serviceId,
+    this.employeeId,
   });
 
   final int salonId;
@@ -44,13 +45,13 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<TimetableBloc>(context).add(
-      TimetableEvent.fetchTimetables(
-        salonId: widget.salonId,
-        serviceId: widget.serviceId,
-        employeeId: widget.employeeId,
-      ),
-    );
+    context.read<TimetableBloc>().add(
+          TimetableEvent.fetchTimetables(
+            salonId: widget.salonId,
+            serviceId: widget.serviceId,
+            employeeId: widget.employeeId,
+          ),
+        );
   }
 
   @override
@@ -90,6 +91,7 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TimeblocsWrap(
+                        dateAt: DateFormat.yMMMM('ru_RU').format(_selectedDay),
                         visible: visible,
                         expanded: expanded,
                       ),

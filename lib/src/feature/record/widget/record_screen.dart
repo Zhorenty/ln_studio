@@ -14,6 +14,8 @@ import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
 import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
 
+typedef TimeblockWithDate = (EmployeeTimeblock$Response, String);
+
 ///
 class RecordScreen extends StatefulWidget {
   const RecordScreen({
@@ -30,7 +32,7 @@ class RecordScreen extends StatefulWidget {
   final EmployeeModel? employeePreset;
 
   ///
-  final EmployeeTimeblock$Response? datePreset;
+  final TimeblockWithDate? datePreset;
 
   @override
   State<RecordScreen> createState() => _RecordScreenState();
@@ -48,7 +50,7 @@ class _RecordScreenState extends State<RecordScreen> {
 
   ServiceModel? currentService;
   EmployeeModel? currentEmployee;
-  EmployeeTimeblock$Response? currentDate;
+  TimeblockWithDate? currentDate;
 
   @override
   void initState() {
@@ -138,6 +140,12 @@ class _RecordScreenState extends State<RecordScreen> {
                             onTap: () => context.goNamed(
                               'choice_service_from_record',
                               extra: currentService,
+                              queryParameters: {
+                                'salon_id': salon!.id,
+                                'employee_id': currentEmployee?.id,
+                                'timeblock_id': currentDate?.$1.id,
+                                'date_at': currentDate!.$2,
+                              },
                             ),
                           ),
                           const Text('Выберите мастера'),
@@ -147,19 +155,21 @@ class _RecordScreenState extends State<RecordScreen> {
                             onTap: () => context.goNamed(
                               'choice_employee_from_record',
                               extra: currentEmployee,
+                              queryParameters: {
+                                'salon_id': salon!.id,
+                                'service_id': currentService?.id,
+                                'timeblock_id': currentDate?.$1.id,
+                                'date_at': currentDate!.$2,
+                              },
                             ),
                           ),
                           const Text('Выберите дату и время'),
                           CustomContainer(
-                            title: currentDate?.time ?? 'Выберите дату и время',
+                            title:
+                                currentDate?.$1.time ?? 'Выберите дату и время',
                             onTap: () => context.goNamed(
                               'choice_date_from_record',
                               extra: currentDate,
-                              // TODO: Делать валидацию
-                              pathParameters: {
-                                'employee_id':
-                                    currentEmployee?.id.toString() ?? '25',
-                              },
                               queryParameters: {
                                 'salon_id': salon!.id,
                                 'service_id': currentService?.id,
@@ -183,6 +193,7 @@ class _RecordScreenState extends State<RecordScreen> {
                           const SizedBox(height: 16),
                           AnimatedButton(
                             onPressed: () {
+                              // TODO: Сделать валидацию
                               // TODO: Wait until asset in
                               //  CongratilationScreen was loaded.
                               recordBLoC.add(
@@ -192,7 +203,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                   clientId: 1,
                                   serviceId: currentService!.id,
                                   employeeId: currentEmployee!.id,
-                                  timeblockId: currentDate!.id,
+                                  timeblockId: currentDate!.$1.id,
                                   price: currentService!.price,
                                   comment: commentController.text,
                                 ),

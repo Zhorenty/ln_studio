@@ -60,34 +60,59 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const CustomHeader(label: 'Записаться'),
-              SizedBox(
-                height: 100,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    RecordTypeCard(
-                      image: Assets.images.serviceIcon.image(scale: 10),
-                      description: 'На услугу',
-                      onTap: () => context.go('/home/choice_service'),
-                    ),
-                    RecordTypeCard(
-                      image: Assets.images.employeeIcon.image(scale: 10),
-                      description: 'К мастеру',
-                      onTap: () => context.go('/home/choice_employee'),
-                    ),
-                    RecordTypeCard(
-                      image: Assets.images.repeatIcon.image(scale: 10),
-                      description: 'Повторно',
-                      onTap: () => context.go('/home/choice_date'),
-                    ),
-                    RecordTypeCard(
-                      image: Assets.images.serviceIcon.image(scale: 10),
-                      description: 'На дом',
-                      onTap: () => context.go('/home/record'),
-                    ),
-                  ],
-                ),
-              ),
+              BlocBuilder<SalonBLoC, SalonState>(builder: (context, state) {
+                if (state.currentSalon == null) {
+                  return const Shimmer();
+                }
+                return SizedBox(
+                  height: 100,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      RecordTypeCard(
+                        image: Assets.images.serviceIcon.image(scale: 10),
+                        description: 'На услугу',
+                        onTap: () => context.goNamed(
+                          'choice_service',
+                          queryParameters: {
+                            'salon_id': state.currentSalon!.id.toString(),
+                          },
+                        ),
+                      ),
+                      RecordTypeCard(
+                        image: Assets.images.employeeIcon.image(scale: 10),
+                        description: 'К мастеру',
+                        onTap: () => context.goNamed(
+                          'choice_employee',
+                          queryParameters: {
+                            'salon_id': state.currentSalon!.id.toString(),
+                          },
+                        ),
+                      ),
+                      RecordTypeCard(
+                        image: Assets.images.repeatIcon.image(scale: 10),
+                        description: 'Повторно',
+                        onTap: () => context.goNamed(
+                          'choice_date',
+                          queryParameters: {
+                            'salon_id': state.currentSalon!.id.toString(),
+                          },
+                        ),
+                      ),
+                      RecordTypeCard(
+                        image: Assets.images.serviceIcon.image(scale: 10),
+                        description: 'На дом',
+                        onTap: () => context.goNamed(
+                          'record',
+                          queryParameters: {
+                            'salon_id': state.currentSalon!.id.toString(),
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
               const CustomHeader(label: 'Новости'),
               SizedBox(
                 height: 115,
