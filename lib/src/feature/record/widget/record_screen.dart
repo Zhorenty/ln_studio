@@ -171,8 +171,9 @@ class _RecordScreenState extends State<RecordScreen> {
                           ),
                           const Text('Выберите дату и время'),
                           CustomContainer(
-                            title:
-                                currentDate?.$1.time ?? 'Выберите дату и время',
+                            title: currentDate != null
+                                ? '${currentDate?.$1.time} ${currentDate?.$2}'
+                                : 'Выберите дату и время',
                             onTap: () => context.goNamed(
                               'choice_date_from_record',
                               extra: currentDate,
@@ -206,7 +207,7 @@ class _RecordScreenState extends State<RecordScreen> {
                               //  CongratilationScreen was loaded.
                               recordBLoC.add(
                                 RecordEvent.create(
-                                  dateAt: DateTime.now(),
+                                  dateAt: currentDate!.$2,
                                   salonId: salon?.id ?? 1,
                                   clientId: 1,
                                   serviceId: currentService!.id,
