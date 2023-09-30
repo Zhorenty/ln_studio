@@ -8,7 +8,7 @@ import '/src/common/widget/pop_up_button.dart';
 import '/src/common/widget/shimmer.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/bloc/salon_state.dart';
-import '/src/feature/salon/widget/salon_choice_screen.dart';
+import '/src/feature/salon/widget/current_salon_screen.dart';
 
 import 'components/qr_code_widget.dart';
 
@@ -30,7 +30,7 @@ class QRCodeScreen extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8 + 4, top: 2),
               child: Icon(
                 Icons.share_rounded,
-                color: context.colorScheme.primary,
+                color: context.colorScheme.secondary,
               ),
               onPressed: () {},
             ),
@@ -40,7 +40,7 @@ class QRCodeScreen extends StatelessWidget {
               label: state.currentSalon != null
                   ? Text(state.currentSalon!.address)
                   : Shimmer(backgroundColor: context.colorScheme.onBackground),
-              child: SalonChoiceScreen(currentSalon: state.currentSalon),
+              child: CurrentSalonScreen(currentSalon: state.currentSalon),
             ),
           ),
         ),

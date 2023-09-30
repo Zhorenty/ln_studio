@@ -10,7 +10,6 @@ import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/animated_button.dart';
 import '/src/common/widget/custom_app_bar.dart';
 import '/src/common/widget/pop_up_button.dart';
-import '/src/common/widget/shimmer.dart';
 import '/src/feature/home/widget/components/record_type_card.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/bloc/salon_state.dart';
@@ -33,7 +32,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8 + 2, bottom: 2),
               child: Icon(
                 Icons.notifications_rounded,
-                color: context.colorScheme.primary,
+                color: context.colorScheme.secondary,
               ),
               onPressed: () {},
             ),
@@ -41,16 +40,12 @@ class HomeScreen extends StatelessWidget {
           bottomChild: BlocBuilder<SalonBLoC, SalonState>(
             builder: (context, state) => PopupButton(
               smoothAnimate: false,
-              label: state.currentSalon != null
-                  ? Text(
-                      state.currentSalon!.address,
-                      style: context.textTheme.bodyLarge?.copyWith(
-                        fontSize: 17,
-                        fontFamily: FontFamily.geologica,
-                        color: context.colorScheme.onBackground,
-                      ),
-                    )
-                  : Shimmer(backgroundColor: context.colorScheme.onBackground),
+              label: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: state.currentSalon != null
+                    ? Text(state.currentSalon!.address)
+                    : const SizedBox(height: 26),
+              ),
               child: CurrentSalonScreen(currentSalon: state.currentSalon),
             ),
           ),

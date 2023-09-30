@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/src/common/bloc/observer.dart';
@@ -19,6 +20,9 @@ class AppRunner with InitializationSteps, InitializationProcessor {
   Future<void> initializeAndRun(InitializationHook hook) async {
     final bindings = WidgetsFlutterBinding.ensureInitialized()
       ..deferFirstFrame();
+    SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
+    );
     FlutterError.onError = logger.logFlutterError;
     PlatformDispatcher.instance.onError = logger.logPlatformDispatcherError;
     Bloc.observer = AppBlocObserver();

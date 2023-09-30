@@ -140,49 +140,10 @@ class CustomButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: color,
           border: border,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Center(child: child),
       ),
     );
   }
 }
-
-    // RichText(
-              //   text: TextSpan(
-              //     children: [
-              //       TextSpan(
-              //         text: 'Время работы',
-              //         style: context.textTheme.bodyLarge?.copyWith(
-              //           fontFamily: FontFamily.geologica,
-              //         ),
-              //       ),
-              //       TextSpan(
-              //         text: "\nпн.-вс.: 10:00 - 21:00",
-              //         style: context.textTheme.bodySmall?.copyWith(
-              //           color: Colors.grey,
-              //           fontFamily: FontFamily.geologica,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              // RichText(
-              //   text: TextSpan(
-              //     children: [
-              //       TextSpan(
-              //         text: 'Телефон',
-              //         style: context.textTheme.bodyLarge?.copyWith(
-              //           fontFamily: FontFamily.geologica,
-              //         ),
-              //       ),
-              //       TextSpan(
-              //         text: "\n${currentSalon?.phone.formatPhoneNumber()}",
-              //         style: context.textTheme.bodySmall?.copyWith(
-              //           color: Colors.grey,
-              //           fontFamily: FontFamily.geologica,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
