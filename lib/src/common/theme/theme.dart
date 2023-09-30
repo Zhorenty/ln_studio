@@ -68,6 +68,7 @@ const darkColorScheme = ColorScheme.dark(
   background: Color(0xFF101010),
   onBackground: Color(0xFF191919),
   scrim: Color(0x00000000),
+  surfaceVariant: Color(0x00000000),
 );
 
 const bottomNavigationBarThemeDataDark = BottomNavigationBarThemeData(
