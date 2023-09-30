@@ -38,7 +38,6 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ) async {
     emit(const ProfileState.processing());
     try {
-      final profileFromCache = profileRepository.saveProfile(event.profile);
       // emit(ProfileState.idle(profile: profileFromCache));
     } on Object catch (e) {
       emit(ProfileState.idle(error: ErrorUtil.formatError(e)));
