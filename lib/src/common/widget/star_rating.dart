@@ -34,6 +34,12 @@ class StarRatingState extends State<StarRating> {
     _currentRating = widget.initialRating;
   }
 
+  @override
+  void didUpdateWidget(covariant StarRating oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _currentRating = widget.initialRating;
+  }
+
   /// Callback, called when rating was updated.
   void _updateRating(int newRating) {
     setState(() => _currentRating = newRating);
