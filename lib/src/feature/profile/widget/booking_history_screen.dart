@@ -4,12 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/utils/extensions/date_time_extension.dart';
-import '/src/common/widget/animated_button.dart';
-import '/src/common/widget/avatar_widget.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/profile/bloc/booking_history/booking_history_bloc.dart';
 import '/src/feature/profile/bloc/booking_history/booking_history_event.dart';
 import '/src/feature/profile/bloc/booking_history/booking_history_state.dart';
+import 'components/history_item_card.dart';
 
 ///
 class BookingHistoryScreen extends StatelessWidget {
@@ -78,12 +77,12 @@ class BookingHistoryScreen extends StatelessWidget {
                 children: [
                   ListView(
                     children: [
-                      ...state.bookingHistory.map((e) {
+                      ...state.bookingHistory.reversed.map((e) {
                         if (!_isAfter(
                           e.dateAt.jsonFormat(),
                           e.timeblock.time,
                         )) {
-                          return BookingHistoryItem(
+                          return HistoryItemCard(
                             title: e.employee.fullName,
                             subtitle: e.service.name,
                             dateAt: e.dateAt.defaultFormat(),
@@ -97,13 +96,13 @@ class BookingHistoryScreen extends StatelessWidget {
                   ),
                   ListView(
                     children: [
-                      ...state.bookingHistory.map(
+                      ...state.bookingHistory.reversed.map(
                         (e) {
                           if (_isAfter(
                             e.dateAt.jsonFormat(),
                             e.timeblock.time,
                           )) {
-                            return BookingHistoryItem(
+                            return HistoryItemCard(
                               title: e.employee.fullName,
                               subtitle: e.service.name,
                               dateAt: e.dateAt.defaultFormat(),
@@ -160,97 +159,5 @@ class BookingHistoryScreen extends StatelessWidget {
     } else {
       return false;
     }
-  }
-}
-
-class BookingHistoryItem extends StatelessWidget {
-  const BookingHistoryItem({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.dateAt,
-    required this.timeblock,
-  });
-
-  final String title;
-
-  final String subtitle;
-
-  final String dateAt;
-
-  final String timeblock;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: context.colorScheme.background,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF272727)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              AvatarWidget(
-                radius: 25,
-                title: title,
-              ),
-              const SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontSize: 18,
-                      color: context.colorScheme.secondary,
-                      fontFamily: FontFamily.geologica,
-                    ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      fontSize: 13,
-                      color: context.colorScheme.primaryContainer,
-                      fontFamily: FontFamily.geologica,
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              AnimatedButton(
-                padding: const EdgeInsets.only(bottom: 24),
-                child: Icon(
-                  Icons.more_vert_rounded,
-                  size: 20,
-                  color: context.colorScheme.secondary,
-                ),
-              )
-            ],
-          ),
-          const Divider(color: Color(0xFF272727)),
-          Text(
-            'Дата записи:',
-            style: context.textTheme.bodySmall?.copyWith(
-              fontSize: 13,
-              color: context.colorScheme.secondary,
-              fontFamily: FontFamily.geologica,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '$timeblock, $dateAt',
-            style: context.textTheme.titleSmall?.copyWith(
-              color: context.colorScheme.secondary,
-              fontFamily: FontFamily.geologica,
-            ),
-          )
-        ],
-      ),
-    );
   }
 }

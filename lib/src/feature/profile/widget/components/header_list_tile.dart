@@ -7,7 +7,13 @@ import '/src/common/utils/extensions/context_extension.dart';
 
 ///
 class HeaderListTile extends StatelessWidget {
-  const HeaderListTile({super.key});
+  const HeaderListTile({super.key, this.onPressed, this.title});
+
+  ///
+  final String? title;
+
+  ///
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +30,7 @@ class HeaderListTile extends StatelessWidget {
       child: ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text(
-          'Евгений Логинов',
+          title ?? 'Настройте профиль',
           style: context.textTheme.headlineSmall?.copyWith(
             fontFamily: FontFamily.geologica,
             color: context.colorScheme.secondary,
@@ -38,6 +44,7 @@ class HeaderListTile extends StatelessWidget {
           ),
         ),
         trailing: AnimatedButton(
+          onPressed: onPressed,
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             decoration: ShapeDecoration(

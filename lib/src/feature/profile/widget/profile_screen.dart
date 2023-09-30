@@ -32,7 +32,9 @@ class ProfileScreen extends StatelessWidget {
           const CupertinoSliverRefreshControl(),
           SliverList.list(
             children: [
-              const HeaderListTile(),
+              HeaderListTile(
+                onPressed: () => context.pushNamed('profile_edit'),
+              ),
               const CustomDivider(),
               CategoryListTile(
                 icon: Icons.history_rounded,
