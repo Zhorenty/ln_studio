@@ -28,7 +28,7 @@ class TimeblockBloc extends Bloc<TimeblockEvent, TimeblockState> {
     try {
       final timeblocks = await repository.getTimeblocks(
         salonId: event.salonId,
-        timetableItemId: event.timetableItemId,
+        dateAt: event.dateAt,
         serviceId: event.serviceId,
         employeeId: event.employeeId,
       );

@@ -33,7 +33,7 @@ abstract interface class RecordRepository {
   ///
   Future<List<EmployeeTimeblock$Response>> getTimeblocks({
     required int salonId,
-    required int timetableItemId,
+    required String dateAt,
     int? serviceId,
     int? employeeId,
   });
@@ -91,13 +91,13 @@ final class RecordRepositoryImpl implements RecordRepository {
   @override
   Future<List<EmployeeTimeblock$Response>> getTimeblocks({
     required int salonId,
-    required int timetableItemId,
+    required String dateAt,
     int? serviceId,
     int? employeeId,
   }) =>
       _dataProvider.fetchTimeblocks(
         salonId: salonId,
-        timetableItemId: timetableItemId,
+        dateAt: dateAt,
         serviceId: serviceId,
         employeeId: employeeId,
       );

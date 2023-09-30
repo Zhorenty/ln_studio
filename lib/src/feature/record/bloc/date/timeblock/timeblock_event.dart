@@ -10,7 +10,7 @@ sealed class TimeblockEvent extends _$TimeblockEventBase {
   /// Factory for fetching Timeblock.
   const factory TimeblockEvent.fetchTimeblocks({
     required int salonId,
-    required int timetableItemId,
+    required String dateAt,
     required int? serviceId,
     required int? employeeId,
   }) = TimeblockEvent$FetchTimeblocks;
@@ -20,14 +20,14 @@ sealed class TimeblockEvent extends _$TimeblockEventBase {
 final class TimeblockEvent$FetchTimeblocks extends TimeblockEvent {
   const TimeblockEvent$FetchTimeblocks({
     required this.salonId,
-    required this.timetableItemId,
+    required this.dateAt,
     required this.serviceId,
     required this.employeeId,
   });
 
   ///
   final int salonId;
-  final int timetableItemId;
+  final String dateAt;
   final int? serviceId;
   final int? employeeId;
 }

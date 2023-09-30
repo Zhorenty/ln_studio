@@ -141,10 +141,13 @@ class _RecordScreenState extends State<RecordScreen> {
                               'choice_service_from_record',
                               extra: currentService,
                               queryParameters: {
-                                'salon_id': salon!.id,
-                                'employee_id': currentEmployee?.id,
-                                'timeblock_id': currentDate?.$1.id,
-                                'date_at': currentDate!.$2,
+                                'salon_id': salon!.id.toString(),
+                                if (currentEmployee != null)
+                                  'employee_id': currentEmployee?.id.toString(),
+                                if (currentDate != null)
+                                  'timeblock_id': currentDate?.$1.id.toString(),
+                                if (currentDate != null)
+                                  'date_at': currentDate!.$2.toString(),
                               },
                             ),
                           ),
@@ -156,10 +159,13 @@ class _RecordScreenState extends State<RecordScreen> {
                               'choice_employee_from_record',
                               extra: currentEmployee,
                               queryParameters: {
-                                'salon_id': salon!.id,
-                                'service_id': currentService?.id,
-                                'timeblock_id': currentDate?.$1.id,
-                                'date_at': currentDate!.$2,
+                                'salon_id': salon!.id.toString(),
+                                if (currentService != null)
+                                  'service_id': currentService?.id.toString(),
+                                if (currentDate != null)
+                                  'timeblock_id': currentDate?.$1.id.toString(),
+                                if (currentDate != null)
+                                  'date_at': currentDate!.$2.toString(),
                               },
                             ),
                           ),
@@ -171,9 +177,11 @@ class _RecordScreenState extends State<RecordScreen> {
                               'choice_date_from_record',
                               extra: currentDate,
                               queryParameters: {
-                                'salon_id': salon!.id,
-                                'service_id': currentService?.id,
-                                'employee_id': currentEmployee?.id,
+                                'salon_id': salon!.id.toString(),
+                                if (currentService != null)
+                                  'service_id': currentService?.id.toString(),
+                                if (currentEmployee != null)
+                                  'employee_id': currentEmployee?.id.toString(),
                               },
                             ),
                           ),

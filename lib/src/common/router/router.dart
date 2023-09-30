@@ -49,7 +49,7 @@ final router = GoRouter(
                   path: 'choice_service',
                   parentNavigatorKey: _parentKey,
                   pageBuilder: (context, state) {
-                    log(state.uri.queryParameters.toString());
+                    // log(state.uri.queryParameters.toString());
                     return CustomTransitionPage<void>(
                       key: state.pageKey,
                       child: ServiceChoiceScreen(
@@ -137,12 +137,14 @@ final router = GoRouter(
                           child: ServiceChoiceScreen(
                             servicePreset: state.extra as ServiceModel?,
                             salonId: int.parse(
-                                state.uri.queryParameters['salon_id']!),
+                              state.uri.queryParameters['salon_id']!,
+                            ),
                             employeeId: int.tryParse(
-                              state.pathParameters['employee_id'] ?? '',
+                              state.uri.queryParameters['employee_id'] ?? '',
                             ),
                             timetableItemId: int.tryParse(
-                              state.pathParameters['timetable_item_id'] ?? '',
+                              state.uri.queryParameters['timetable_item_id'] ??
+                                  '',
                             ),
                             dateAt: state.uri.queryParameters['date_at'],
                           ),
@@ -174,12 +176,12 @@ final router = GoRouter(
                             salonId: int.parse(
                                 state.uri.queryParameters['salon_id']!),
                             serviceId: int.tryParse(
-                              state.pathParameters['service_id'] ?? '',
+                              state.uri.queryParameters['service_id'] ?? '',
                             ),
                             timeblockId: int.tryParse(
-                              state.pathParameters['timeblock_id'] ?? '',
+                              state.uri.queryParameters['timeblock_id'] ?? '',
                             ),
-                            dateAt: state.pathParameters['date_at'],
+                            dateAt: state.uri.queryParameters['date_at'],
                           ),
                           transitionsBuilder:
                               (context, animation, secondaryAnimation, child) {
@@ -201,18 +203,20 @@ final router = GoRouter(
                       name: 'choice_date_from_record',
                       path: 'choice_date',
                       parentNavigatorKey: _parentKey,
-                      builder: (context, state) => DateChoiceScreen(
-                        // TODO: Брать дату пресет из extra
-                        salonId: int.parse(
-                          state.pathParameters['salon_id']!,
-                        ),
-                        serviceId: int.tryParse(
-                          state.pathParameters['service_id'] ?? '',
-                        ),
-                        employeeId: int.tryParse(
-                          state.pathParameters['employee_id'] ?? '',
-                        ),
-                      ),
+                      builder: (context, state) {
+                        return DateChoiceScreen(
+                          // TODO: Брать дату пресет из extra
+                          salonId: int.parse(
+                            state.uri.queryParameters['salon_id']!,
+                          ),
+                          serviceId: int.tryParse(
+                            state.uri.queryParameters['service_id'] ?? '',
+                          ),
+                          employeeId: int.tryParse(
+                            state.uri.queryParameters['employee_id'] ?? '',
+                          ),
+                        );
+                      },
                     ),
                     GoRoute(
                       name: 'congratulation',

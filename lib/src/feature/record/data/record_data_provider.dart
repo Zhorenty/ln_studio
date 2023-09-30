@@ -33,7 +33,7 @@ abstract interface class RecordDataProvider {
   ///
   Future<List<EmployeeTimeblock$Response>> fetchTimeblocks({
     required int salonId,
-    required int timetableItemId,
+    required String dateAt,
     int? serviceId,
     int? employeeId,
   });
@@ -121,15 +121,15 @@ class RecordDataProviderImpl implements RecordDataProvider {
   @override
   Future<List<EmployeeTimeblock$Response>> fetchTimeblocks({
     required int salonId,
-    required int timetableItemId,
+    required String dateAt,
     int? serviceId,
     int? employeeId,
   }) async {
-    final response = await restClient.post(
-      '/api/timeblock/refresh',
-      body: {
+    final response = await restClient.get(
+      '/api/book/get_timeblocks',
+      queryParams: {
         'salon_id': salonId,
-        'timetable_item_id': timetableItemId,
+        'date_at': dateAt,
         if (serviceId != null) 'service_id': serviceId,
         if (employeeId != null) 'employee_id': employeeId,
       },

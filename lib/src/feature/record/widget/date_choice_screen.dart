@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 
 import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_bloc.dart';
@@ -91,7 +90,7 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TimeblocsWrap(
-                        dateAt: DateFormat.yMMMM('ru_RU').format(_selectedDay),
+                        dateAt: _selectedDay.jsonFormat(),
                         visible: visible,
                         expanded: expanded,
                       ),
@@ -123,9 +122,7 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
               salonId: widget.salonId,
               serviceId: widget.serviceId,
               employeeId: widget.employeeId,
-              timetableItemId: timetableItems
-                  .firstWhere((item) => selectedDay == item.dateAt)
-                  .id,
+              dateAt: _selectedDay.jsonFormat(),
             ),
           );
     }
