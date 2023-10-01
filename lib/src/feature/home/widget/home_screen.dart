@@ -91,8 +91,8 @@ class HomeScreen extends StatelessWidget {
                         ),
                         RecordTypeCard(
                           ignoring: state.currentSalon == null,
-                          image: Assets.images.repeatIcon.image(scale: 10),
-                          description: 'Повторно',
+                          image: Assets.images.calendarIcon.image(scale: 10),
+                          description: 'На дату',
                           onTap: () => context.goNamed(
                             'choice_date',
                             queryParameters: {
@@ -102,8 +102,8 @@ class HomeScreen extends StatelessWidget {
                         ),
                         RecordTypeCard(
                           ignoring: state.currentSalon == null,
-                          image: Assets.images.serviceIcon.image(scale: 10),
-                          description: 'На дом',
+                          image: Assets.images.repeatIcon.image(scale: 10),
+                          description: 'Повторно',
                           onTap: () => context.goNamed(
                             'record',
                             queryParameters: {

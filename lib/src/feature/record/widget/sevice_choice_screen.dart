@@ -48,20 +48,20 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colorScheme.onBackground,
-      body: BlocProvider(
-        create: (context) => CategoryBloc(
-          repository: DependenciesScope.of(context).recordRepository,
-        )..add(
-            CategoryEvent.fetchServiceCategories(
-              salonId: widget.salonId,
-              employeeId: widget.employeeId,
-              timetableItemId: widget.timetableItemId,
-              dateAt: widget.dateAt,
-            ),
+    return BlocProvider(
+      create: (context) => CategoryBloc(
+        repository: DependenciesScope.of(context).recordRepository,
+      )..add(
+          CategoryEvent.fetchServiceCategories(
+            salonId: widget.salonId,
+            employeeId: widget.employeeId,
+            timetableItemId: widget.timetableItemId,
+            dateAt: widget.dateAt,
           ),
-        child: BlocBuilder<CategoryBloc, CategoryState>(
+        ),
+      child: Scaffold(
+        backgroundColor: context.colorScheme.onBackground,
+        body: BlocBuilder<CategoryBloc, CategoryState>(
           builder: (context, state) {
             return Stack(
               children: [
@@ -85,7 +85,10 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                       itemCount: state.categoryWithServices.length,
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           child: Card(
                             shape: RoundedRectangleBorder(
                               side: const BorderSide(color: Color(0xFF272727)),

@@ -29,8 +29,8 @@ class HistoryItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: context.colorScheme.background,
         borderRadius: BorderRadius.circular(12),
@@ -41,7 +41,7 @@ class HistoryItemCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              AvatarWidget(radius: 25, title: title),
+              AvatarWidget(radius: 26, title: title),
               const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

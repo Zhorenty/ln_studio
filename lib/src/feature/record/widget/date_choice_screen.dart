@@ -74,17 +74,22 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       child: CustomTableCalendar(
-                        onDaySelected: (selectedDay, focusedDay) =>
-                            onDaySelected(
-                                selectedDay, focusedDay, state.timetables),
+                        onDaySelected: (selectedDay, focusedDay) {
+                          return onDaySelected(
+                            selectedDay,
+                            focusedDay,
+                            state.timetables,
+                          );
+                        },
                         selectedDayPredicate: (day) =>
                             isSameDay(_selectedDay, day),
-                        enabledDayPredicate: (day) => enabledDayPredicate(
-                          day,
-                          state.timetables,
-                        ),
+                        enabledDayPredicate: (day) =>
+                            enabledDayPredicate(day, state.timetables),
                       ),
                     ),
                     Padding(
@@ -130,15 +135,13 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
 
   ///
   bool enabledDayPredicate(DateTime day, List<TimetableItem> timetables) {
-    if (day.isAfterAsNow()) {
-      return timetables.any(
-        (timetable) =>
-            timetable.dateAt.year == day.year &&
-            timetable.dateAt.month == day.month &&
-            timetable.dateAt.day == day.day,
-      );
-    } else {
-      return false;
-    }
+    return day.isAfterAsNow()
+        ? timetables.any(
+            (timetable) =>
+                timetable.dateAt.year == day.year &&
+                timetable.dateAt.month == day.month &&
+                timetable.dateAt.day == day.day,
+          )
+        : false;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -6,9 +7,28 @@ import '/src/common/utils/extensions/context_extension.dart';
 /// {@template qr_code_widget}
 /// QRCodeWidget.
 /// {@endtemplate}
-class QRCodeWidget extends StatelessWidget {
+class QRCodeWidget extends StatefulWidget {
   /// {@macro qr_code_widget}
   const QRCodeWidget({super.key});
+
+  @override
+  State<QRCodeWidget> createState() => _QRCodeWidgetState();
+}
+
+class _QRCodeWidgetState extends State<QRCodeWidget> {
+  late Image myImage;
+
+  @override
+  void initState() {
+    super.initState();
+    myImage = Assets.images.qrCode.image();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(myImage.image, context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +45,7 @@ class QRCodeWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 32 + 16),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.asset('assets/images/qr_code.png'),
+              child: Assets.images.qrCode.image(),
             ),
           ),
           const SizedBox(height: 16),
