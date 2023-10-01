@@ -32,14 +32,11 @@ class DateChoiceScreen extends StatefulWidget {
 }
 
 class _DateChoiceScreenState extends State<DateChoiceScreen> {
-  ///
   bool visible = false;
-
-  ///
   bool expanded = false;
 
-  ///
   DateTime _selectedDay = DateTime.now().subtract(const Duration(days: 1));
+  DateTime _focusedDay = DateTime.now();
 
   @override
   void initState() {
@@ -58,54 +55,49 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
     return Scaffold(
       backgroundColor: context.colorScheme.onBackground,
       body: BlocBuilder<TimetableBloc, TimetableState>(
-        builder: (context, state) {
-          return CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                pinned: true,
-                title: Text(
-                  'Выберите дату',
-                  style: context.textTheme.titleLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                  ),
+        builder: (context, state) => CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              title: Text(
+                'Выберите дату',
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontFamily: FontFamily.geologica,
                 ),
               ),
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      child: CustomTableCalendar(
-                        onDaySelected: (selectedDay, focusedDay) {
-                          return onDaySelected(
-                            selectedDay,
-                            focusedDay,
-                            state.timetables,
-                          );
-                        },
-                        selectedDayPredicate: (day) =>
-                            isSameDay(_selectedDay, day),
-                        enabledDayPredicate: (day) =>
-                            enabledDayPredicate(day, state.timetables),
-                      ),
+            ),
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TimeblocsWrap(
-                        dateAt: _selectedDay.jsonFormat(),
-                        visible: visible,
-                        expanded: expanded,
-                      ),
+                    child: CustomTableCalendar(
+                      focusedDay: _focusedDay,
+                      onDaySelected: (selectedDay, focusedDay) => onDaySelected(
+                          selectedDay, focusedDay, state.timetables),
+                      selectedDayPredicate: (day) =>
+                          isSameDay(_selectedDay, day),
+                      enabledDayPredicate: (day) =>
+                          enabledDayPredicate(day, state.timetables),
                     ),
-                  ],
-                ),
-              )
-            ],
-          );
-        },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TimeblocsWrap(
+                      dateAt: _selectedDay.jsonFormat(),
+                      visible: visible,
+                      expanded: expanded,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -119,8 +111,10 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
     if (enabledDayPredicate(selectedDay, timetableItems)) {
       visible = true;
       expanded = !expanded;
-      _selectedDay = selectedDay;
-      setState(() {});
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+      });
 
       context.read<TimeblockBloc>().add(
             TimeblockEvent.fetchTimeblocks(
