@@ -242,7 +242,7 @@ class _ServiceCardState extends State<ServiceCard> {
                 AnimatedButton(
                   padding: const EdgeInsets.only(right: 4, top: 2),
                   onPressed: () => setState(() => expanded = !expanded),
-                  child: const Icon(Icons.info_outline, size: 18),
+                  child: const Icon(Icons.info_outline, size: 20),
                 ),
               ],
             ),

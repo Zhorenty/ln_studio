@@ -8,8 +8,8 @@ import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_bloc.
 import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_state.dart';
 
 ///
-class TimeblocsWrap extends StatelessWidget {
-  const TimeblocsWrap({
+class TimeblocksWrap extends StatelessWidget {
+  const TimeblocksWrap({
     super.key,
     required this.dateAt,
     this.visible = false,

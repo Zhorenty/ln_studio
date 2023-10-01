@@ -86,7 +86,7 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TimeblocsWrap(
+                    child: TimeblocksWrap(
                       dateAt: _selectedDay.jsonFormat(),
                       visible: visible,
                       expanded: expanded,
