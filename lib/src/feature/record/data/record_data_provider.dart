@@ -55,14 +55,15 @@ class RecordDataProviderImpl implements RecordDataProvider {
     int? timeblockId,
     String? dateAt,
   }) async {
+    final params = {
+      'salon_id': salonId,
+      if (employeeId != null) 'employee_id': employeeId,
+      if (timeblockId != null) 'timeblock_id': timeblockId,
+      if (dateAt != null) 'date_at': dateAt,
+    };
     final response = await restClient.get(
       '/api/book/get_services',
-      queryParams: {
-        'salon_id': salonId,
-        if (employeeId != null) 'employee_id': employeeId,
-        if (timeblockId != null) 'timeblock_id': timeblockId,
-        if (dateAt != null) 'date_at': dateAt,
-      },
+      queryParams: params,
     );
 
     final categories = List.from((response['data'] as List))

@@ -95,19 +95,21 @@ final router = GoRouter(
                       name: 'choice_service_from_record',
                       path: 'choice_service',
                       parentNavigatorKey: _parentKey,
-                      builder: (context, state) => ServiceChoiceScreen(
-                        servicePreset: state.extra as ServiceModel?,
-                        salonId: int.parse(
-                          state.uri.queryParameters['salon_id']!,
-                        ),
-                        employeeId: int.tryParse(
-                          state.uri.queryParameters['employee_id'] ?? '',
-                        ),
-                        timetableItemId: int.tryParse(
-                          state.uri.queryParameters['timetable_item_id'] ?? '',
-                        ),
-                        dateAt: state.uri.queryParameters['date_at'],
-                      ),
+                      builder: (context, state) {
+                        return ServiceChoiceScreen(
+                          servicePreset: state.extra as ServiceModel?,
+                          salonId: int.parse(
+                            state.uri.queryParameters['salon_id']!,
+                          ),
+                          employeeId: int.tryParse(
+                            state.uri.queryParameters['employee_id'] ?? '',
+                          ),
+                          timetableItemId: int.tryParse(
+                            state.uri.queryParameters['timeblock_id'] ?? '',
+                          ),
+                          dateAt: state.uri.queryParameters['date_at'],
+                        );
+                      },
                     ),
                     GoRoute(
                       name: 'choice_employee_from_record',
