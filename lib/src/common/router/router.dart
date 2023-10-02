@@ -109,8 +109,7 @@ final router = GoRouter(
                             state.uri.queryParameters['employee_id'] ?? '',
                           ),
                           timetableItemId: int.tryParse(
-                            state.uri.queryParameters['timetable_item_id'] ??
-                                '',
+                            state.uri.queryParameters['timeblock_id'] ?? '',
                           ),
                           dateAt: state.uri.queryParameters['date_at'],
                         );
