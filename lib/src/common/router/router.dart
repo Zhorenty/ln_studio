@@ -48,25 +48,21 @@ final router = GoRouter(
                   name: 'choice_service',
                   path: 'choice_service',
                   parentNavigatorKey: _parentKey,
-                  builder: (context, state) {
-                    return ServiceChoiceScreen(
-                      salonId: int.parse(
-                        state.uri.queryParameters['salon_id']!,
-                      ),
-                    );
-                  },
+                  builder: (context, state) => ServiceChoiceScreen(
+                    salonId: int.parse(
+                      state.uri.queryParameters['salon_id']!,
+                    ),
+                  ),
                 ),
                 GoRoute(
                   name: 'choice_employee',
                   path: 'choice_employee',
                   parentNavigatorKey: _parentKey,
-                  builder: (context, state) {
-                    return EmployeeChoiceScreen(
-                      salonId: int.parse(
-                        state.uri.queryParameters['salon_id']!,
-                      ),
-                    );
-                  },
+                  builder: (context, state) => EmployeeChoiceScreen(
+                    salonId: int.parse(
+                      state.uri.queryParameters['salon_id']!,
+                    ),
+                  ),
                 ),
                 GoRoute(
                   name: 'choice_date',
@@ -99,60 +95,53 @@ final router = GoRouter(
                       name: 'choice_service_from_record',
                       path: 'choice_service',
                       parentNavigatorKey: _parentKey,
-                      builder: (context, state) {
-                        return ServiceChoiceScreen(
-                          servicePreset: state.extra as ServiceModel?,
-                          salonId: int.parse(
-                            state.uri.queryParameters['salon_id']!,
-                          ),
-                          employeeId: int.tryParse(
-                            state.uri.queryParameters['employee_id'] ?? '',
-                          ),
-                          timetableItemId: int.tryParse(
-                            state.uri.queryParameters['timetable_item_id'] ??
-                                '',
-                          ),
-                          dateAt: state.uri.queryParameters['date_at'],
-                        );
-                      },
+                      builder: (context, state) => ServiceChoiceScreen(
+                        servicePreset: state.extra as ServiceModel?,
+                        salonId: int.parse(
+                          state.uri.queryParameters['salon_id']!,
+                        ),
+                        employeeId: int.tryParse(
+                          state.uri.queryParameters['employee_id'] ?? '',
+                        ),
+                        timetableItemId: int.tryParse(
+                          state.uri.queryParameters['timetable_item_id'] ?? '',
+                        ),
+                        dateAt: state.uri.queryParameters['date_at'],
+                      ),
                     ),
                     GoRoute(
                       name: 'choice_employee_from_record',
                       path: 'choice_employee',
                       parentNavigatorKey: _parentKey,
-                      builder: (context, state) {
-                        return EmployeeChoiceScreen(
-                          employeePreset: state.extra as EmployeeModel?,
-                          salonId:
-                              int.parse(state.uri.queryParameters['salon_id']!),
-                          serviceId: int.tryParse(
-                            state.uri.queryParameters['service_id'] ?? '',
-                          ),
-                          timeblockId: int.tryParse(
-                            state.uri.queryParameters['timeblock_id'] ?? '',
-                          ),
-                          dateAt: state.uri.queryParameters['date_at'],
-                        );
-                      },
+                      builder: (context, state) => EmployeeChoiceScreen(
+                        employeePreset: state.extra as EmployeeModel?,
+                        salonId:
+                            int.parse(state.uri.queryParameters['salon_id']!),
+                        serviceId: int.tryParse(
+                          state.uri.queryParameters['service_id'] ?? '',
+                        ),
+                        timeblockId: int.tryParse(
+                          state.uri.queryParameters['timeblock_id'] ?? '',
+                        ),
+                        dateAt: state.uri.queryParameters['date_at'],
+                      ),
                     ),
                     GoRoute(
                       name: 'choice_date_from_record',
                       path: 'choice_date',
                       parentNavigatorKey: _parentKey,
-                      builder: (context, state) {
-                        return DateChoiceScreen(
-                          // TODO: Брать дату пресет из extra
-                          salonId: int.parse(
-                            state.uri.queryParameters['salon_id']!,
-                          ),
-                          serviceId: int.tryParse(
-                            state.uri.queryParameters['service_id'] ?? '',
-                          ),
-                          employeeId: int.tryParse(
-                            state.uri.queryParameters['employee_id'] ?? '',
-                          ),
-                        );
-                      },
+                      builder: (context, state) => DateChoiceScreen(
+                        // TODO: Брать дату пресет из extra
+                        salonId: int.parse(
+                          state.uri.queryParameters['salon_id']!,
+                        ),
+                        serviceId: int.tryParse(
+                          state.uri.queryParameters['service_id'] ?? '',
+                        ),
+                        employeeId: int.tryParse(
+                          state.uri.queryParameters['employee_id'] ?? '',
+                        ),
+                      ),
                     ),
                     GoRoute(
                       name: 'congratulation',

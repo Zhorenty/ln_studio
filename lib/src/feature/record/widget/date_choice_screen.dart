@@ -66,14 +66,16 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                 ),
               ),
             ),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
+            SliverList.list(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: AnimatedOpacity(
+                    opacity: state.hasTimetable ? 1 : 0,
+                    duration: const Duration(milliseconds: 600),
                     child: CustomTableCalendar(
                       focusedDay: _focusedDay,
                       onDaySelected: (selectedDay, focusedDay) => onDaySelected(
@@ -84,17 +86,17 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                           enabledDayPredicate(day, state.timetables),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TimeblocksWrap(
-                      dateAt: _selectedDay.jsonFormat(),
-                      visible: visible,
-                      expanded: expanded,
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TimeblocksWrap(
+                    dateAt: _selectedDay.jsonFormat(),
+                    visible: visible,
+                    expanded: expanded,
                   ),
-                  const SizedBox(height: 32),
-                ],
-              ),
+                ),
+                const SizedBox(height: 32),
+              ],
             )
           ],
         ),

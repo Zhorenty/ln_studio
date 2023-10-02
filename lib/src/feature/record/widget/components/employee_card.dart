@@ -29,6 +29,7 @@ class EmployeeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = employee.userModel;
     final jobPlace = employee.jobModel;
+
     return AnimatedButton(
       onPressed: () => onChanged(employee),
       child: Container(
@@ -100,7 +101,7 @@ class SkeletonEmployeeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SliverToBoxAdapter(
-      child: Placeholder(),
+      child: SizedBox(),
     );
   }
 }

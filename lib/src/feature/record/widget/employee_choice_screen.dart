@@ -115,8 +115,10 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                     ],
                   ),
                   CupertinoSliverRefreshControl(onRefresh: _refresh),
-                  if (state.hasEmployee) ...[
-                    SliverPadding(
+                  SliverAnimatedOpacity(
+                    opacity: state.hasEmployee ? 1 : 0,
+                    duration: const Duration(milliseconds: 600),
+                    sliver: SliverPadding(
                       padding: const EdgeInsets.all(8),
                       sliver: SliverList.builder(
                         itemCount: state.employees.length,
@@ -140,9 +142,7 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                         },
                       ),
                     ),
-                  ] else ...[
-                    const SkeletonEmployeeCard()
-                  ],
+                  ),
                   SliverToBoxAdapter(
                     child: visible
                         ? SizedBox(

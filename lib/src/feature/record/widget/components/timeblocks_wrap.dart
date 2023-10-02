@@ -42,6 +42,7 @@ class TimeblocksWrap extends StatelessWidget {
                 border: Border.all(color: const Color(0xFF272727)),
               ),
               child: Wrap(
+                alignment: WrapAlignment.center,
                 children: [
                   ...state.timeblocks.map(
                     (timeblock) => Padding(
