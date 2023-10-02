@@ -71,14 +71,32 @@ class BookingHistoryScreen extends StatelessWidget {
           ),
           body: BlocBuilder<BookingHistoryBloc, BookingHistoryState>(
               builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TabBarView(
-                children: [
-                  ListView(
-                    children: [
-                      ...state.bookingHistory.reversed.map((e) {
-                        if (!_isAfter(
+            return TabBarView(
+              children: [
+                ListView(
+                  children: [
+                    ...state.bookingHistory.reversed.map((e) {
+                      if (!_isAfter(
+                        e.dateAt.jsonFormat(),
+                        e.timeblock.time,
+                      )) {
+                        return HistoryItemCard(
+                          title: e.employee.fullName,
+                          subtitle: e.service.name,
+                          dateAt: e.dateAt.defaultFormat(),
+                          timeblock: e.timeblock.time
+                              .substring(0, e.timeblock.time.length - 3),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }),
+                  ],
+                ),
+                ListView(
+                  children: [
+                    ...state.bookingHistory.reversed.map(
+                      (e) {
+                        if (_isAfter(
                           e.dateAt.jsonFormat(),
                           e.timeblock.time,
                         )) {
@@ -86,39 +104,18 @@ class BookingHistoryScreen extends StatelessWidget {
                             title: e.employee.fullName,
                             subtitle: e.service.name,
                             dateAt: e.dateAt.defaultFormat(),
-                            timeblock: e.timeblock.time
-                                .substring(0, e.timeblock.time.length - 3),
+                            timeblock: createTimeWithDuration(
+                              e.timeblock.time,
+                              20,
+                            ),
                           );
                         }
                         return const SizedBox.shrink();
-                      }),
-                    ],
-                  ),
-                  ListView(
-                    children: [
-                      ...state.bookingHistory.reversed.map(
-                        (e) {
-                          if (_isAfter(
-                            e.dateAt.jsonFormat(),
-                            e.timeblock.time,
-                          )) {
-                            return HistoryItemCard(
-                              title: e.employee.fullName,
-                              subtitle: e.service.name,
-                              dateAt: e.dateAt.defaultFormat(),
-                              timeblock: createTimeWithDuration(
-                                e.timeblock.time,
-                                20,
-                              ),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                      },
+                    ),
+                  ],
+                ),
+              ],
             );
           }),
         ),

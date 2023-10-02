@@ -8,16 +8,28 @@ sealed class EmployeeEvent extends _$EmployeeEventBase {
   const EmployeeEvent();
 
   /// Factory for fetching Employee.
-  const factory EmployeeEvent.fetchSalonEmployees(int salonId) =
-      EmployeeEvent$FetchSalonEmployees;
+  const factory EmployeeEvent.fetchEmployees({
+    required int salonId,
+    required int? serviceId,
+    required int? timeblockId,
+    required String? dateAt,
+  }) = EmployeeEvent$FetchEmployees;
 }
 
-/// [EmployeeEvent.fetchSalonEmployees] event.
-final class EmployeeEvent$FetchSalonEmployees extends EmployeeEvent {
-  const EmployeeEvent$FetchSalonEmployees(this.salonId) : super();
+/// [EmployeeEvent.fetchEmployees] event.
+final class EmployeeEvent$FetchEmployees extends EmployeeEvent {
+  const EmployeeEvent$FetchEmployees({
+    required this.salonId,
+    required this.serviceId,
+    required this.timeblockId,
+    required this.dateAt,
+  });
 
   ///
   final int salonId;
+  final int? serviceId;
+  final int? timeblockId;
+  final String? dateAt;
 }
 
 /// Employee events base class.
@@ -26,28 +38,27 @@ abstract base class _$EmployeeEventBase {
 
   /// Map over state union.
   R map<R>({
-    required PatternMatch<R, EmployeeEvent$FetchSalonEmployees>
-        fetchSalonEmployees,
+    required PatternMatch<R, EmployeeEvent$FetchEmployees> fetchEmployees,
   }) =>
       switch (this) {
-        final EmployeeEvent$FetchSalonEmployees s => fetchSalonEmployees(s),
+        final EmployeeEvent$FetchEmployees s => fetchEmployees(s),
         _ => throw AssertionError(),
       };
 
   /// Map over state union or return default if no match.
   R maybeMap<R>({
     required R Function() orElse,
-    PatternMatch<R, EmployeeEvent$FetchSalonEmployees>? fetchSalonEmployees,
+    PatternMatch<R, EmployeeEvent$FetchEmployees>? fetchEmployees,
   }) =>
       map<R>(
-        fetchSalonEmployees: fetchSalonEmployees ?? (_) => orElse(),
+        fetchEmployees: fetchEmployees ?? (_) => orElse(),
       );
 
   /// Map over state union or return null if no match.
   R? mapOrNull<R>({
-    PatternMatch<R, EmployeeEvent$FetchSalonEmployees>? fetchSalonEmployees,
+    PatternMatch<R, EmployeeEvent$FetchEmployees>? fetchEmployees,
   }) =>
       map<R?>(
-        fetchSalonEmployees: fetchSalonEmployees ?? (_) => null,
+        fetchEmployees: fetchEmployees ?? (_) => null,
       );
 }

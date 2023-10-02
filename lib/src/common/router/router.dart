@@ -4,7 +4,6 @@ import 'package:ln_studio/src/feature/profile/widget/booking_history_screen.dart
 import 'package:ln_studio/src/feature/profile/widget/edit_profile_screen.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
-import 'package:ln_studio/src/feature/record/model/timetable.dart';
 import 'package:ln_studio/src/feature/record/widget/congratulation_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/date_choice_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/employee_choice_screen.dart';
@@ -49,23 +48,11 @@ final router = GoRouter(
                   name: 'choice_service',
                   path: 'choice_service',
                   parentNavigatorKey: _parentKey,
-                  pageBuilder: (context, state) {
-                    return CustomTransitionPage<void>(
-                      key: state.pageKey,
-                      child: const ServiceChoiceScreen(),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        const begin = Offset(0.0, 1.0);
-                        const end = Offset.zero;
-                        final tween = Tween(begin: begin, end: end);
-                        final offsetAnimation = animation.drive(tween);
-
-                        // TODO(zhorenty): Change animation transition.
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      },
+                  builder: (context, state) {
+                    return ServiceChoiceScreen(
+                      salonId: int.parse(
+                        state.uri.queryParameters['salon_id']!,
+                      ),
                     );
                   },
                 ),
@@ -73,25 +60,24 @@ final router = GoRouter(
                   name: 'choice_employee',
                   path: 'choice_employee',
                   parentNavigatorKey: _parentKey,
-                  pageBuilder: (context, state) {
-                    return CustomTransitionPage<void>(
-                      key: state.pageKey,
-                      child: const EmployeeChoiceScreen(),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        const begin = Offset(0.0, 1.0);
-                        const end = Offset.zero;
-                        final tween = Tween(begin: begin, end: end);
-                        final offsetAnimation = animation.drive(tween);
-
-                        // TODO(zhorenty): Change animation transition.
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      },
+                  builder: (context, state) {
+                    return EmployeeChoiceScreen(
+                      salonId: int.parse(
+                        state.uri.queryParameters['salon_id']!,
+                      ),
                     );
                   },
+                ),
+                GoRoute(
+                  name: 'choice_date',
+                  path: 'choice_date',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => DateChoiceScreen(
+                    // TODO: Брать дату пресет из extra
+                    salonId: int.parse(
+                      state.uri.queryParameters['salon_id']!,
+                    ),
+                  ),
                 ),
                 GoRoute(
                   name: 'record',
@@ -104,8 +90,8 @@ final router = GoRouter(
                     employeePreset: state.extra is EmployeeModel
                         ? state.extra as EmployeeModel
                         : null,
-                    datePreset: state.extra is EmployeeTimeblock$Response
-                        ? state.extra as EmployeeTimeblock$Response
+                    datePreset: state.extra is TimeblockWithDate
+                        ? state.extra as TimeblockWithDate
                         : null,
                   ),
                   routes: [
@@ -113,25 +99,20 @@ final router = GoRouter(
                       name: 'choice_service_from_record',
                       path: 'choice_service',
                       parentNavigatorKey: _parentKey,
-                      pageBuilder: (context, state) {
-                        return CustomTransitionPage<void>(
-                          key: state.pageKey,
-                          child: ServiceChoiceScreen(
-                            servicePreset: state.extra as ServiceModel?,
+                      builder: (context, state) {
+                        return ServiceChoiceScreen(
+                          servicePreset: state.extra as ServiceModel?,
+                          salonId: int.parse(
+                            state.uri.queryParameters['salon_id']!,
                           ),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            const begin = Offset(0.0, 1.0);
-                            const end = Offset.zero;
-                            final tween = Tween(begin: begin, end: end);
-                            final offsetAnimation = animation.drive(tween);
-
-                            // TODO(zhorenty): Change animation transition.
-                            return SlideTransition(
-                              position: offsetAnimation,
-                              child: child,
-                            );
-                          },
+                          employeeId: int.tryParse(
+                            state.uri.queryParameters['employee_id'] ?? '',
+                          ),
+                          timetableItemId: int.tryParse(
+                            state.uri.queryParameters['timetable_item_id'] ??
+                                '',
+                          ),
+                          dateAt: state.uri.queryParameters['date_at'],
                         );
                       },
                     ),
@@ -139,36 +120,39 @@ final router = GoRouter(
                       name: 'choice_employee_from_record',
                       path: 'choice_employee',
                       parentNavigatorKey: _parentKey,
-                      pageBuilder: (context, state) {
-                        return CustomTransitionPage<void>(
-                          key: state.pageKey,
-                          child: const EmployeeChoiceScreen(),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            const begin = Offset(0.0, 1.0);
-                            const end = Offset.zero;
-                            final tween = Tween(begin: begin, end: end);
-                            final offsetAnimation = animation.drive(tween);
-
-                            // TODO(zhorenty): Change animation transition.
-                            return SlideTransition(
-                              position: offsetAnimation,
-                              child: child,
-                            );
-                          },
+                      builder: (context, state) {
+                        return EmployeeChoiceScreen(
+                          employeePreset: state.extra as EmployeeModel?,
+                          salonId:
+                              int.parse(state.uri.queryParameters['salon_id']!),
+                          serviceId: int.tryParse(
+                            state.uri.queryParameters['service_id'] ?? '',
+                          ),
+                          timeblockId: int.tryParse(
+                            state.uri.queryParameters['timeblock_id'] ?? '',
+                          ),
+                          dateAt: state.uri.queryParameters['date_at'],
                         );
                       },
                     ),
                     GoRoute(
                       name: 'choice_date_from_record',
-                      path: 'choice_date/:employee_id',
+                      path: 'choice_date',
                       parentNavigatorKey: _parentKey,
-                      builder: (context, state) => DateChoiceScreen(
-                        // TODO: Брать дату пресет из extra
-                        employeeId: int.parse(
-                          state.pathParameters['employee_id']!,
-                        ),
-                      ),
+                      builder: (context, state) {
+                        return DateChoiceScreen(
+                          // TODO: Брать дату пресет из extra
+                          salonId: int.parse(
+                            state.uri.queryParameters['salon_id']!,
+                          ),
+                          serviceId: int.tryParse(
+                            state.uri.queryParameters['service_id'] ?? '',
+                          ),
+                          employeeId: int.tryParse(
+                            state.uri.queryParameters['employee_id'] ?? '',
+                          ),
+                        );
+                      },
                     ),
                     GoRoute(
                       name: 'congratulation',
@@ -177,15 +161,6 @@ final router = GoRouter(
                       builder: (context, state) => const CongratulationScreen(),
                     ),
                   ],
-                ),
-                GoRoute(
-                  name: 'choice_date',
-                  path: 'choice_date/:employee_id',
-                  parentNavigatorKey: _parentKey,
-                  builder: (context, state) => DateChoiceScreen(
-                    // TODO: Брать дату пресет из extra
-                    employeeId: int.parse(state.pathParameters['employee_id']!),
-                  ),
                 ),
               ],
             ),

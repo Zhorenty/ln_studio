@@ -1,4 +1,3 @@
-import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/model/record_create.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
@@ -9,18 +8,35 @@ import '/src/feature/record/model/category.dart';
 /// Datasource for Record RecordDataProvider.
 abstract interface class RecordDataProvider {
   /// Fetch RecordRecordDataProvider
-  Future<List<CategoryModel>> fetchCategories();
+  Future<List<CategoryModel>> fetchServiceCategories({
+    required int salonId,
+    int? employeeId,
+    int? timeblockId,
+    String? dateAt,
+  });
 
   /// Fetch staff by salon id
-  Future<List<EmployeeModel>> fetchSalonEmployees(int salonId);
+  Future<List<EmployeeModel>> fetchEmployees({
+    required int salonId,
+    int? serviceId,
+    int? timeblockId,
+    String? dateAt,
+  });
 
   ///
-  Future<List<TimetableItem>> fetchEmployeeTimetable(int employeeId);
+  Future<List<TimetableItem>> fetchTimetable({
+    required int salonId,
+    int? serviceId,
+    int? employeeId,
+  });
 
   ///
-  Future<List<EmployeeTimeblock$Response>> fetchEmployeeTimeblocks(
-    EmployeeTimeblock$Body timeblock,
-  );
+  Future<List<EmployeeTimeblock$Response>> fetchTimeblocks({
+    required int salonId,
+    required String dateAt,
+    int? serviceId,
+    int? employeeId,
+  });
 
   Future<void> createRecord(RecordModel$Create recordData);
 }
@@ -33,8 +49,21 @@ class RecordDataProviderImpl implements RecordDataProvider {
   final RestClient restClient;
 
   @override
-  Future<List<CategoryModel>> fetchCategories() async {
-    final response = await restClient.get('/api/category/with_services');
+  Future<List<CategoryModel>> fetchServiceCategories({
+    required int salonId,
+    int? employeeId,
+    int? timeblockId,
+    String? dateAt,
+  }) async {
+    final response = await restClient.get(
+      '/api/book/get_services',
+      queryParams: {
+        'salon_id': salonId,
+        if (employeeId != null) 'employee_id': employeeId,
+        if (timeblockId != null) 'timeblock_id': timeblockId,
+        if (dateAt != null) 'date_at': dateAt,
+      },
+    );
 
     final categories = List.from((response['data'] as List))
         .map((e) => CategoryModel.fromJson(e))
@@ -44,8 +73,21 @@ class RecordDataProviderImpl implements RecordDataProvider {
   }
 
   @override
-  Future<List<EmployeeModel>> fetchSalonEmployees(int salonId) async {
-    final response = await restClient.get('/api/employee/by_salon_id/$salonId');
+  Future<List<EmployeeModel>> fetchEmployees({
+    required int salonId,
+    int? serviceId,
+    int? timeblockId,
+    String? dateAt,
+  }) async {
+    final response = await restClient.get(
+      '/api/book/get_employees',
+      queryParams: {
+        'salon_id': salonId,
+        if (serviceId != null) 'service_id': serviceId,
+        if (timeblockId != null) 'timeblock_id': timeblockId,
+        if (dateAt != null) 'date_at': dateAt,
+      },
+    );
 
     final staff = List.from((response['data'] as List))
         .map((e) => EmployeeModel.fromJson(e))
@@ -55,9 +97,18 @@ class RecordDataProviderImpl implements RecordDataProvider {
   }
 
   @override
-  Future<List<TimetableItem>> fetchEmployeeTimetable(int employeeId) async {
+  Future<List<TimetableItem>> fetchTimetable({
+    required int salonId,
+    int? serviceId,
+    int? employeeId,
+  }) async {
     final response = await restClient.get(
-      '/api/timetable/by_employee_id/$employeeId',
+      '/api/book/get_timetables',
+      queryParams: {
+        'salon_id': salonId,
+        if (serviceId != null) 'service_id': serviceId,
+        if (employeeId != null) 'employee_id': employeeId,
+      },
     );
 
     final timetables = List.from((response['data'] as List))
@@ -68,15 +119,19 @@ class RecordDataProviderImpl implements RecordDataProvider {
   }
 
   @override
-  Future<List<EmployeeTimeblock$Response>> fetchEmployeeTimeblocks(
-    EmployeeTimeblock$Body timeblock,
-  ) async {
-    final response = await restClient.post(
-      '/api/timeblock/refresh',
-      body: {
-        'date_at': timeblock.dateAt.jsonFormat(),
-        'employee_id': timeblock.employeeId,
-        'salon_id': timeblock.salonId,
+  Future<List<EmployeeTimeblock$Response>> fetchTimeblocks({
+    required int salonId,
+    required String dateAt,
+    int? serviceId,
+    int? employeeId,
+  }) async {
+    final response = await restClient.get(
+      '/api/book/get_timeblocks',
+      queryParams: {
+        'salon_id': salonId,
+        'date_at': dateAt,
+        if (serviceId != null) 'service_id': serviceId,
+        if (employeeId != null) 'employee_id': employeeId,
       },
     );
 

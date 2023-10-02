@@ -12,8 +12,7 @@ class TimeblockBloc extends Bloc<TimeblockEvent, TimeblockState> {
       : super(const TimeblockState.idle()) {
     on<TimeblockEvent>(
       (event, emit) => event.map(
-        fetchEmployeeTimeblocks: (event) =>
-            _fetchEmployeeTimeblocks(event, emit),
+        fetchTimeblocks: (event) => _fetchTimeblocks(event, emit),
       ),
     );
   }
@@ -22,13 +21,16 @@ class TimeblockBloc extends Bloc<TimeblockEvent, TimeblockState> {
   final RecordRepository repository;
 
   /// Fetch Timeblock from repository.
-  Future<void> _fetchEmployeeTimeblocks(
-    TimeblockEvent$FetchEmployeeTimeblocks event,
+  Future<void> _fetchTimeblocks(
+    TimeblockEvent$FetchTimeblocks event,
     Emitter<TimeblockState> emit,
   ) async {
     try {
-      final timeblocks = await repository.getEmployeeTimeblocks(
-        event.timeblock,
+      final timeblocks = await repository.getTimeblocks(
+        salonId: event.salonId,
+        dateAt: event.dateAt,
+        serviceId: event.serviceId,
+        employeeId: event.employeeId,
       );
       emit(TimeblockState.loaded(timeblocks: timeblocks));
     } on Object catch (e) {

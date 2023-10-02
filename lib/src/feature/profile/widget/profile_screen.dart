@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '/src/common/assets/generated/assets.gen.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -10,9 +11,14 @@ import '/src/common/widget/custom_divider.dart';
 import 'components/category_list_tile.dart';
 import 'components/header_list_tile.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +65,8 @@ class ProfileScreen extends StatelessWidget {
                 size: 23,
               ),
               const CustomDivider(),
-              const CategoryListTile(
+              CategoryListTile(
+                onTap: _launchWhatsApp,
                 icon: Icons.help_outline_rounded,
                 title: 'Поддержка',
                 size: 23.5,
@@ -82,6 +89,7 @@ class ProfileScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AnimatedButton(
+                      onPressed: _launchVk,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CircleAvatar(
@@ -95,6 +103,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     AnimatedButton(
+                      onPressed: _launchWhatsApp,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CircleAvatar(
@@ -108,6 +117,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     AnimatedButton(
+                      onPressed: _launchTelegram,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CircleAvatar(
@@ -128,5 +138,32 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _launchVk() async {
+    final url = Uri.parse('https://vk.com/salonokolashes');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void _launchWhatsApp() async {
+    final url = Uri.parse('https://wa.me/79604875329');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void _launchTelegram() async {
+    final url = Uri.parse('https://t.me/oko_lashes_keasnodar');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

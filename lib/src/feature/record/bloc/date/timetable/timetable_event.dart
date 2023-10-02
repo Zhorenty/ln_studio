@@ -8,16 +8,24 @@ sealed class TimetableEvent extends _$TimetableEventBase {
   const TimetableEvent();
 
   /// Factory for fetching Timetable.
-  const factory TimetableEvent.fetchEmployeeTimetables(int employeeId) =
-      TimetableEvent$FetchEmployeeTimetables;
+  const factory TimetableEvent.fetchTimetables({
+    required int salonId,
+    required int? serviceId,
+    required int? employeeId,
+  }) = TimetableEvent$FetchTimetables;
 }
 
-/// [TimetableEvent.fetchEmployeeTimetables] event.
-final class TimetableEvent$FetchEmployeeTimetables extends TimetableEvent {
-  const TimetableEvent$FetchEmployeeTimetables(this.employeeId) : super();
+/// [TimetableEvent.fetchTimetables] event.
+final class TimetableEvent$FetchTimetables extends TimetableEvent {
+  const TimetableEvent$FetchTimetables({
+    required this.salonId,
+    required this.serviceId,
+    required this.employeeId,
+  });
 
-  ///
-  final int employeeId;
+  final int salonId;
+  final int? serviceId;
+  final int? employeeId;
 }
 
 /// Timetable events base class.
@@ -26,31 +34,27 @@ abstract base class _$TimetableEventBase {
 
   /// Map over state union.
   R map<R>({
-    required PatternMatch<R, TimetableEvent$FetchEmployeeTimetables>
-        fetchEmployeeTimetables,
+    required PatternMatch<R, TimetableEvent$FetchTimetables> fetchTimetables,
   }) =>
       switch (this) {
-        final TimetableEvent$FetchEmployeeTimetables s =>
-          fetchEmployeeTimetables(s),
+        final TimetableEvent$FetchTimetables s => fetchTimetables(s),
         _ => throw AssertionError(),
       };
 
   /// Map over state union or return default if no match.
   R maybeMap<R>({
     required R Function() orElse,
-    PatternMatch<R, TimetableEvent$FetchEmployeeTimetables>?
-        fetchEmployeeTimetables,
+    PatternMatch<R, TimetableEvent$FetchTimetables>? fetchTimetables,
   }) =>
       map<R>(
-        fetchEmployeeTimetables: fetchEmployeeTimetables ?? (_) => orElse(),
+        fetchTimetables: fetchTimetables ?? (_) => orElse(),
       );
 
   /// Map over state union or return null if no match.
   R? mapOrNull<R>({
-    PatternMatch<R, TimetableEvent$FetchEmployeeTimetables>?
-        fetchEmployeeTimetables,
+    PatternMatch<R, TimetableEvent$FetchTimetables>? fetchTimetables,
   }) =>
       map<R?>(
-        fetchEmployeeTimetables: fetchEmployeeTimetables ?? (_) => null,
+        fetchTimetables: fetchTimetables ?? (_) => null,
       );
 }
