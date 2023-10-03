@@ -45,7 +45,7 @@ final class BookingModel {
 
   factory BookingModel.fromJson(Map<String, dynamic> json) => BookingModel(
         id: json['id'],
-        dateAt: DateTime.parse(json['date_at'] as String),
+        dateAt: DateTime.parse(json['date_at']),
         price: json['price'],
         comment: json['comment'],
         salon: Salon.fromJson(json['salon']),

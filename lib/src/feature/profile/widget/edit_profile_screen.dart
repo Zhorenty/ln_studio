@@ -203,8 +203,9 @@ class ProfileHeader extends StatelessWidget {
       subtitle: Text(
         subtitle,
         style: context.textTheme.titleSmall?.copyWith(
-            fontFamily: FontFamily.geologica,
-            color: context.colorScheme.primaryContainer),
+          fontFamily: FontFamily.geologica,
+          color: context.colorScheme.primaryContainer,
+        ),
       ),
     );
   }

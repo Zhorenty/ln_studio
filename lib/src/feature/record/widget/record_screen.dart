@@ -125,182 +125,170 @@ class _RecordScreenState extends State<RecordScreen> {
 
     return Scaffold(
       backgroundColor: context.colorScheme.onBackground,
-      body: GestureDetector(
-        onTap: () {
-          if (commentFocusNode.hasFocus) {
-            commentFocusNode.unfocus();
-          }
-        },
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-              title: Text(
-                'Запись на маникюр',
-                style: context.textTheme.titleLarge?.copyWith(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            title: Text(
+              'Запись на маникюр',
+              style: context.textTheme.titleLarge?.copyWith(
+                fontFamily: FontFamily.geologica,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverToBoxAdapter(
+              child: DefaultTextStyle(
+                style: context.textTheme.titleMedium!.copyWith(
                   fontFamily: FontFamily.geologica,
+                ),
+                child: BlocConsumer<RecordBLoC, RecordState>(
+                  listener: (context, state) => state.mapOrNull(
+                    successful: (state) => context.goNamed('congratulation'),
+                  ),
+                  bloc: recordBLoC,
+                  builder: (context, state) {
+                    final salon = context.read<SalonBLoC>().state.currentSalon;
+
+                    _salonController.text = salon?.name ?? '';
+
+                    return Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Выберите услугу'),
+                          FieldButton(
+                            controller: _servicesController,
+                            deletable: true,
+                            hintText: 'Выберите услугу',
+                            onSuffixPressed: () => setState(
+                              () => currentService = null,
+                            ),
+                            onTap: () => context.goNamed(
+                              'choice_service_from_record',
+                              extra: currentService,
+                              queryParameters: {
+                                'salon_id': salon!.id.toString(),
+                                if (currentEmployee != null)
+                                  'employee_id': currentEmployee?.id.toString(),
+                                if (currentDate != null)
+                                  'timeblock_id': currentDate?.$1.id.toString(),
+                                if (currentDate != null)
+                                  'date_at': currentDate!.$2.toString(),
+                              },
+                            ),
+                            validator: _emptyServiceValidator,
+                          ),
+                          const Text('Выберите мастера'),
+                          FieldButton(
+                            controller: _employeeController,
+                            deletable: true,
+                            hintText: 'Выберите мастера',
+                            onSuffixPressed: () => setState(
+                              () => currentEmployee = null,
+                            ),
+                            onTap: () => context.goNamed(
+                              'choice_employee_from_record',
+                              extra: currentEmployee,
+                              queryParameters: {
+                                'salon_id': salon!.id.toString(),
+                                if (currentService != null)
+                                  'service_id': currentService?.id.toString(),
+                                if (currentDate != null)
+                                  'timeblock_id': currentDate?.$1.id.toString(),
+                                if (currentDate != null)
+                                  'date_at': currentDate!.$2.toString(),
+                              },
+                            ),
+                            validator: _emptyEmployeeValidator,
+                          ),
+                          const Text('Выберите дату и время'),
+                          FieldButton(
+                            controller: _dateController,
+                            deletable: true,
+                            hintText: 'Выберите дату и время',
+                            onSuffixPressed: () => setState(
+                              () => currentDate = null,
+                            ),
+                            onTap: () => context.goNamed(
+                              'choice_date_from_record',
+                              extra: currentDate,
+                              queryParameters: {
+                                'salon_id': salon!.id.toString(),
+                                if (currentService != null)
+                                  'service_id': currentService?.id.toString(),
+                                if (currentEmployee != null)
+                                  'employee_id': currentEmployee?.id.toString(),
+                              },
+                            ),
+                            validator: _emptyDateValidator,
+                          ),
+                          const Text('Филиал'),
+                          FieldButton(
+                            controller: _salonController,
+                            hintText: 'Выберите филиал на главном экране',
+                            validator: _emptySalonValidator,
+                          ),
+                          const Text('Комментарий к записи'),
+                          HugeTextField(
+                            controller: commentController,
+                            focusNode: commentFocusNode,
+                          ),
+                          state.service?.price != null
+                              ? Text('Стоимость: ${state.service?.price} ₽')
+                              : const SizedBox.shrink(),
+                          const SizedBox(height: 16),
+                          AnimatedButton(
+                            onPressed: () {
+                              // TODO: Сделать валидацию
+                              // TODO: Wait until asset in
+                              //  CongratilationScreen was loaded.
+                              if (_formKey.currentState!.validate()) {
+                                recordBLoC.add(
+                                  RecordEvent.create(
+                                    dateAt: currentDate!.$2,
+                                    salonId: salon?.id ?? 1,
+                                    clientId: 1,
+                                    serviceId: currentService!.id,
+                                    employeeId: currentEmployee!.id,
+                                    timeblockId: currentDate!.$1.id,
+                                    price: currentService!.price,
+                                    comment: commentController.text,
+                                  ),
+                                );
+                              }
+                            },
+                            child: Container(
+                              height: 48,
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 32,
+                                vertical: 12,
+                              ),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: context.colorScheme.primary,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Text(
+                                'Записаться',
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  color: context.colorScheme.onBackground,
+                                  fontFamily: FontFamily.geologica,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
-            SliverPadding(
-              padding: const EdgeInsets.all(16),
-              sliver: SliverToBoxAdapter(
-                child: DefaultTextStyle(
-                  style: context.textTheme.titleMedium!.copyWith(
-                    fontFamily: FontFamily.geologica,
-                  ),
-                  child: BlocConsumer<RecordBLoC, RecordState>(
-                    listener: (context, state) => state.mapOrNull(
-                      successful: (state) => context.goNamed('congratulation'),
-                    ),
-                    bloc: recordBLoC,
-                    builder: (context, state) {
-                      final salon =
-                          context.read<SalonBLoC>().state.currentSalon;
-
-                      _salonController.text = salon?.name ?? '';
-
-                      return Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Выберите услугу'),
-                            FieldButton(
-                              controller: _servicesController,
-                              deletable: true,
-                              hintText: 'Выберите услугу',
-                              onSuffixPressed: () => setState(
-                                () => currentService = null,
-                              ),
-                              onTap: () => context.goNamed(
-                                'choice_service_from_record',
-                                extra: currentService,
-                                queryParameters: {
-                                  'salon_id': salon!.id.toString(),
-                                  if (currentEmployee != null)
-                                    'employee_id':
-                                        currentEmployee?.id.toString(),
-                                  if (currentDate != null)
-                                    'timeblock_id':
-                                        currentDate?.$1.id.toString(),
-                                  if (currentDate != null)
-                                    'date_at': currentDate!.$2.toString(),
-                                },
-                              ),
-                              validator: _emptyServiceValidator,
-                            ),
-                            const Text('Выберите мастера'),
-                            FieldButton(
-                              controller: _employeeController,
-                              deletable: true,
-                              hintText: 'Выберите мастера',
-                              onSuffixPressed: () => setState(
-                                () => currentEmployee = null,
-                              ),
-                              onTap: () => context.goNamed(
-                                'choice_employee_from_record',
-                                extra: currentEmployee,
-                                queryParameters: {
-                                  'salon_id': salon!.id.toString(),
-                                  if (currentService != null)
-                                    'service_id': currentService?.id.toString(),
-                                  if (currentDate != null)
-                                    'timeblock_id':
-                                        currentDate?.$1.id.toString(),
-                                  if (currentDate != null)
-                                    'date_at': currentDate!.$2.toString(),
-                                },
-                              ),
-                              validator: _emptyEmployeeValidator,
-                            ),
-                            const Text('Выберите дату и время'),
-                            FieldButton(
-                              controller: _dateController,
-                              deletable: true,
-                              hintText: 'Выберите дату и время',
-                              onSuffixPressed: () => setState(
-                                () => currentDate = null,
-                              ),
-                              onTap: () => context.goNamed(
-                                'choice_date_from_record',
-                                extra: currentDate,
-                                queryParameters: {
-                                  'salon_id': salon!.id.toString(),
-                                  if (currentService != null)
-                                    'service_id': currentService?.id.toString(),
-                                  if (currentEmployee != null)
-                                    'employee_id':
-                                        currentEmployee?.id.toString(),
-                                },
-                              ),
-                              validator: _emptyDateValidator,
-                            ),
-                            const Text('Филиал'),
-                            FieldButton(
-                              controller: _salonController,
-                              hintText: 'Выберите филиал на главном экране',
-                              validator: _emptySalonValidator,
-                            ),
-                            const Text('Комментарий к записи'),
-                            HugeTextField(
-                              controller: commentController,
-                              focusNode: commentFocusNode,
-                            ),
-                            state.service?.price != null
-                                ? Text('Стоимость: ${state.service?.price} ₽')
-                                : const SizedBox.shrink(),
-                            const SizedBox(height: 16),
-                            AnimatedButton(
-                              onPressed: () {
-                                // TODO: Сделать валидацию
-                                // TODO: Wait until asset in
-                                //  CongratilationScreen was loaded.
-                                if (_formKey.currentState!.validate()) {
-                                  recordBLoC.add(
-                                    RecordEvent.create(
-                                      dateAt: currentDate!.$2,
-                                      salonId: salon?.id ?? 1,
-                                      clientId: 1,
-                                      serviceId: currentService!.id,
-                                      employeeId: currentEmployee!.id,
-                                      timeblockId: currentDate!.$1.id,
-                                      price: currentService!.price,
-                                      comment: commentController.text,
-                                    ),
-                                  );
-                                }
-                              },
-                              child: Container(
-                                height: 32 + 16,
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 32,
-                                  vertical: 12,
-                                ),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: context.colorScheme.primary,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  'Записаться',
-                                  style: context.textTheme.bodyLarge?.copyWith(
-                                    color: context.colorScheme.onBackground,
-                                    fontFamily: FontFamily.geologica,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
@@ -342,10 +330,12 @@ class HugeTextField extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
           color: context.colorScheme.background,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(color: const Color(0xFF272727)),
         ),
         child: TextFormField(
+          onTapOutside: (_) =>
+              focusNode!.hasFocus ? focusNode?.unfocus() : null,
           controller: controller,
           focusNode: focusNode,
           maxLines: null,

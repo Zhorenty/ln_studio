@@ -92,7 +92,7 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                           child: Card(
                             shape: RoundedRectangleBorder(
                               side: const BorderSide(color: Color(0xFF272727)),
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(16),
                             ),
                             clipBehavior: Clip.antiAlias,
                             margin: EdgeInsets.zero,
@@ -172,6 +172,7 @@ class ServiceCard extends StatefulWidget {
 }
 
 class _ServiceCardState extends State<ServiceCard> {
+  ///
   bool expanded = false;
 
   @override
@@ -183,11 +184,6 @@ class _ServiceCardState extends State<ServiceCard> {
           const EdgeInsets.only(right: 8),
         ),
         padding: const EdgeInsets.all(8),
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-          color: context.colorScheme.background,
-          borderRadius: BorderRadius.circular(8),
-        ),
         child: Column(
           children: [
             Row(

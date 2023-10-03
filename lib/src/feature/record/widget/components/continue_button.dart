@@ -28,7 +28,7 @@ class ContinueButton extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: context.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Text(
                   'Продолжить',

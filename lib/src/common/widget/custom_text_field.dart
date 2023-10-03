@@ -82,7 +82,6 @@ class CustomTextField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: dense ? 8 : 2),
       child: TextFormField(
-        /// TODO: Implement unfocus
         onTapOutside: onTapOutside,
         enabled: enabled,
         focusNode: focusNode,
@@ -109,23 +108,27 @@ class CustomTextField extends StatelessWidget {
           fillColor: context.colorScheme.background,
           errorBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Color(0xFFB95D6D)),
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
           focusedErrorBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Color(0xFFB95D6D)),
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Color(0xFF272727)),
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
           disabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Color(0xFF272727)),
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF6B6A6A)),
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: context.colorScheme.primary.withOpacity(.4),
+              width: 1.5,
+            ),
+            // borderSide: BorderSide(color: Color(0xFF6B6A6A)),
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
           ),
           labelText: label,
           isDense: true,
