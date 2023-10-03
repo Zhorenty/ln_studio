@@ -84,8 +84,10 @@ class BookingHistoryScreen extends StatelessWidget {
                           title: e.employee.fullName,
                           subtitle: e.service.name,
                           dateAt: e.dateAt.defaultFormat(),
-                          timeblock: e.timeblock.time
-                              .substring(0, e.timeblock.time.length - 3),
+                          timeblock: createTimeWithDuration(
+                            e.timeblock.time,
+                            e.service.duration!,
+                          ),
                         );
                       }
                       return const SizedBox.shrink();
@@ -106,7 +108,7 @@ class BookingHistoryScreen extends StatelessWidget {
                             dateAt: e.dateAt.defaultFormat(),
                             timeblock: createTimeWithDuration(
                               e.timeblock.time,
-                              20,
+                              e.service.duration!,
                             ),
                           );
                         }

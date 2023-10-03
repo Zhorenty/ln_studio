@@ -134,17 +134,10 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                   right: 0,
                   child: ContinueButton(
                     visible: visible,
-                    onPressed: () {
-                      context.goNamed(
-                        'record',
-                        extra: selectedService,
-                        // queryParameters: {
-                        //   'salon_id': widget.salonId,
-                        //   'service_id': selectedService?.id,
-                        //   'employee_id': widget.employeeId,
-                        // },
-                      );
-                    },
+                    onPressed: () => context.goNamed(
+                      'record',
+                      extra: selectedService,
+                    ),
                   ),
                 ),
               ],
@@ -254,11 +247,25 @@ class _ServiceCardState extends State<ServiceCard> {
               child: expanded
                   ? Padding(
                       padding: const EdgeInsets.only(top: 4, left: 10),
-                      child: Text(
-                        widget.service.description,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontFamily: FontFamily.geologica,
-                          color: context.colorScheme.primaryContainer,
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: widget.service.description,
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontFamily: FontFamily.geologica,
+                                color: context.colorScheme.primaryContainer,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '\nДлительность процедуры: '
+                                  '${widget.service.duration} минут',
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontFamily: FontFamily.geologica,
+                                color: context.colorScheme.primaryContainer,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     )

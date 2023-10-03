@@ -117,8 +117,9 @@ final router = GoRouter(
                       parentNavigatorKey: _parentKey,
                       builder: (context, state) => EmployeeChoiceScreen(
                         employeePreset: state.extra as EmployeeModel?,
-                        salonId:
-                            int.parse(state.uri.queryParameters['salon_id']!),
+                        salonId: int.parse(
+                          state.uri.queryParameters['salon_id']!,
+                        ),
                         serviceId: int.tryParse(
                           state.uri.queryParameters['service_id'] ?? '',
                         ),

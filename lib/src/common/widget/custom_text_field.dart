@@ -21,6 +21,8 @@ class CustomTextField extends StatelessWidget {
     this.onChanged,
     this.suffix,
     this.labelStyle,
+    this.errorStyle,
+    this.onTapOutside,
     this.dense = true,
     this.enabled = true,
   });
@@ -68,6 +70,11 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
 
   ///
+  final void Function(PointerDownEvent)? onTapOutside;
+
+  final TextStyle? errorStyle;
+
+  ///
   final Widget? suffix;
 
   @override
@@ -75,6 +82,8 @@ class CustomTextField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: dense ? 8 : 2),
       child: TextFormField(
+        /// TODO: Implement unfocus
+        onTapOutside: onTapOutside,
         enabled: enabled,
         focusNode: focusNode,
         validator: validator,
@@ -94,6 +103,7 @@ class CustomTextField extends StatelessWidget {
                 fontFamily: FontFamily.geologica,
                 fontWeight: FontWeight.bold,
               ),
+          errorStyle: errorStyle,
           hintText: hintText,
           filled: true,
           fillColor: context.colorScheme.background,

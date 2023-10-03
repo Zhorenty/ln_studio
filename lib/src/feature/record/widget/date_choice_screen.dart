@@ -75,7 +75,7 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                   ),
                   child: AnimatedOpacity(
                     opacity: state.hasTimetable ? 1 : 0,
-                    duration: const Duration(milliseconds: 600),
+                    duration: const Duration(milliseconds: 300),
                     child: CustomTableCalendar(
                       focusedDay: _focusedDay,
                       onDaySelected: (selectedDay, focusedDay) => onDaySelected(
