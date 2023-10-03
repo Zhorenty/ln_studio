@@ -180,10 +180,10 @@ class _ServiceCardState extends State<ServiceCard> {
     return GestureDetector(
       onTap: () => widget.onTap(widget.service),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8).add(
-          const EdgeInsets.only(right: 8),
+        decoration: BoxDecoration(color: context.colorScheme.background),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8).add(
+          const EdgeInsets.only(right: 16),
         ),
-        padding: const EdgeInsets.all(8),
         child: Column(
           children: [
             Row(
