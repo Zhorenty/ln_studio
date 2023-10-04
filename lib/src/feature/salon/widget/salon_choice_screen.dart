@@ -125,7 +125,7 @@ class _SalonChoiceRow extends StatelessWidget {
           padding: const EdgeInsets.all(4).add(const EdgeInsets.only(left: 12)),
           decoration: BoxDecoration(
             color: context.colorScheme.background,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(color: const Color(0xFF272727)),
           ),
           child: Column(

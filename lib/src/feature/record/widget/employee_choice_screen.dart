@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
+import 'package:ln_studio/src/common/utils/extensions/color_extension.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/common/widget/overlay/modal_popup.dart';
+import 'package:ln_studio/src/common/widget/shimmer.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_event.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_state.dart';
@@ -116,31 +118,39 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                   ),
                   CupertinoSliverRefreshControl(onRefresh: _refresh),
                   SliverAnimatedOpacity(
-                    opacity: state.hasEmployee ? 1 : 0,
-                    duration: const Duration(milliseconds: 600),
+                    opacity: state.hasEmployee ? 1 : .5,
+                    duration: const Duration(milliseconds: 350),
                     sliver: SliverPadding(
                       padding: const EdgeInsets.all(8),
-                      sliver: SliverList.builder(
-                        itemCount: state.employees.length,
-                        itemBuilder: (context, index) {
-                          final employee = state.employees[index];
+                      sliver: state.hasEmployee
+                          ? SliverList.builder(
+                              itemCount: state.employees.length,
+                              itemBuilder: (context, index) {
+                                final employee = state.employees[index];
 
-                          return !employee.isDismiss
-                              ? EmployeeCard(
-                                  employee: employee,
-                                  selectedEmployee: selectedEmployee,
-                                  onChanged: (cardEmployee) => setState(() {
-                                    visible = true;
-                                    selectedEmployee = cardEmployee;
-                                    context.goNamed(
-                                      'record',
-                                      extra: selectedEmployee,
-                                    );
-                                  }),
-                                )
-                              : const SizedBox.shrink();
-                        },
-                      ),
+                                return !employee.isDismiss
+                                    ? EmployeeCard(
+                                        employee: employee,
+                                        selectedEmployee: selectedEmployee,
+                                        onChanged: (cardEmployee) =>
+                                            setState(() {
+                                          visible = true;
+                                          selectedEmployee = cardEmployee;
+                                          context.goNamed(
+                                            'record',
+                                            extra: selectedEmployee,
+                                          );
+                                        }),
+                                      )
+                                    : const SizedBox.shrink();
+                              },
+                            )
+                          : SliverList.separated(
+                              itemCount: 5,
+                              itemBuilder: (context, index) =>
+                                  const SkeletonEmployeeCard(),
+                              separatorBuilder: (c, i) => const SizedBox(),
+                            ),
                     ),
                   ),
                   SliverToBoxAdapter(
@@ -198,5 +208,28 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
     final block = context.read<EmployeeBloc>().stream.first;
     _fetchSalonEmployees();
     await block;
+  }
+}
+
+class SkeletonEmployeeCard extends StatelessWidget {
+  const SkeletonEmployeeCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 8, bottom: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFF272727),
+        ),
+      ),
+      child: Shimmer(
+        size: const Size(double.infinity, 95),
+        color: context.colorScheme.onBackground.lighten(0.05),
+        backgroundColor: context.colorScheme.background,
+        cornerRadius: 16,
+      ),
+    );
   }
 }

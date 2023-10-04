@@ -40,20 +40,25 @@ class RecordTypeCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: const Color(0xFF272727)),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              image,
-              const SizedBox(height: 4),
-              if (description != null)
-                Text(
-                  description!,
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.colorScheme.secondary,
-                    fontFamily: FontFamily.geologica,
-                  ),
-                ),
-            ],
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: !ignoring
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      image,
+                      const SizedBox(height: 4),
+                      if (description != null)
+                        Text(
+                          description!,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colorScheme.secondary,
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
           ),
         ),
       ),

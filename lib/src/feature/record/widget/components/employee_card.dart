@@ -37,7 +37,7 @@ class EmployeeCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         decoration: BoxDecoration(
           color: context.colorScheme.background.lighten(0.015),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(color: const Color(0xFF272727)),
         ),
         child: Row(

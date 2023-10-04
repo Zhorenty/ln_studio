@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:ln_studio/src/common/utils/extensions/color_extension.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
+import 'package:ln_studio/src/common/widget/shimmer.dart';
 
 import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_event.dart';
@@ -52,6 +55,10 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat("LLLL y 'г.'");
+    String formattedDate = formatter.format(now);
+
     return Scaffold(
       backgroundColor: context.colorScheme.onBackground,
       body: BlocBuilder<TimetableBloc, TimetableState>(
@@ -73,19 +80,45 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                     horizontal: 16,
                     vertical: 8,
                   ),
-                  child: AnimatedOpacity(
-                    opacity: state.hasTimetable ? 1 : 0,
-                    duration: const Duration(milliseconds: 300),
-                    child: CustomTableCalendar(
-                      focusedDay: _focusedDay,
-                      onDaySelected: (selectedDay, focusedDay) => onDaySelected(
-                          selectedDay, focusedDay, state.timetables),
-                      selectedDayPredicate: (day) =>
-                          isSameDay(_selectedDay, day),
-                      enabledDayPredicate: (day) =>
-                          enabledDayPredicate(day, state.timetables),
-                    ),
-                  ),
+                  child: state.hasTimetable
+                      ? CustomTableCalendar(
+                          focusedDay: _focusedDay,
+                          onDaySelected: (selectedDay, focusedDay) =>
+                              onDaySelected(
+                                  selectedDay, focusedDay, state.timetables),
+                          selectedDayPredicate: (day) =>
+                              isSameDay(_selectedDay, day),
+                          enabledDayPredicate: (day) =>
+                              enabledDayPredicate(day, state.timetables),
+                        )
+                      : Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: context.colorScheme.background,
+                            border: Border.all(
+                              color: const Color(0xFF272727),
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                formattedDate,
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  fontFamily: FontFamily.geologica,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Shimmer(
+                                size: const Size(double.infinity, 320),
+                                color: context.colorScheme.onBackground
+                                    .lighten(0.05),
+                                backgroundColor: context.colorScheme.background,
+                                cornerRadius: 16,
+                              ),
+                            ],
+                          ),
+                        ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16),

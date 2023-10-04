@@ -84,52 +84,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const CustomDivider(),
               SizedBox(
-                height: 150,
+                height: MediaQuery.sizeOf(context).height / 6.25,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AnimatedButton(
+                    RedirectIcon(
                       onPressed: _launchVk,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                          radius: 21,
-                          backgroundColor: context.colorScheme.onBackground,
-                          child: Assets.images.vkIcon.image(
-                            scale: 20,
-                            color: context.colorScheme.secondary,
-                          ),
-                        ),
+                      child: Assets.images.vkIcon.image(
+                        scale: 20,
+                        color: context.colorScheme.secondary,
                       ),
                     ),
-                    AnimatedButton(
+                    RedirectIcon(
                       onPressed: _launchWhatsApp,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                          radius: 21,
-                          backgroundColor: context.colorScheme.onBackground,
-                          child: Assets.images.whatsappIcon.image(
-                            scale: 20,
-                            color: context.colorScheme.secondary,
-                          ),
-                        ),
+                      child: Assets.images.whatsappIcon.image(
+                        scale: 20,
+                        color: context.colorScheme.secondary,
                       ),
                     ),
-                    AnimatedButton(
+                    RedirectIcon(
                       onPressed: _launchTelegram,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                          radius: 21,
-                          backgroundColor: context.colorScheme.onBackground,
-                          child: Assets.images.telegramIcon.image(
-                            scale: 25,
-                            color: context.colorScheme.secondary,
-                          ),
-                        ),
+                      child: Assets.images.telegramIcon.image(
+                        scale: 25,
+                        color: context.colorScheme.secondary,
                       ),
-                    ),
+                    )
                   ],
                 ),
               )
@@ -165,5 +144,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+}
+
+///
+class RedirectIcon extends StatelessWidget {
+  const RedirectIcon({super.key, this.onPressed, this.child});
+
+  ///
+  final void Function()? onPressed;
+
+  ///
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedButton(
+      onPressed: onPressed,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: context.colorScheme.onBackground,
+          border: Border.all(color: const Color(0xFF202020)),
+        ),
+        child: child,
+      ),
+    );
   }
 }
