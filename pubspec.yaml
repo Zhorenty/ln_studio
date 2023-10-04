@@ -98,6 +98,8 @@ flutter:
           weight: 700
     - family: Geologica
       fonts:
+        - asset: assets/fonts/Geologica-Light.ttf
+          weight: 300
         - asset: assets/fonts/Geologica-Regular.ttf
           weight: 400
         - asset: assets/fonts/Geologica-Bold.ttf

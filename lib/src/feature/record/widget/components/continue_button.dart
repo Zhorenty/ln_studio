@@ -22,13 +22,13 @@ class ContinueButton extends StatelessWidget {
           ? AnimatedButton(
               onPressed: onPressed,
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 50,
+                padding: EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: MediaQuery.sizeOf(context).width / 4,
                 ),
                 decoration: BoxDecoration(
                   color: context.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Text(
                   'Продолжить',

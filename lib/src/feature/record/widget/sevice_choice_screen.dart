@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
+import 'package:ln_studio/src/common/utils/extensions/color_extension.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/common/widget/shimmer.dart';
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_event.dart';
@@ -81,50 +83,73 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                         onPressed: () => context.pop(),
                       ),
                     ),
-                    SliverList.builder(
-                      itemCount: state.categoryWithServices.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(color: Color(0xFF272727)),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            clipBehavior: Clip.antiAlias,
-                            margin: EdgeInsets.zero,
-                            child: ExpansionTile(
-                              backgroundColor: context.colorScheme.background,
-                              collapsedBackgroundColor:
-                                  context.colorScheme.background,
-                              title: Text(
-                                state.categoryWithServices[index].name,
-                                style: context.textTheme.bodyLarge?.copyWith(
-                                  fontFamily: FontFamily.geologica,
-                                ),
-                              ),
-                              children: [
-                                ...state.categoryWithServices[index].service
-                                    .map(
-                                  (service) => ServiceCard(
-                                    service: service,
-                                    selectedService: selectedService,
-                                    onTap: (cardService) => setState(
-                                      () {
-                                        selectedService = cardService;
-                                        visible = true;
-                                      },
+                    SliverAnimatedOpacity(
+                      opacity: state.hasCategory ? 1 : .5,
+                      duration: const Duration(milliseconds: 400),
+                      sliver: state.hasCategory
+                          ? SliverList.builder(
+                              itemCount: state.categoryWithServices.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      side: const BorderSide(
+                                        color: Color(0xFF272727),
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    margin: EdgeInsets.zero,
+                                    child: ExpansionTile(
+                                      backgroundColor:
+                                          context.colorScheme.background,
+                                      collapsedBackgroundColor:
+                                          context.colorScheme.background,
+                                      title: Text(
+                                        state.categoryWithServices[index].name,
+                                        style: context.textTheme.bodyLarge
+                                            ?.copyWith(
+                                          fontFamily: FontFamily.geologica,
+                                        ),
+                                      ),
+                                      children: [
+                                        ...state
+                                            .categoryWithServices[index].service
+                                            .map(
+                                          (service) => ServiceCard(
+                                            service: service,
+                                            selectedService: selectedService,
+                                            onTap: (cardService) => setState(
+                                              () {
+                                                selectedService = cardService;
+                                                visible = true;
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              ],
+                                );
+                              },
+                            )
+                          : SliverPadding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 16,
+                              ),
+                              sliver: SliverList.separated(
+                                itemCount: 5,
+                                itemBuilder: (context, index) =>
+                                    const SkeletonServiceCard(),
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(height: 16),
+                              ),
                             ),
-                          ),
-                        );
-                      },
                     ),
                   ],
                 ),
@@ -134,23 +159,38 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                   right: 0,
                   child: ContinueButton(
                     visible: visible,
-                    onPressed: () {
-                      context.goNamed(
-                        'record',
-                        extra: selectedService,
-                        // queryParameters: {
-                        //   'salon_id': widget.salonId,
-                        //   'service_id': selectedService?.id,
-                        //   'employee_id': widget.employeeId,
-                        // },
-                      );
-                    },
+                    onPressed: () => context.goNamed(
+                      'record',
+                      extra: selectedService,
+                    ),
                   ),
                 ),
               ],
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class SkeletonServiceCard extends StatelessWidget {
+  const SkeletonServiceCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFF272727),
+        ),
+      ),
+      child: Shimmer(
+        size: const Size(double.infinity, 57),
+        color: context.colorScheme.onBackground.lighten(0.05),
+        backgroundColor: context.colorScheme.background,
+        cornerRadius: 16,
       ),
     );
   }
@@ -179,6 +219,7 @@ class ServiceCard extends StatefulWidget {
 }
 
 class _ServiceCardState extends State<ServiceCard> {
+  ///
   bool expanded = false;
 
   @override
@@ -186,14 +227,9 @@ class _ServiceCardState extends State<ServiceCard> {
     return GestureDetector(
       onTap: () => widget.onTap(widget.service),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8).add(
-          const EdgeInsets.only(right: 8),
-        ),
-        padding: const EdgeInsets.all(8),
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-          color: context.colorScheme.background,
-          borderRadius: BorderRadius.circular(8),
+        decoration: BoxDecoration(color: context.colorScheme.background),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8).add(
+          const EdgeInsets.only(right: 16),
         ),
         child: Column(
           children: [
@@ -254,11 +290,25 @@ class _ServiceCardState extends State<ServiceCard> {
               child: expanded
                   ? Padding(
                       padding: const EdgeInsets.only(top: 4, left: 10),
-                      child: Text(
-                        widget.service.description,
-                        style: context.textTheme.bodyMedium!.copyWith(
-                          fontFamily: FontFamily.geologica,
-                          color: context.colorScheme.primaryContainer,
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: widget.service.description,
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontFamily: FontFamily.geologica,
+                                color: context.colorScheme.primaryContainer,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '\nДлительность процедуры: '
+                                  '${widget.service.duration} минут',
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontFamily: FontFamily.geologica,
+                                color: context.colorScheme.primaryContainer,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     )

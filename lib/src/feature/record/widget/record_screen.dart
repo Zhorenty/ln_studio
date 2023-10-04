@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
+import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/common/widget/field_button.dart';
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_event.dart';
@@ -42,7 +44,14 @@ class _RecordScreenState extends State<RecordScreen> {
   ///
   late final RecordBLoC recordBLoC;
 
+  /// [FormState] for validating.
+  final _formKey = GlobalKey<FormState>();
+
   ///
+  late final TextEditingController _servicesController;
+  late final TextEditingController _employeeController;
+  late final TextEditingController _dateController;
+  late final TextEditingController _salonController;
   late final TextEditingController commentController;
 
   ///
@@ -71,7 +80,12 @@ class _RecordScreenState extends State<RecordScreen> {
     currentEmployee = widget.employeePreset;
     currentDate = widget.datePreset;
 
+    _servicesController = TextEditingController();
+    _employeeController = TextEditingController();
+    _dateController = TextEditingController();
+    _salonController = TextEditingController();
     commentController = TextEditingController();
+
     commentFocusNode = FocusNode();
   }
 
@@ -90,53 +104,68 @@ class _RecordScreenState extends State<RecordScreen> {
   @override
   void dispose() {
     commentController.dispose();
+    _servicesController.dispose();
+    _employeeController.dispose();
+    _dateController.dispose();
+    _salonController.dispose();
     commentFocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    _dateController.text = currentDate != null
+        ? '${DateTime.parse(currentDate!.$2).defaultFormat()}, '
+            '${currentDate?.$1.time.substring(0, currentDate!.$1.time.length - 3)}'
+        : '';
+
+    _servicesController.text = currentService?.name ?? '';
+
+    _employeeController.text = currentEmployee?.fullName ?? '';
+
     return Scaffold(
       backgroundColor: context.colorScheme.onBackground,
-      body: GestureDetector(
-        onTap: () {
-          if (commentFocusNode.hasFocus) {
-            commentFocusNode.unfocus();
-          }
-        },
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-              title: Text(
-                'Запись на маникюр',
-                style: context.textTheme.titleLarge?.copyWith(
-                  fontFamily: FontFamily.geologica,
-                ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            title: Text(
+              'Запись на маникюр',
+              style: context.textTheme.titleLarge?.copyWith(
+                fontFamily: FontFamily.geologica,
               ),
             ),
-            SliverPadding(
-              padding: const EdgeInsets.all(16),
-              sliver: SliverToBoxAdapter(
-                child: DefaultTextStyle(
-                  style: context.textTheme.titleMedium!.copyWith(
-                    fontFamily: FontFamily.geologica,
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverToBoxAdapter(
+              child: DefaultTextStyle(
+                style: context.textTheme.titleMedium!.copyWith(
+                  fontFamily: FontFamily.geologica,
+                ),
+                child: BlocConsumer<RecordBLoC, RecordState>(
+                  listener: (context, state) => state.mapOrNull(
+                    successful: (state) => context.goNamed('congratulation'),
                   ),
-                  child: BlocConsumer<RecordBLoC, RecordState>(
-                    listener: (context, state) => state.mapOrNull(
-                      successful: (state) => context.goNamed('congratulation'),
-                    ),
-                    bloc: recordBLoC,
-                    builder: (context, state) {
-                      final salon =
-                          context.read<SalonBLoC>().state.currentSalon;
+                  bloc: recordBLoC,
+                  builder: (context, state) {
+                    final salon = context.read<SalonBLoC>().state.currentSalon;
 
-                      return Column(
+                    _salonController.text = salon?.name ?? '';
+
+                    return Form(
+                      key: _formKey,
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text('Выберите услугу'),
-                          CustomContainer(
-                            title: currentService?.name ?? 'Выберите услугу',
+                          FieldButton(
+                            controller: _servicesController,
+                            deletable: true,
+                            hintText: 'Выберите услугу',
+                            onSuffixPressed: () => setState(
+                              () => currentService = null,
+                            ),
                             onTap: () => context.goNamed(
                               'choice_service_from_record',
                               extra: currentService,
@@ -150,11 +179,16 @@ class _RecordScreenState extends State<RecordScreen> {
                                   'date_at': currentDate!.$2.toString(),
                               },
                             ),
+                            validator: _emptyServiceValidator,
                           ),
                           const Text('Выберите мастера'),
-                          CustomContainer(
-                            title:
-                                currentEmployee?.fullName ?? 'Выберите мастера',
+                          FieldButton(
+                            controller: _employeeController,
+                            deletable: true,
+                            hintText: 'Выберите мастера',
+                            onSuffixPressed: () => setState(
+                              () => currentEmployee = null,
+                            ),
                             onTap: () => context.goNamed(
                               'choice_employee_from_record',
                               extra: currentEmployee,
@@ -168,12 +202,16 @@ class _RecordScreenState extends State<RecordScreen> {
                                   'date_at': currentDate!.$2.toString(),
                               },
                             ),
+                            validator: _emptyEmployeeValidator,
                           ),
                           const Text('Выберите дату и время'),
-                          CustomContainer(
-                            title: currentDate != null
-                                ? '${currentDate?.$1.time} ${currentDate?.$2}'
-                                : 'Выберите дату и время',
+                          FieldButton(
+                            controller: _dateController,
+                            deletable: true,
+                            hintText: 'Выберите дату и время',
+                            onSuffixPressed: () => setState(
+                              () => currentDate = null,
+                            ),
                             onTap: () => context.goNamed(
                               'choice_date_from_record',
                               extra: currentDate,
@@ -185,11 +223,13 @@ class _RecordScreenState extends State<RecordScreen> {
                                   'employee_id': currentEmployee?.id.toString(),
                               },
                             ),
+                            validator: _emptyDateValidator,
                           ),
                           const Text('Филиал'),
-                          CustomContainer(
-                            title: salon?.name ??
-                                'Выберите филиал на главном экране',
+                          FieldButton(
+                            controller: _salonController,
+                            hintText: 'Выберите филиал на главном экране',
+                            validator: _emptySalonValidator,
                           ),
                           const Text('Комментарий к записи'),
                           HugeTextField(
@@ -205,21 +245,23 @@ class _RecordScreenState extends State<RecordScreen> {
                               // TODO: Сделать валидацию
                               // TODO: Wait until asset in
                               //  CongratilationScreen was loaded.
-                              recordBLoC.add(
-                                RecordEvent.create(
-                                  dateAt: currentDate!.$2,
-                                  salonId: salon?.id ?? 1,
-                                  clientId: 1,
-                                  serviceId: currentService!.id,
-                                  employeeId: currentEmployee!.id,
-                                  timeblockId: currentDate!.$1.id,
-                                  price: currentService!.price,
-                                  comment: commentController.text,
-                                ),
-                              );
+                              if (_formKey.currentState!.validate()) {
+                                recordBLoC.add(
+                                  RecordEvent.create(
+                                    dateAt: currentDate!.$2,
+                                    salonId: salon?.id ?? 1,
+                                    clientId: 1,
+                                    serviceId: currentService!.id,
+                                    employeeId: currentEmployee!.id,
+                                    timeblockId: currentDate!.$1.id,
+                                    price: currentService!.price,
+                                    comment: commentController.text,
+                                  ),
+                                );
+                              }
                             },
                             child: Container(
-                              height: 32 + 16,
+                              height: 48,
                               margin: const EdgeInsets.symmetric(
                                 horizontal: 32,
                                 vertical: 12,
@@ -227,7 +269,7 @@ class _RecordScreenState extends State<RecordScreen> {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: context.colorScheme.primary,
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(16),
                               ),
                               child: Text(
                                 'Записаться',
@@ -239,56 +281,33 @@ class _RecordScreenState extends State<RecordScreen> {
                             ),
                           ),
                         ],
-                      );
-                    },
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-///
-class CustomContainer extends StatelessWidget {
-  const CustomContainer({super.key, required this.title, this.onTap});
-
-  ///
-  final String title;
-
-  /// Callback, called when the container is tapped.
-  final void Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(top: 10, bottom: 12),
-        decoration: BoxDecoration(
-          color: context.colorScheme.background,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: const Color(0xFF272727)),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                style: context.textTheme.bodyLarge?.copyWith(
-                  fontFamily: FontFamily.geologica,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
+
+  /// Empty value validator.
+  String? _emptyServiceValidator(String? value) =>
+      value!.isEmpty ? 'Пожалуйста, выберите услугу' : null;
+
+  /// Empty value validator.
+  String? _emptyEmployeeValidator(String? value) =>
+      value!.isEmpty ? 'Пожалуйста, выберите мастера' : null;
+
+  /// Empty value validator.
+  String? _emptyDateValidator(String? value) =>
+      value!.isEmpty ? 'Пожалуйста, выберите дату' : null;
+
+  /// Empty value validator.
+  String? _emptySalonValidator(String? value) =>
+      value!.isEmpty ? 'Выберите филиал на главном экране' : null;
 }
 
 /// Large text field for comments.
@@ -308,13 +327,15 @@ class HugeTextField extends StatelessWidget {
       duration: const Duration(milliseconds: 300),
       child: Container(
         margin: const EdgeInsets.only(top: 8, bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
           color: context.colorScheme.background,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(color: const Color(0xFF272727)),
         ),
         child: TextFormField(
+          onTapOutside: (_) =>
+              focusNode!.hasFocus ? focusNode?.unfocus() : null,
           controller: controller,
           focusNode: focusNode,
           maxLines: null,
@@ -331,9 +352,7 @@ class HugeTextField extends StatelessWidget {
               ),
             ),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: context.colorScheme.scrim,
-              ),
+              borderSide: BorderSide(color: context.colorScheme.scrim),
             ),
           ),
         ),

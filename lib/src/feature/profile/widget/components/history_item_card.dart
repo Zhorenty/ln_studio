@@ -33,7 +33,7 @@ class HistoryItemCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: context.colorScheme.background,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFF272727)),
       ),
       child: Column(
@@ -64,15 +64,6 @@ class HistoryItemCard extends StatelessWidget {
                   ),
                 ],
               ),
-              // const Spacer(),
-              // AnimatedButton(
-              //   padding: const EdgeInsets.only(bottom: 24),
-              //   child: Icon(
-              //     Icons.more_vert_rounded,
-              //     size: 20,
-              //     color: context.colorScheme.secondary,
-              //   ),
-              // ),
             ],
           ),
           const Divider(color: Color(0xFF272727)),

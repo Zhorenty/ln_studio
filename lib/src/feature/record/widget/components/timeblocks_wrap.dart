@@ -38,7 +38,7 @@ class TimeblocksWrap extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: context.colorScheme.background,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: const Color(0xFF272727)),
               ),
               child: Wrap(
