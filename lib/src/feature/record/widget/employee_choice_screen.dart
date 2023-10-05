@@ -118,7 +118,7 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                   CupertinoSliverRefreshControl(onRefresh: _refresh),
                   SliverAnimatedOpacity(
                     opacity: state.hasEmployee ? 1 : .5,
-                    duration: const Duration(milliseconds: 350),
+                    duration: const Duration(milliseconds: 400),
                     sliver: SliverPadding(
                       padding: const EdgeInsets.all(8),
                       sliver: state.hasEmployee

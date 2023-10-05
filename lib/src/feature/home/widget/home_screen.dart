@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
-import 'package:ln_studio/src/feature/home/widget/components/news_card.dart';
-import 'package:ln_studio/src/feature/salon/widget/current_salon_screen.dart';
 
-import '/src/common/assets/generated/fonts.gen.dart';
+import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
+import 'package:ln_studio/src/feature/salon/widget/current_salon_screen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/animated_button.dart';
 import '/src/common/widget/custom_app_bar.dart';
 import '/src/common/widget/pop_up_button.dart';
-import '/src/feature/home/widget/components/record_type_card.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/bloc/salon_state.dart';
+import 'components/custom_header.dart';
+import 'components/news_card.dart';
+import 'components/record_type_card.dart';
 
 /// {@template Home_screen}
 /// Home screen.
@@ -58,8 +58,8 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const CustomHeader(label: 'Записаться'),
-              BlocBuilder<SalonBLoC, SalonState>(builder: (context, state) {
-                return SizedBox(
+              BlocBuilder<SalonBLoC, SalonState>(
+                builder: (context, state) => SizedBox(
                   height: 100,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
@@ -110,8 +110,8 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                );
-              }),
+                ),
+              ),
               const CustomHeader(label: 'Новости'),
               SizedBox(
                 height: 115,
@@ -145,46 +145,11 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              // const CustomHeader(label: 'Магазин'),
+              const CustomHeader(label: 'Магазин'),
             ],
           ),
         ),
       ],
-    );
-  }
-}
-
-///
-class CustomHeader extends StatelessWidget {
-  const CustomHeader({super.key, required this.label});
-
-  ///
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 12, top: 12, bottom: 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: context.textTheme.bodyLarge?.copyWith(
-              fontFamily: FontFamily.geologica,
-              color: context.colorScheme.secondary,
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: context.colorScheme.primary,
-            ),
-            height: 3.3,
-            width: 50,
-          ),
-        ],
-      ),
     );
   }
 }
