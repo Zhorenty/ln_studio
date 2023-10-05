@@ -7,10 +7,17 @@ import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/feature/salon/models/salon.dart';
 
 class CurrentSalonScreen extends StatelessWidget {
-  const CurrentSalonScreen({super.key, required this.currentSalon});
+  const CurrentSalonScreen({
+    super.key,
+    required this.currentSalon,
+    required this.pathName,
+  });
 
   /// Currently selected salon.
   final Salon? currentSalon;
+
+  ///
+  final String pathName;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +105,7 @@ class CurrentSalonScreen extends StatelessWidget {
               onPressed: () => context
                 // Close ModalPopup.
                 ..pop()
-                ..goNamed('salon_choice', extra: currentSalon),
+                ..goNamed('salon_choice_from_$pathName', extra: currentSalon),
             ),
           ),
         ],
