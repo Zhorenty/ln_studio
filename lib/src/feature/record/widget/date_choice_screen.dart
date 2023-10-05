@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
+import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 
 import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/date/timeblock/timeblock_event.dart';
@@ -40,94 +41,108 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
   DateTime _selectedDay = DateTime.now().subtract(const Duration(days: 1));
   DateTime _focusedDay = DateTime.now();
 
+  late final TimetableBloc _timetableBloc;
+  late final TimeblockBloc _timeblockBloc;
+
   @override
   void initState() {
     super.initState();
-    context.read<TimetableBloc>().add(
-          TimetableEvent.fetchTimetables(
-            salonId: widget.salonId,
-            serviceId: widget.serviceId,
-            employeeId: widget.employeeId,
-          ),
-        );
+    _timetableBloc = TimetableBloc(
+      repository: DependenciesScope.of(context).recordRepository,
+    )..add(
+        TimetableEvent.fetchTimetables(
+          salonId: widget.salonId,
+          serviceId: widget.serviceId,
+          employeeId: widget.employeeId,
+        ),
+      );
+    _timeblockBloc = TimeblockBloc(
+      repository: DependenciesScope.of(context).recordRepository,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    DateFormat formatter = DateFormat("LLLL y 'г.'");
-    String formattedDate = formatter.format(now);
+    final now = DateTime.now();
+    final formatter = DateFormat("LLLL y 'г.'");
+    final formattedDate = formatter.format(now);
 
     return Scaffold(
       backgroundColor: context.colorScheme.onBackground,
-      body: BlocBuilder<TimetableBloc, TimetableState>(
-        builder: (context, state) => CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-              title: Text(
-                'Выберите дату',
-                style: context.textTheme.titleLarge?.copyWith(
-                  fontFamily: FontFamily.geologica,
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => _timetableBloc),
+          BlocProvider(create: (context) => _timeblockBloc),
+        ],
+        child: BlocBuilder<TimetableBloc, TimetableState>(
+          builder: (context, state) => CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                pinned: true,
+                title: Text(
+                  'Выберите дату',
+                  style: context.textTheme.titleLarge?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                  ),
                 ),
               ),
-            ),
-            SliverList.list(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  child: state.hasTimetable
-                      ? CustomTableCalendar(
-                          focusedDay: _focusedDay,
-                          onDaySelected: (selectedDay, focusedDay) =>
-                              onDaySelected(
-                                  selectedDay, focusedDay, state.timetables),
-                          selectedDayPredicate: (day) =>
-                              isSameDay(_selectedDay, day),
-                          enabledDayPredicate: (day) =>
-                              enabledDayPredicate(day, state.timetables),
-                        )
-                      : Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: context.colorScheme.background,
-                            border: Border.all(
-                              color: const Color(0xFF272727),
+              SliverList.list(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    child: state.hasTimetable
+                        ? CustomTableCalendar(
+                            focusedDay: _focusedDay,
+                            onDaySelected: (selectedDay, focusedDay) =>
+                                onDaySelected(
+                                    selectedDay, focusedDay, state.timetables),
+                            selectedDayPredicate: (day) =>
+                                isSameDay(_selectedDay, day),
+                            enabledDayPredicate: (day) =>
+                                enabledDayPredicate(day, state.timetables),
+                          )
+                        : Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: context.colorScheme.background,
+                              border: Border.all(
+                                color: const Color(0xFF272727),
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Text(
+                                  formattedDate,
+                                  style: context.textTheme.bodyLarge?.copyWith(
+                                    fontFamily: FontFamily.geologica,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                const Shimmer(
+                                  size: Size(double.infinity, 320),
+                                  cornerRadius: 16,
+                                ),
+                              ],
                             ),
                           ),
-                          child: Column(
-                            children: [
-                              Text(
-                                formattedDate,
-                                style: context.textTheme.bodyLarge?.copyWith(
-                                  fontFamily: FontFamily.geologica,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              const Shimmer(
-                                size: Size(double.infinity, 320),
-                                cornerRadius: 16,
-                              ),
-                            ],
-                          ),
-                        ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: TimeblocksWrap(
-                    dateAt: _selectedDay.jsonFormat(),
-                    visible: visible,
-                    expanded: expanded,
                   ),
-                ),
-                const SizedBox(height: 32),
-              ],
-            )
-          ],
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: TimeblocksWrap(
+                      dateAt: _selectedDay.jsonFormat(),
+                      visible: visible,
+                      expanded: expanded,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -147,14 +162,14 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
         _focusedDay = focusedDay;
       });
 
-      context.read<TimeblockBloc>().add(
-            TimeblockEvent.fetchTimeblocks(
-              salonId: widget.salonId,
-              serviceId: widget.serviceId,
-              employeeId: widget.employeeId,
-              dateAt: _selectedDay.jsonFormat(),
-            ),
-          );
+      _timeblockBloc.add(
+        TimeblockEvent.fetchTimeblocks(
+          salonId: widget.salonId,
+          serviceId: widget.serviceId,
+          employeeId: widget.employeeId,
+          dateAt: _selectedDay.jsonFormat(),
+        ),
+      );
     }
   }
 
