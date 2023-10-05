@@ -40,7 +40,7 @@ class QRCodeScreen extends StatelessWidget {
               smoothAnimate: false,
               label: state.currentSalon != null
                   ? Text(state.currentSalon!.address)
-                  : Shimmer(backgroundColor: context.colorScheme.onBackground),
+                  : const Shimmer(),
               child: CurrentSalonScreen(currentSalon: state.currentSalon),
             ),
           ),

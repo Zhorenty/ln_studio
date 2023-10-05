@@ -73,32 +73,15 @@ class BookingHistoryScreen extends StatelessWidget {
               builder: (context, state) {
             return TabBarView(
               children: [
-                ListView(
-                  children: [
-                    ...state.bookingHistory.reversed.map((e) {
-                      if (!_isAfter(
-                        e.dateAt.jsonFormat(),
-                        e.timeblock.time,
-                      )) {
-                        return HistoryItemCard(
-                          title: e.employee.fullName,
-                          subtitle: e.service.name,
-                          dateAt: e.dateAt.defaultFormat(),
-                          timeblock: createTimeWithDuration(
-                            e.timeblock.time,
-                            e.service.duration!,
-                          ),
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    }),
-                  ],
-                ),
-                ListView(
-                  children: [
-                    ...state.bookingHistory.reversed.map(
-                      (e) {
-                        if (_isAfter(
+                RefreshIndicator.adaptive(
+                  displacement: 16,
+                  onRefresh: () async => context.read<BookingHistoryBloc>().add(
+                        const BookingHistoryEvent.fetchAll(),
+                      ),
+                  child: ListView(
+                    children: [
+                      ...state.bookingHistory.reversed.map((e) {
+                        if (!_isAfter(
                           e.dateAt.jsonFormat(),
                           e.timeblock.time,
                         )) {
@@ -113,9 +96,38 @@ class BookingHistoryScreen extends StatelessWidget {
                           );
                         }
                         return const SizedBox.shrink();
-                      },
-                    ),
-                  ],
+                      }),
+                    ],
+                  ),
+                ),
+                RefreshIndicator.adaptive(
+                  displacement: 16,
+                  onRefresh: () async => context.read<BookingHistoryBloc>().add(
+                        const BookingHistoryEvent.fetchAll(),
+                      ),
+                  child: ListView(
+                    children: [
+                      ...state.bookingHistory.reversed.map(
+                        (e) {
+                          if (_isAfter(
+                            e.dateAt.jsonFormat(),
+                            e.timeblock.time,
+                          )) {
+                            return HistoryItemCard(
+                              title: e.employee.fullName,
+                              subtitle: e.service.name,
+                              dateAt: e.dateAt.defaultFormat(),
+                              timeblock: createTimeWithDuration(
+                                e.timeblock.time,
+                                e.service.duration!,
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             );

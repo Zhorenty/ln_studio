@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
-import 'package:ln_studio/src/common/utils/extensions/color_extension.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
@@ -186,10 +185,8 @@ class SkeletonServiceCard extends StatelessWidget {
           color: const Color(0xFF272727),
         ),
       ),
-      child: Shimmer(
-        size: const Size(double.infinity, 57),
-        color: context.colorScheme.onBackground.lighten(0.05),
-        backgroundColor: context.colorScheme.background,
+      child: const Shimmer(
+        size: Size(double.infinity, 57),
         cornerRadius: 16,
       ),
     );
