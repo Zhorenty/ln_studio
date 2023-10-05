@@ -8,6 +8,7 @@ import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
+import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_event.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_state.dart';
@@ -58,7 +59,9 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
   @override
   void initState() {
     super.initState();
-    employeesBloc = context.read<EmployeeBloc>();
+    employeesBloc = EmployeeBloc(
+      repository: DependenciesScope.of(context).recordRepository,
+    );
     _fetchSalonEmployees();
     initController();
     selectedEmployee = widget.employeePreset;
@@ -87,93 +90,96 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
         }
         return false;
       },
-      child: BlocBuilder<EmployeeBloc, EmployeeState>(
-        builder: (context, state) => Scaffold(
-          backgroundColor: context.colorScheme.onBackground,
-          body: Stack(
-            children: [
-              CustomScrollView(
-                slivers: [
-                  SliverAppBar(
-                    title: Text(
-                      'Выберите мастера',
-                      style: context.textTheme.titleLarge!.copyWith(
-                        color: context.colorScheme.secondary,
-                        fontFamily: FontFamily.geologica,
-                      ),
-                    ),
-                    centerTitle: true,
-                    pinned: true,
-                    actions: [
-                      AnimatedButton(
-                        padding: const EdgeInsets.only(right: 8 + 2, top: 2),
-                        child: Icon(
-                          Icons.person_search_rounded,
+      child: BlocProvider(
+        create: (context) => employeesBloc,
+        child: BlocBuilder<EmployeeBloc, EmployeeState>(
+          builder: (context, state) => Scaffold(
+            backgroundColor: context.colorScheme.onBackground,
+            body: Stack(
+              children: [
+                CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      title: Text(
+                        'Выберите мастера',
+                        style: context.textTheme.titleLarge!.copyWith(
                           color: context.colorScheme.secondary,
+                          fontFamily: FontFamily.geologica,
                         ),
-                        onPressed: () {},
                       ),
-                    ],
-                  ),
-                  CupertinoSliverRefreshControl(onRefresh: _refresh),
-                  SliverAnimatedOpacity(
-                    opacity: state.hasEmployee ? 1 : .5,
-                    duration: const Duration(milliseconds: 400),
-                    sliver: SliverPadding(
-                      padding: const EdgeInsets.all(8),
-                      sliver: state.hasEmployee
-                          ? SliverList.builder(
-                              itemCount: state.employees.length,
-                              itemBuilder: (context, index) {
-                                final employee = state.employees[index];
-
-                                return !employee.isDismiss
-                                    ? EmployeeCard(
-                                        employee: employee,
-                                        selectedEmployee: selectedEmployee,
-                                        onChanged: (cardEmployee) =>
-                                            setState(() {
-                                          visible = true;
-                                          selectedEmployee = cardEmployee;
-                                          context.goNamed(
-                                            'record',
-                                            extra: selectedEmployee,
-                                          );
-                                        }),
-                                      )
-                                    : const SizedBox.shrink();
-                              },
-                            )
-                          : SliverList.separated(
-                              itemCount: 5,
-                              itemBuilder: (context, index) =>
-                                  const SkeletonEmployeeCard(),
-                              separatorBuilder: (c, i) => const SizedBox(),
-                            ),
+                      centerTitle: true,
+                      pinned: true,
+                      actions: [
+                        AnimatedButton(
+                          padding: const EdgeInsets.only(right: 8 + 2, top: 2),
+                          child: Icon(
+                            Icons.person_search_rounded,
+                            color: context.colorScheme.secondary,
+                          ),
+                          onPressed: () {},
+                        ),
+                      ],
                     ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: visible
-                        ? SizedBox(
-                            height: MediaQuery.sizeOf(context).height / 9,
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                ],
-              ),
-              Positioned(
-                bottom: MediaQuery.of(context).size.height / 20,
-                left: 0,
-                right: 0,
-                child: ContinueButton(
-                  visible: visible,
-                  onPressed: () => context.goNamed(
-                    'record',
-                    extra: selectedEmployee,
+                    CupertinoSliverRefreshControl(onRefresh: _refresh),
+                    SliverAnimatedOpacity(
+                      opacity: state.hasEmployee ? 1 : .5,
+                      duration: const Duration(milliseconds: 400),
+                      sliver: SliverPadding(
+                        padding: const EdgeInsets.all(8),
+                        sliver: state.hasEmployee
+                            ? SliverList.builder(
+                                itemCount: state.employees.length,
+                                itemBuilder: (context, index) {
+                                  final employee = state.employees[index];
+
+                                  return !employee.isDismiss
+                                      ? EmployeeCard(
+                                          employee: employee,
+                                          selectedEmployee: selectedEmployee,
+                                          onChanged: (cardEmployee) =>
+                                              setState(() {
+                                            visible = true;
+                                            selectedEmployee = cardEmployee;
+                                            context.goNamed(
+                                              'record',
+                                              extra: selectedEmployee,
+                                            );
+                                          }),
+                                        )
+                                      : const SizedBox.shrink();
+                                },
+                              )
+                            : SliverList.separated(
+                                itemCount: 5,
+                                itemBuilder: (context, index) =>
+                                    const SkeletonEmployeeCard(),
+                                separatorBuilder: (c, i) => const SizedBox(),
+                              ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: visible
+                          ? SizedBox(
+                              height: MediaQuery.sizeOf(context).height / 9,
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
+                ),
+                Positioned(
+                  bottom: MediaQuery.of(context).size.height / 20,
+                  left: 0,
+                  right: 0,
+                  child: ContinueButton(
+                    visible: visible,
+                    onPressed: () => context.goNamed(
+                      'record',
+                      extra: selectedEmployee,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
