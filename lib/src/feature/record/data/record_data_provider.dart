@@ -62,7 +62,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
       if (dateAt != null) 'date_at': dateAt,
     };
     final response = await restClient.get(
-      '/api/book/get_services',
+      '/api/v1/book/get_services',
       queryParams: params,
     );
 
@@ -81,7 +81,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
     String? dateAt,
   }) async {
     final response = await restClient.get(
-      '/api/book/get_employees',
+      '/api/v1/book/get_employees',
       queryParams: {
         'salon_id': salonId,
         if (serviceId != null) 'service_id': serviceId,
@@ -104,7 +104,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
     int? employeeId,
   }) async {
     final response = await restClient.get(
-      '/api/book/get_timetables',
+      '/api/v1/book/get_timetables',
       queryParams: {
         'salon_id': salonId,
         if (serviceId != null) 'service_id': serviceId,
@@ -127,7 +127,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
     int? employeeId,
   }) async {
     final response = await restClient.get(
-      '/api/book/get_timeblocks',
+      '/api/v1/book/get_timeblocks',
       queryParams: {
         'salon_id': salonId,
         'date_at': dateAt,
@@ -147,7 +147,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
   Future<void> createRecord(RecordModel$Create recordData) async {
     final body = recordData.toJson();
     await restClient.post(
-      '/api/service_sale/book_service',
+      '/api/v1/service_sale/book_service',
       body: body,
     );
   }
