@@ -39,7 +39,7 @@ class SalonDataProviderImpl implements SalonDataProvider {
 
   @override
   Future<List<Salon>> fetchSalons() async {
-    final response = await _restClient.get('/api/v1/salon');
+    final response = await _restClient.get('/api/salon/all');
     final salons = List.from(response['data'] as List)
         .map((e) => Salon.fromJson(e))
         .toList();
