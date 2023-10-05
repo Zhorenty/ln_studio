@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:ln_studio/src/common/utils/extensions/color_extension.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
 
@@ -109,11 +108,8 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              Shimmer(
-                                size: const Size(double.infinity, 320),
-                                color: context.colorScheme.onBackground
-                                    .lighten(0.05),
-                                backgroundColor: context.colorScheme.background,
+                              const Shimmer(
+                                size: Size(double.infinity, 320),
                                 cornerRadius: 16,
                               ),
                             ],
