@@ -93,42 +93,50 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                       horizontal: 16,
                       vertical: 8,
                     ),
-                    child: state.hasTimetable
-                        ? CustomTableCalendar(
-                            focusedDay: _focusedDay,
-                            onDaySelected: (selectedDay, focusedDay) =>
-                                onDaySelected(
-                                    selectedDay, focusedDay, state.timetables),
-                            selectedDayPredicate: (day) =>
-                                isSameDay(_selectedDay, day),
-                            enabledDayPredicate: (day) =>
-                                enabledDayPredicate(day, state.timetables),
-                          )
-                        : Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: context.colorScheme.background,
-                              border: Border.all(
-                                color: const Color(0xFF272727),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: context.colorScheme.background,
+                        border: Border.all(
+                          color: const Color(0xFF272727),
+                        ),
+                      ),
+                      child: AnimatedCrossFade(
+                        firstChild: CustomTableCalendar(
+                          focusedDay: _focusedDay,
+                          onDaySelected: (selectedDay, focusedDay) =>
+                              onDaySelected(
+                                  selectedDay, focusedDay, state.timetables),
+                          selectedDayPredicate: (day) =>
+                              isSameDay(_selectedDay, day),
+                          enabledDayPredicate: (day) =>
+                              enabledDayPredicate(day, state.timetables),
+                        ),
+                        secondChild: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                formattedDate,
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  fontFamily: FontFamily.geologica,
+                                ),
                               ),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  formattedDate,
-                                  style: context.textTheme.bodyLarge?.copyWith(
-                                    fontFamily: FontFamily.geologica,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                const Shimmer(
-                                  size: Size(double.infinity, 320),
-                                  cornerRadius: 16,
-                                ),
-                              ],
-                            ),
+                              const SizedBox(height: 8),
+                              const Shimmer(
+                                size: Size(double.infinity, 320),
+                                cornerRadius: 16,
+                              ),
+                            ],
                           ),
+                        ),
+                        crossFadeState: state.hasTimetable
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        duration: const Duration(milliseconds: 250),
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16),
@@ -140,7 +148,7 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                   ),
                   const SizedBox(height: 32),
                 ],
-              )
+              ),
             ],
           ),
         ),

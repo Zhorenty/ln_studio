@@ -46,7 +46,7 @@ class HeaderListTile extends StatelessWidget {
               color: context.colorScheme.primary,
             ),
           ),
-          trailing: AvatarWidget(radius: 25, title: title),
+          trailing: const AvatarWidget(radius: 25, title: '794'),
         ),
       ),
     );
