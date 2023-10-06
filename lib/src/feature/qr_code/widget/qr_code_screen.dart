@@ -41,7 +41,10 @@ class QRCodeScreen extends StatelessWidget {
               label: state.currentSalon != null
                   ? Text(state.currentSalon!.address)
                   : const Shimmer(),
-              child: CurrentSalonScreen(currentSalon: state.currentSalon),
+              child: CurrentSalonScreen(
+                pathName: 'qr',
+                currentSalon: state.currentSalon,
+              ),
             ),
           ),
         ),

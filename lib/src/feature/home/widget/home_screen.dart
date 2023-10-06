@@ -49,7 +49,10 @@ class HomeScreen extends StatelessWidget {
                       ? Text(state.currentSalon!.address)
                       : const SizedBox(height: 26),
                 ),
-                child: CurrentSalonScreen(currentSalon: state.currentSalon),
+                child: CurrentSalonScreen(
+                  pathName: 'home',
+                  currentSalon: state.currentSalon,
+                ),
               ),
             ),
           ),

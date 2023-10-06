@@ -37,7 +37,7 @@ final router = GoRouter(
               builder: (context, state) => const HomeScreen(),
               routes: [
                 GoRoute(
-                  name: 'salon_choice',
+                  name: 'salon_choice_from_home',
                   path: 'salon_choice',
                   parentNavigatorKey: _parentKey,
                   builder: (context, state) => SalonChoiceScreen(
@@ -163,6 +163,16 @@ final router = GoRouter(
             GoRoute(
               path: '/qr_code',
               builder: (context, state) => const QRCodeScreen(),
+              routes: [
+                GoRoute(
+                  name: 'salon_choice_from_qr',
+                  path: 'salon_choice',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => SalonChoiceScreen(
+                    currentSalon: state.extra as Salon?,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
