@@ -82,8 +82,8 @@ class _ProductCardState extends State<ProductCard> {
                       : context.colorScheme.onBackground,
                   border: Border.all(
                     color: count != 0
-                        ? context.colorScheme.primary
-                        : const Color(0xFF272727),
+                        ? context.colorScheme.scrim
+                        : context.colorScheme.primary,
                   ),
                 ),
                 child: count != 0
