@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_studio/src/feature/auth/widget/auth_screen.dart';
+import 'package:ln_studio/src/feature/auth/widget/verification_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/booking_history_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/edit_profile_screen.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
@@ -22,8 +24,21 @@ final _parentKey = GlobalKey<NavigatorState>();
 /// Router of this application.
 final router = GoRouter(
   initialLocation: '/home',
+  // initialLocation: '/auth',
   navigatorKey: _parentKey,
   routes: [
+    GoRoute(
+      name: 'auth',
+      path: '/auth',
+      builder: (context, state) => const AuthScreen(),
+      routes: [
+        GoRoute(
+          name: 'verify',
+          path: 'verify',
+          builder: (context, state) => const VerificationScreen(),
+        ),
+      ],
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) => CustomBottomNavigationBar(
         navigationShell,
