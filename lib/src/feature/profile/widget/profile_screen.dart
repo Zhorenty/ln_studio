@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
@@ -35,7 +34,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          const CupertinoSliverRefreshControl(),
           SliverList.list(
             children: [
               HeaderListTile(
