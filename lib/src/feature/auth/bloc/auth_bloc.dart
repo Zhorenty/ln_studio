@@ -15,8 +15,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
 
     on<AuthEvent>(
       (event, emit) => event.map(
-        signInWithEmailAndPassword: (e) => _signInWithEmailAndPassword(e, emit),
-        signUpWithEmailAndPassword: (e) => _signUpWithEmailAndPassword(e, emit),
+        signInWithPhone: (e) => _signInWithPhone(e, emit),
+        signUpWithPhone: (e) => _signUpWithPhone(e, emit),
         // signInAnonymously: (e) => _signInAnonymously(e, emit),
         signOut: (e) => _signOut(e, emit),
       ),
@@ -25,8 +25,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
 
   final AuthRepository authRepository;
 
-  Future<void> _signUpWithEmailAndPassword(
-    AuthEventSignUpWithEmailAndPassword event,
+  Future<void> _signUpWithPhone(
+    AuthEventSignUpWithPhone event,
     Emitter<AuthState> emit,
   ) async {
     emit(AuthState.processing(user: state.user));
@@ -43,8 +43,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     }
   }
 
-  Future<void> _signInWithEmailAndPassword(
-    AuthEventSignInWithEmailAndPassword event,
+  Future<void> _signInWithPhone(
+    AuthEventSignInWithPhone event,
     Emitter<AuthState> emit,
   ) async {
     emit(AuthState.processing(user: state.user));

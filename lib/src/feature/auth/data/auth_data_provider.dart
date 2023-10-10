@@ -49,14 +49,10 @@ abstract interface class AuthDataProvider {
   User? getUser();
 
   /// Attempts to sign in with the given [phone].
-  Future<User> signInWithPhone({
-    required String phone,
-  });
+  Future<User> signInWithPhone({required String phone});
 
   /// Attempts to sign up with the given [phone].
-  Future<User> signUpWithPhone({
-    required String phone,
-  });
+  Future<User> signUpWithPhone({required String phone});
 
   // /// Attempts to sign in anonymously.
   // Future<User> signInAnonymously();
@@ -93,10 +89,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
 
   Future<void> _saveUser(User user) async {
     if (user.phone != null) {
-      await _sharedPreferences.setString(
-        'auth.user.phone',
-        user.phone!,
-      );
+      await _sharedPreferences.setString('auth.user.phone', user.phone!);
     }
     // await _sharedPreferences.setBool(
     //   'auth.user.is_anonymous',

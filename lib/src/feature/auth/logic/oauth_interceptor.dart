@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../model/user.dart';
 
+///
 base class OAuthInterceptor extends QueuedInterceptor {
   OAuthInterceptor({
     required this.refresh,

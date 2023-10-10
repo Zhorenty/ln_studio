@@ -4,7 +4,19 @@ enum ErrorCode {
   unknown(1),
 
   /// Error where the phone number already exists.
-  phoneExists(2);
+  phoneExists(2),
+
+  ///
+  phoneNotFound(3),
+
+  ///
+  tokenExpired(5),
+
+  ///
+  tokenMalformed(6),
+
+  ///
+  invalidBody(7);
 
   const ErrorCode(this.code);
 

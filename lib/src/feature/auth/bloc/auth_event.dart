@@ -5,18 +5,18 @@ sealed class AuthEvent extends _$AuthEventBase {
   const AuthEvent();
 
   const factory AuthEvent.signInWithPhone({required String phone}) =
-      AuthEventSignInWithEmailAndPassword;
+      AuthEventSignInWithPhone;
 
   // const factory AuthEvent.signInAnonymously() = AuthEventSignInAnonymously;
 
   const factory AuthEvent.signUpWithPhone({required String phone}) =
-      AuthEventSignUpWithEmailAndPassword;
+      AuthEventSignUpWithPhone;
 
   const factory AuthEvent.signOut() = AuthEventSignOut;
 }
 
-final class AuthEventSignUpWithEmailAndPassword extends AuthEvent {
-  const AuthEventSignUpWithEmailAndPassword({required this.phone}) : super();
+final class AuthEventSignUpWithPhone extends AuthEvent {
+  const AuthEventSignUpWithPhone({required this.phone}) : super();
 
   final String phone;
 
@@ -30,8 +30,8 @@ final class AuthEventSignUpWithEmailAndPassword extends AuthEvent {
   }
 }
 
-final class AuthEventSignInWithEmailAndPassword extends AuthEvent {
-  const AuthEventSignInWithEmailAndPassword({required this.phone}) : super();
+final class AuthEventSignInWithPhone extends AuthEvent {
+  const AuthEventSignInWithPhone({required this.phone}) : super();
 
   final String phone;
 
@@ -65,53 +65,43 @@ abstract base class _$AuthEventBase {
   const _$AuthEventBase();
 
   R map<R>({
-    required AuthEventMatch<R, AuthEventSignInWithEmailAndPassword>
-        signInWithEmailAndPassword,
+    required AuthEventMatch<R, AuthEventSignInWithPhone> signInWithPhone,
+    required AuthEventMatch<R, AuthEventSignUpWithPhone> signUpWithPhone,
     // required AuthEventMatch<R, AuthEventSignInAnonymously> signInAnonymously,
     required AuthEventMatch<R, AuthEventSignOut> signOut,
-    required AuthEventMatch<R, AuthEventSignUpWithEmailAndPassword>
-        signUpWithEmailAndPassword,
   }) =>
       switch (this) {
-        final AuthEventSignInWithEmailAndPassword s =>
-          signInWithEmailAndPassword(s),
+        final AuthEventSignInWithPhone s => signInWithPhone(s),
+        final AuthEventSignUpWithPhone s => signUpWithPhone(s),
         // final AuthEventSignInAnonymously s => signInAnonymously(s),
         final AuthEventSignOut s => signOut(s),
-        final AuthEventSignUpWithEmailAndPassword s =>
-          signUpWithEmailAndPassword(s),
         _ => throw AssertionError(),
       };
 
   R maybeMap<R>({
     required R Function() orElse,
-    AuthEventMatch<R, AuthEventSignInWithEmailAndPassword>?
-        signInWithEmailAndPassword,
+    AuthEventMatch<R, AuthEventSignInWithPhone>? signInWithPhone,
+    AuthEventMatch<R, AuthEventSignUpWithPhone>? signUpWithPhone,
     // AuthEventMatch<R, AuthEventSignInAnonymously>? signInAnonymously,
     AuthEventMatch<R, AuthEventSignOut>? signOut,
-    AuthEventMatch<R, AuthEventSignUpWithEmailAndPassword>?
-        signUpWithEmailAndPassword,
   }) =>
       map<R>(
-        signInWithEmailAndPassword:
-            signInWithEmailAndPassword ?? (_) => orElse(),
+        signInWithPhone: signInWithPhone ?? (_) => orElse(),
+        signUpWithPhone: signUpWithPhone ?? (_) => orElse(),
         // signInAnonymously: signInAnonymously ?? (_) => orElse(),
         signOut: signOut ?? (_) => orElse(),
-        signUpWithEmailAndPassword:
-            signUpWithEmailAndPassword ?? (_) => orElse(),
       );
 
   R? mapOrNull<R>({
-    AuthEventMatch<R, AuthEventSignInWithEmailAndPassword>?
-        signInWithEmailAndPassword,
+    AuthEventMatch<R, AuthEventSignInWithPhone>? signInWithPhone,
+    AuthEventMatch<R, AuthEventSignUpWithPhone>? signUpWithPhone,
     // AuthEventMatch<R, AuthEventSignInAnonymously>? signInAnonymously,
     AuthEventMatch<R, AuthEventSignOut>? signOut,
-    AuthEventMatch<R, AuthEventSignUpWithEmailAndPassword>?
-        signUpWithEmailAndPassword,
   }) =>
       map<R?>(
-        signInWithEmailAndPassword: signInWithEmailAndPassword ?? (_) => null,
+        signInWithPhone: signInWithPhone ?? (_) => null,
         // signInAnonymously: signInAnonymously ?? (_) => null,
         signOut: signOut ?? (_) => null,
-        signUpWithEmailAndPassword: signUpWithEmailAndPassword ?? (_) => null,
+        signUpWithPhone: signUpWithPhone ?? (_) => null,
       );
 }

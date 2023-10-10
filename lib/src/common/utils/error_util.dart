@@ -45,7 +45,11 @@ sealed class ErrorUtil {
   /// `Never` returns as it always throws an exception.
   static Never throwAuthException(ErrorCode code, String message) =>
       throw switch (code) {
+        ErrorCode.phoneNotFound => const AuthException$UserNotFound(),
         ErrorCode.phoneExists => const AuthException$PhoneExists(),
+        ErrorCode.tokenMalformed => const AuthException$TokenMalformed(),
+        ErrorCode.tokenExpired => const AuthException$RefreshTokenExpired(),
+        ErrorCode.invalidBody => const AuthException$InvalidBody(),
         ErrorCode.unknown => AuthException$Unknown(message: message),
       };
 }
