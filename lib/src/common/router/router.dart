@@ -23,7 +23,6 @@ final _parentKey = GlobalKey<NavigatorState>();
 
 /// Router of this application.
 final router = GoRouter(
-  // initialLocation: '/home',
   initialLocation: '/auth',
   navigatorKey: _parentKey,
   routes: [

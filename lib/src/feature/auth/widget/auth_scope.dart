@@ -31,7 +31,7 @@ abstract mixin class AuthenticationController {
   String? get error;
 
   /// Whether the current user is authenticated
-  bool get isAuthenticated => user != null;
+  bool get isAuthenticated => user?.phone != null;
 }
 
 class AuthenticationScope extends StatefulWidget {
@@ -77,7 +77,8 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
       setState(() => _state = state);
       final router = AppRouterScope.of(context, listen: false);
 
-      if (state.user == null) {
+      // TODO: Возможно, надо поменять
+      if (isAuthenticated) {
         router.replaceNamed('home');
       } else {
         router.replaceNamed('auth');
