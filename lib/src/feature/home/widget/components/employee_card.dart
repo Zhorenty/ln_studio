@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -19,7 +20,7 @@ class EmployeeCard extends StatelessWidget {
     final user = employee.userModel;
 
     return AnimatedButton(
-      onPressed: () {},
+      onPressed: () => context.goNamed('employee_info', extra: employee),
       child: Container(
         decoration: BoxDecoration(
           color: context.colorScheme.onBackground,

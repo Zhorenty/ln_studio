@@ -8,8 +8,8 @@ import '/src/common/utils/extensions/date_time_extension.dart';
 final class EmployeeModel {
   const EmployeeModel({
     required this.id,
-    this.workedDays,
-    this.clients,
+    required this.workedDays,
+    required this.clients,
     required this.address,
     required this.jobId,
     required this.salonId,
@@ -100,6 +100,8 @@ final class EmployeeModel {
   /// Converts [EmployeeModel] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
+        'worked_days': workedDays,
+        'clients': clients,
         'address': address,
         'job_place_id': jobId,
         'salon_id': salonId,

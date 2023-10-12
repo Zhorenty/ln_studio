@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_studio/src/feature/home/widget/employee_info_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/booking_history_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/edit_profile_screen.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
@@ -73,6 +74,14 @@ final router = GoRouter(
                     salonId: int.parse(
                       state.uri.queryParameters['salon_id']!,
                     ),
+                  ),
+                ),
+                GoRoute(
+                  name: 'employee_info',
+                  path: 'employee',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => EmployeeInfoScreen(
+                    employee: state.extra as EmployeeModel,
                   ),
                 ),
                 GoRoute(

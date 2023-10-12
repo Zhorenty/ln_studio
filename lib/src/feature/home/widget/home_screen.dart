@@ -128,17 +128,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const CustomHeader(label: 'Наши мастера'),
-                BlocBuilder<EmployeeBloc, EmployeeState>(
-                  builder: (context, state) => SizedBox(
-                    height: 192,
-                    child: ListView.builder(
+                SizedBox(
+                  height: 192,
+                  child: BlocBuilder<EmployeeBloc, EmployeeState>(
+                    builder: (context, state) => ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: state.employees.length,
-                      itemBuilder: (context, index) {
-                        final employee = state.employees[index];
-
-                        return EmployeeCard(employee: employee);
-                      },
+                      itemBuilder: (context, index) => EmployeeCard(
+                        employee: state.employees[index],
+                      ),
                     ),
                   ),
                 ),
