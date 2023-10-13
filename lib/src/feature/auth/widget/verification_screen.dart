@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
-import 'package:ln_studio/src/common/widget/custom_text_field.dart';
 
+import '/src/common/utils/extensions/context_extension.dart';
 import 'components/verification_field.dart';
-
 // import 'auth_scope.dart';
 
+///
 class VerificationScreen extends StatefulWidget {
   const VerificationScreen({super.key});
 

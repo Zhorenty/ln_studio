@@ -10,13 +10,13 @@ import '../bloc/auth_event.dart';
 
 abstract mixin class AuthenticationController {
   /// Sign in with [email] and [password]
-  void signInWithEmailAndPassword(String phone);
+  void signInWithPhone(String phone);
 
   /// Sign in as a guest
   // void signInAnonymously();
 
   /// Sign up with [email], [password] and [username]
-  void signUpWithEmailAndPassword(String phone);
+  void signUpWithPhone(String phone);
 
   /// Sign out the current user
   void signOut();
@@ -101,12 +101,12 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   //     );
 
   @override
-  void signInWithEmailAndPassword(String phone) =>
+  void signInWithPhone(String phone) =>
       _authBloc.add(AuthEvent.signInWithPhone(phone: phone));
 
   @override
-  void signUpWithEmailAndPassword(String phone) =>
-      _authBloc.add(AuthEvent.signInWithPhone(phone: phone));
+  void signUpWithPhone(String phone) =>
+      _authBloc.add(AuthEvent.signUpWithPhone(phone: phone));
 
   @override
   void signOut() => _authBloc.add(const AuthEvent.signOut());

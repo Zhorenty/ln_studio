@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
-import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 
+import '/src/common/assets/generated/assets.gen.dart';
+import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
-import '/src/common/utils/phone_input_formatter.dart';
 import '/src/common/widget/custom_text_field.dart';
-// import 'auth_scope.dart';
+import 'auth_scope.dart';
 
 // final phoneFormatter = MaskTextInputFormatter(
 //   mask: '+7 (###) ###-##-##',
@@ -46,7 +45,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final auth = AuthenticationScope.of(context);
+    final auth = AuthenticationScope.of(context);
     return Scaffold(
       backgroundColor: context.colorScheme.onBackground,
       body: Container(
@@ -75,7 +74,9 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   keyboardType: TextInputType.phone,
                   hintText: '+7 (123) 456-78-90',
-                  inputFormatters: [RuPhoneInputFormatter()],
+                  inputFormatters: const [
+                    // RuPhoneInputFormatter(),
+                  ],
                   // TODO: Implement phone number validation
                   validator: (text) {
                     return null;
@@ -99,8 +100,9 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
+                      auth.signInWithPhone(phoneController.text);
                       // TODO: Implement auth logic
-                      context.goNamed('verify');
+                      context.goNamed('home');
                     }
                   },
                   child: Text(

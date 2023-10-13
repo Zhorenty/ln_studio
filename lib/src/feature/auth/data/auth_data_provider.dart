@@ -177,6 +177,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       '/api/auth/sign-in',
       data: jsonEncode({
         'phone_number': phone,
+        'sms_code': null,
       }),
     );
 
