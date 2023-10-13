@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
+import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/utils/phone_input_formatter.dart';
@@ -23,17 +25,21 @@ class _AuthScreenState extends State<AuthScreen> {
   /// [FormState] for validating.
   final _formKey = GlobalKey<FormState>();
 
+  late final TextEditingController phoneController;
+
   ///
   late final FocusNode phoneFocusNode;
 
   @override
   void initState() {
     super.initState();
+    phoneController = TextEditingController();
     phoneFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
+    phoneController.dispose();
     phoneFocusNode.dispose();
     super.dispose();
   }
@@ -42,48 +48,69 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     // final auth = AuthenticationScope.of(context);
     return Scaffold(
+      backgroundColor: context.colorScheme.onBackground,
       body: Container(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Номер телефона',
-                style: context.textTheme.headlineLarge,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'Укажите номер телефона',
-                style: context.textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).hintColor,
+              const SizedBox(height: 64),
+              Assets.images.logoWhite.image(scale: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Добро пожаловать',
+                  style: context.textTheme.headlineMedium,
                 ),
               ),
               const SizedBox(height: 8),
-              CustomTextField(
-                focusNode: phoneFocusNode,
-                keyboardType: TextInputType.phone,
-                hintText: '+7 (123) 456-78-90',
-                inputFormatters: [RuPhoneInputFormatter()],
-                // TODO: Implement phone number validation
-                validator: (text) {
-                  return null;
-                },
-                onTapOutside: (_) =>
-                    phoneFocusNode.hasFocus ? phoneFocusNode.unfocus() : null,
-                onChanged: _checkPhoneNumber,
+              Center(
+                child: CustomTextField(
+                  focusNode: phoneFocusNode,
+                  label: 'Укажите номер телефона',
+                  labelStyle: context.textTheme.bodyMedium?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                    color: context.colorScheme.primaryContainer,
+                  ),
+                  keyboardType: TextInputType.phone,
+                  hintText: '+7 (123) 456-78-90',
+                  inputFormatters: [RuPhoneInputFormatter()],
+                  // TODO: Implement phone number validation
+                  validator: (text) {
+                    return null;
+                  },
+                  onTapOutside: (_) =>
+                      phoneFocusNode.hasFocus ? phoneFocusNode.unfocus() : null,
+                  onChanged: _checkPhoneNumber,
+                ),
               ),
               const SizedBox(height: 16),
-              FilledButton(
-                child: const Text('Продолжить'),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // TODO: Implement auth logic
-                    context.goNamed('verify');
-                  }
-                },
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    fixedSize: Size(MediaQuery.sizeOf(context).width, 50),
+                    backgroundColor: context.colorScheme.primary,
+                  ),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      // TODO: Implement auth logic
+                      context.goNamed('verify');
+                    }
+                  },
+                  child: Text(
+                    'Продолжить',
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      fontFamily: FontFamily.geologica,
+                      color: context.colorScheme.onBackground,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

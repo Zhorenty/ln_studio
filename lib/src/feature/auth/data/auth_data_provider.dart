@@ -172,13 +172,11 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   // }
 
   @override
-  Future<User> signInWithPhone({
-    required String phone,
-  }) async {
+  Future<User> signInWithPhone({required String phone}) async {
     final response = await client.post<Map<String, Object?>>(
-      '/api/v1/auth/signin',
+      '/api/auth/sign-in',
       data: jsonEncode({
-        'phone': phone,
+        'phone_number': phone,
       }),
     );
 
