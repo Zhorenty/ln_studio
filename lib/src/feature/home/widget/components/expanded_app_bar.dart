@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/avatar_widget.dart';
 import 'package:ln_studio/src/common/widget/overlay/message_popup.dart';
-import 'package:ln_studio/src/common/widget/star_rating.dart';
 
 /// Custom-styled expanded [SliverAppBar].
 class ExpandedAppBar extends StatelessWidget {
@@ -41,30 +39,9 @@ class ExpandedAppBar extends StatelessWidget {
     return SliverAppBar(
       backgroundColor: context.colorScheme.background,
       surfaceTintColor: context.colorScheme.background,
-      toolbarHeight: 160,
+      toolbarHeight: 130,
       centerTitle: true,
-      title: Column(
-        children: [
-          AvatarWidget(radius: 60, title: label),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const StarRating(
-                initialRating: 4,
-                size: 22,
-              ),
-              const SizedBox(width: 4),
-              Text(
-                '(68)',
-                style: context.textTheme.bodyMedium?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                    color: context.colorScheme.secondaryContainer),
-              ),
-            ],
-          ),
-        ],
-      ),
+      title: AvatarWidget(radius: 60, title: label),
       floating: true,
       pinned: true,
       leading: Align(
@@ -80,7 +57,7 @@ class ExpandedAppBar extends StatelessWidget {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 80),
+          padding: const EdgeInsets.only(bottom: 55),
           child: IconButton(
             icon: Icon(
               Icons.more_horiz_rounded,

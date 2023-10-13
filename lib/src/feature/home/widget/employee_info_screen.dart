@@ -6,31 +6,16 @@ import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/feature/home/widget/components/expanded_app_bar.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
-import 'package:ln_studio/src/feature/salon/widget/current_salon_screen.dart';
 
 ///
-class EmployeeInfoScreen extends StatefulWidget {
+class EmployeeInfoScreen extends StatelessWidget {
   const EmployeeInfoScreen({super.key, required this.employee});
 
   ///
   final EmployeeModel employee;
 
   @override
-  State<EmployeeInfoScreen> createState() => _EmployeeInfoScreenState();
-}
-
-class _EmployeeInfoScreenState extends State<EmployeeInfoScreen> {
-  // Переменные, которые не должны изменяться при rebuild'е.
-  // int? clientsCount;
-  // int? workedDaysCount;
-
-  @override
   Widget build(BuildContext context) {
-    // if (clientsCount == null) {
-    //   clientsCount = widget.employee.clients;
-    //   workedDaysCount = widget.employee.workedDays;
-    // }
-
     return Scaffold(
       backgroundColor: context.colorScheme.background,
       body: Stack(
@@ -38,9 +23,9 @@ class _EmployeeInfoScreenState extends State<EmployeeInfoScreen> {
           CustomScrollView(
             slivers: [
               ExpandedAppBar(
-                label: widget.employee.fullName,
+                label: employee.fullName,
                 title: Text(
-                  widget.employee.fullName,
+                  employee.fullName,
                   style: context.textTheme.titleLarge!.copyWith(
                     fontFamily: FontFamily.geologica,
                   ),
@@ -96,7 +81,7 @@ class _EmployeeInfoScreenState extends State<EmployeeInfoScreen> {
               child: ElevatedButton(
                 onPressed: () => context.goNamed(
                   'record',
-                  extra: widget.employee,
+                  extra: employee,
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.colorScheme.primary,
