@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:ln_studio/src/common/router/app_router_scope.dart';
-import 'package:ln_studio/src/common/utils/mixin/scope_mixin.dart';
-import 'package:ln_studio/src/feature/auth/bloc/auth_bloc.dart';
-import 'package:ln_studio/src/feature/auth/bloc/auth_state.dart';
-import 'package:ln_studio/src/feature/auth/model/user.dart';
-import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 
 import '../bloc/auth_event.dart';
+import '/src/common/router/app_router_scope.dart';
+import '/src/common/utils/mixin/scope_mixin.dart';
+import '/src/feature/auth/bloc/auth_bloc.dart';
+import '/src/feature/auth/bloc/auth_state.dart';
+import '/src/feature/auth/model/user.dart';
+import '/src/feature/initialization/widget/dependencies_scope.dart';
 
+///
 abstract mixin class AuthenticationController {
-  /// Sign in with [email] and [password]
+  /// Sign in with [phone].
   void signInWithPhone(String phone);
 
   /// Sign in as a guest
   // void signInAnonymously();
 
-  /// Sign up with [email], [password] and [username]
+  /// Sign up with [phone].
   void signUpWithPhone(String phone);
 
   /// Sign out the current user
@@ -34,11 +35,14 @@ abstract mixin class AuthenticationController {
   bool get isAuthenticated => user?.phone != null;
 }
 
+///
 class AuthenticationScope extends StatefulWidget {
   const AuthenticationScope(this.child, {super.key});
 
+  ///
   final Widget child;
 
+  ////
   static AuthenticationController of(
     BuildContext context, {
     bool listen = true,
@@ -78,11 +82,9 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
       final router = AppRouterScope.of(context, listen: false);
 
       // TODO: Возможно, надо поменять
-      if (isAuthenticated) {
-        router.replaceNamed('home');
-      } else {
-        router.replaceNamed('auth');
-      }
+      isAuthenticated
+          ? router.replaceNamed('home')
+          : router.replaceNamed('auth');
     }
   }
 
@@ -101,12 +103,14 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   //     );
 
   @override
-  void signInWithPhone(String phone) =>
-      _authBloc.add(AuthEvent.signInWithPhone(phone: phone));
+  void signInWithPhone(String phone) => _authBloc.add(
+        AuthEvent.signInWithPhone(phone: phone),
+      );
 
   @override
-  void signUpWithPhone(String phone) =>
-      _authBloc.add(AuthEvent.signUpWithPhone(phone: phone));
+  void signUpWithPhone(String phone) => _authBloc.add(
+        AuthEvent.signUpWithPhone(phone: phone),
+      );
 
   @override
   void signOut() => _authBloc.add(const AuthEvent.signOut());
@@ -119,6 +123,7 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
       );
 }
 
+///
 class _InheritedAuthentication extends InheritedWidget {
   const _InheritedAuthentication({
     required this.controller,
@@ -126,8 +131,10 @@ class _InheritedAuthentication extends InheritedWidget {
     required super.child,
   });
 
+  ///
   final AuthState? state;
 
+  ///
   final AuthenticationController controller;
 
   @override
