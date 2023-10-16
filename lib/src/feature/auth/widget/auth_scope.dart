@@ -13,7 +13,7 @@ abstract mixin class AuthenticationController {
   void sendCode(String phone);
 
   /// Sign in with [phone].
-  // void signInWithPhone(String phone);
+  void signInWithPhone(String smsCode);
 
   /// Sign in as a guest
   // void signInAnonymously();
@@ -26,6 +26,8 @@ abstract mixin class AuthenticationController {
 
   /// The current user
   User? get user;
+
+  String? get phone;
 
   /// Whether the current user is being processed
   bool get isProcessing;
@@ -80,13 +82,22 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
 
   void _onAuthStateChanged(AuthState state) {
     if (!identical(state, _state)) {
-      setState(() => _state = state);
+      // Если надо сравнивать states
       final router = AppRouterScope.of(context, listen: false);
+      if (state is AuthState$Successful &&
+          _state?.phone != null &&
+          !isAuthenticated) {
+        router.goNamed('verify');
+      } else if (state is AuthState$Successful && isAuthenticated) {
+        router.go('/home');
+      }
+
+      setState(() => _state = state);
 
       // TODO: Возможно, надо поменять
-      isAuthenticated
-          ? router.replaceNamed('home')
-          : router.replaceNamed('auth');
+      // isAuthenticated
+      //     ? router.replaceNamed('home')
+      //     : router.replaceNamed('auth');
     }
   }
 
@@ -94,20 +105,27 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   User? get user => _state?.user;
 
   @override
+  String? get phone => _state?.phone;
+
+  @override
   String? get error => _state?.error;
 
   @override
   bool get isProcessing => _state?.isProcessing ?? false;
+
+  @override
+  void sendCode(String phone) =>
+      _authBloc.add(AuthEvent.sendCode(phone: phone));
 
   // @override
   // void signInAnonymously() => _authBloc.add(
   //       const AuthEvent.signInAnonymously(),
   //     );
 
-  // @override
-  // void signInWithPhone(String phone) => _authBloc.add(
-  //       AuthEvent.signInWithPhone(phone: phone),
-  //     );
+  @override
+  void signInWithPhone(String smsCode) => _authBloc.add(
+        AuthEvent.signInWithPhone(smsCode),
+      );
 
   // @override
   // void signUpWithPhone(String phone) => _authBloc.add(

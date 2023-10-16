@@ -7,12 +7,17 @@ import '../model/user.dart';
 /// {@endtemplate}
 sealed class AuthState extends _$AuthStateBase {
   /// {@macro auth_state}
-  const AuthState({required super.user, required super.message});
+  const AuthState({
+    required super.user,
+    required super.phone,
+    required super.message,
+  });
 
   /// Idling state
   /// {@macro auth_state}
   const factory AuthState.idle({
     User? user,
+    String? phone,
     String message,
     String? error,
   }) = AuthState$Idle;
@@ -21,13 +26,15 @@ sealed class AuthState extends _$AuthStateBase {
   /// {@macro auth_state}
   const factory AuthState.processing({
     required User? user,
+    required String? phone,
     String message,
   }) = AuthState$Processing;
 
   /// Successful
   /// {@macro auth_state}
   const factory AuthState.successful({
-    User? user,
+    required User? user,
+    required String? phone,
     String message,
   }) = AuthState$Successful;
 }
@@ -38,6 +45,7 @@ final class AuthState$Idle extends AuthState with _$AuthState {
   /// {@nodoc}
   const AuthState$Idle({
     super.user,
+    super.phone,
     super.message = 'Idling',
     this.error,
   });
@@ -52,6 +60,7 @@ final class AuthState$Processing extends AuthState with _$AuthState {
   /// {@nodoc}
   const AuthState$Processing({
     required super.user,
+    required super.phone,
     super.message = 'Successful',
   });
 
@@ -65,6 +74,7 @@ final class AuthState$Successful extends AuthState with _$AuthState {
   /// {@nodoc}
   const AuthState$Successful({
     super.user,
+    super.phone,
     super.message = 'Successful',
   });
 
@@ -82,11 +92,18 @@ typedef AuthStateMatch<R, S extends AuthState> = R Function(S state);
 @immutable
 abstract base class _$AuthStateBase {
   /// {@nodoc}
-  const _$AuthStateBase({required this.user, required this.message});
+  const _$AuthStateBase({
+    required this.user,
+    required this.phone,
+    required this.message,
+  });
 
   /// Data entity payload.
   @nonVirtual
   final User? user;
+
+  @nonVirtual
+  final String? phone;
 
   /// Message or state description.
   @nonVirtual
@@ -109,10 +126,12 @@ abstract base class _$AuthStateBase {
   R map<R>({
     required AuthStateMatch<R, AuthState$Idle> idle,
     required AuthStateMatch<R, AuthState$Processing> processing,
+    required AuthStateMatch<R, AuthState$Successful> successful,
   }) =>
       switch (this) {
         final AuthState$Idle s => idle(s),
         final AuthState$Processing s => processing(s),
+        final AuthState$Successful s => successful(s),
         _ => throw AssertionError(),
       };
 
@@ -121,20 +140,24 @@ abstract base class _$AuthStateBase {
     required R Function() orElse,
     AuthStateMatch<R, AuthState$Idle>? idle,
     AuthStateMatch<R, AuthState$Processing>? processing,
+    AuthStateMatch<R, AuthState$Successful>? successful,
   }) =>
       map<R>(
         idle: idle ?? (_) => orElse(),
         processing: processing ?? (_) => orElse(),
+        successful: successful ?? (_) => orElse(),
       );
 
   /// Pattern matching for [AuthState].
   R? mapOrNull<R>({
     AuthStateMatch<R, AuthState$Idle>? idle,
     AuthStateMatch<R, AuthState$Processing>? processing,
+    AuthStateMatch<R, AuthState$Successful>? successful,
   }) =>
       map<R?>(
         idle: idle ?? (_) => null,
         processing: processing ?? (_) => null,
+        successful: successful ?? (_) => null,
       );
 
   @override

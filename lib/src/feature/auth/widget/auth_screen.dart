@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_studio/src/common/utils/phone_input_formatter.dart';
 
 import '/src/common/assets/generated/assets.gen.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -48,7 +49,7 @@ class _AuthScreenState extends State<AuthScreen> {
     final auth = AuthenticationScope.of(context);
     return Scaffold(
       backgroundColor: context.colorScheme.onBackground,
-      body: Container(
+      body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
@@ -66,6 +67,7 @@ class _AuthScreenState extends State<AuthScreen> {
               const SizedBox(height: 8),
               Center(
                 child: CustomTextField(
+                  controller: phoneController,
                   focusNode: phoneFocusNode,
                   label: 'Укажите номер телефона',
                   labelStyle: context.textTheme.bodyMedium?.copyWith(
@@ -74,8 +76,8 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   keyboardType: TextInputType.phone,
                   hintText: '+7 (123) 456-78-90',
-                  inputFormatters: const [
-                    // RuPhoneInputFormatter(),
+                  inputFormatters: [
+                    RuPhoneInputFormatter(),
                   ],
                   // TODO: Implement phone number validation
                   validator: (text) {
@@ -128,9 +130,9 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            auth.signInWithPhone(phoneController.text);
+            auth.sendCode(phoneController.text);
             // TODO: Implement auth logic
-            context.goNamed('home');
+            // context.goNamed('home');
           }
         },
       ),

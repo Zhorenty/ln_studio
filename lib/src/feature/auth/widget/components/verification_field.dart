@@ -54,6 +54,8 @@ class VerificationCodeField extends StatefulWidget {
   /// A [FocusNode] for managing focus on field
   final FocusNode? focusNode;
 
+  final TextEditingController? controller;
+
   const VerificationCodeField({
     super.key,
     this.length = _maxLength,
@@ -67,6 +69,7 @@ class VerificationCodeField extends StatefulWidget {
     this.showFocusIndicator = true,
     this.blinkFocusIndicator = true,
     this.autofillHints,
+    this.controller,
   });
 
   @override
@@ -107,6 +110,7 @@ class _VerificationCodeFieldState extends State<VerificationCodeField> {
           maintainAnimation: true,
           maintainSemantics: true,
           child: TextField(
+            controller: widget.controller,
             autofocus: widget.autofocus,
             enabled: widget.enabled,
             keyboardType: widget.keyboardType,

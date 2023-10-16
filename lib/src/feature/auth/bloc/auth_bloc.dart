@@ -16,7 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     on<AuthEvent>(
       (event, emit) => event.map(
         sendCode: (e) => _sendCode(e, emit),
-        // signInWithPhone: (e) => _signInWithPhone(e, emit),
+        signInWithPhone: (e) => _signInWithPhone(e, emit),
         // signUpWithPhone: (e) => _signUpWithPhone(e, emit),
         // signInAnonymously: (e) => _signInAnonymously(e, emit),
         signOut: (e) => _signOut(e, emit),
@@ -30,15 +30,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     AuthEvent$SendCode event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthState.processing(user: state.user));
+    emit(AuthState.processing(user: state.user, phone: event.phone));
     try {
       await authRepository.sendCode(phone: event.phone);
-      emit(const AuthState.idle());
+      emit(AuthState.successful(user: state.user, phone: event.phone));
     } on Object catch (e) {
       emit(
         AuthState.idle(error: ErrorUtil.formatError(e)),
       );
       rethrow;
+    } finally {
+      emit(AuthState.idle(user: state.user, phone: state.phone));
     }
   }
 
@@ -60,21 +62,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
   //   }
   // }
 
-  // Future<void> _signInWithPhone(
-  //   AuthEventSignInWithPhone event,
-  //   Emitter<AuthState> emit,
-  // ) async {
-  //   emit(AuthState.processing(user: state.user));
-  //   try {
-  //     final user = await authRepository.signInWithPhone(phone: event.phone);
-  //     emit(AuthState.idle(user: user));
-  //   } on Object catch (e) {
-  //     emit(
-  //       AuthState.idle(error: ErrorUtil.formatError(e)),
-  //     );
-  //     rethrow;
-  //   }
-  // }
+  Future<void> _signInWithPhone(
+    AuthEventSignInWithPhone event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthState.processing(user: state.user, phone: state.phone));
+    try {
+      final user = await authRepository.signInWithPhone(
+        phone: state.phone!,
+        smsCode: event.smsCode,
+      );
+      emit(AuthState.idle(user: user));
+    } on Object catch (e) {
+      emit(
+        AuthState.idle(error: ErrorUtil.formatError(e)),
+      );
+      rethrow;
+    }
+  }
 
   // Future<void> _signInAnonymously(
   //   AuthEventSignInAnonymously event,
@@ -98,7 +103,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     AuthEventSignOut event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthState.processing(user: state.user));
+    emit(AuthState.processing(user: state.user, phone: null));
     try {
       await authRepository.signOut();
       emit(

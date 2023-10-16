@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
+import 'auth_scope.dart';
 import 'components/verification_field.dart';
 // import 'auth_scope.dart';
 
@@ -15,11 +16,13 @@ class VerificationScreen extends StatefulWidget {
 class _VerificationScreenState extends State<VerificationScreen> {
   ///
   late final FocusNode verificationCodeFocusNode;
+  late final TextEditingController controller;
 
   @override
   void initState() {
     super.initState();
     verificationCodeFocusNode = FocusNode();
+    controller = TextEditingController();
   }
 
   @override
@@ -30,7 +33,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final auth = AuthenticationScope.of(context);
+    final auth = AuthenticationScope.of(context);
     return Scaffold(
       backgroundColor: context.colorScheme.onBackground,
       body: Padding(
@@ -47,6 +50,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
             VerificationCodeField(
               length: 4,
               onSubmit: () => print('Submitted'),
+              controller: controller,
+              onChange: (value) => _checkVerificationCode(value),
+              focusNode: verificationCodeFocusNode,
             ),
             TextButton(
               child: const Text('Получить новый код'),
@@ -60,6 +66,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          auth.signInWithPhone(controller.text);
+        },
+        label: const Text('Войти'),
       ),
     );
   }
