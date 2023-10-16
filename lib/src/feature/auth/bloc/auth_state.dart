@@ -23,6 +23,13 @@ sealed class AuthState extends _$AuthStateBase {
     required User? user,
     String message,
   }) = AuthState$Processing;
+
+  /// Successful
+  /// {@macro auth_state}
+  const factory AuthState.successful({
+    User? user,
+    String message,
+  }) = AuthState$Successful;
 }
 
 /// Idling state
@@ -45,7 +52,20 @@ final class AuthState$Processing extends AuthState with _$AuthState {
   /// {@nodoc}
   const AuthState$Processing({
     required super.user,
-    super.message = 'Processing',
+    super.message = 'Successful',
+  });
+
+  @override
+  String? get error => null;
+}
+
+/// Successful
+/// {@nodoc}
+final class AuthState$Successful extends AuthState with _$AuthState {
+  /// {@nodoc}
+  const AuthState$Successful({
+    super.user,
+    super.message = 'Successful',
   });
 
   @override

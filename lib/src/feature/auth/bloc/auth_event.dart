@@ -4,46 +4,54 @@ import 'package:flutter/foundation.dart';
 sealed class AuthEvent extends _$AuthEventBase {
   const AuthEvent();
 
-  const factory AuthEvent.signInWithPhone({required String phone}) =
-      AuthEventSignInWithPhone;
+  const factory AuthEvent.sendCode({required String phone}) =
+      AuthEvent$SendCode;
 
-  // const factory AuthEvent.signInAnonymously() = AuthEventSignInAnonymously;
+  // const factory AuthEvent.signInWithPhone({required String phone}) =
+  //     AuthEventSignInWithPhone;
 
-  const factory AuthEvent.signUpWithPhone({required String phone}) =
-      AuthEventSignUpWithPhone;
+  // // const factory AuthEvent.signInAnonymously() = AuthEventSignInAnonymously;
+
+  // const factory AuthEvent.signUpWithPhone({required String phone}) =
+  //     AuthEventSignUpWithPhone;
 
   const factory AuthEvent.signOut() = AuthEventSignOut;
 }
 
-final class AuthEventSignUpWithPhone extends AuthEvent {
-  const AuthEventSignUpWithPhone({required this.phone}) : super();
+final class AuthEvent$SendCode extends AuthEvent {
+  const AuthEvent$SendCode({required this.phone});
 
   final String phone;
-
-  @override
-  String toString() {
-    final buffer = StringBuffer()
-      ..write('AuthEvent.signUp(')
-      ..write('phone: $phone')
-      ..write(')');
-    return buffer.toString();
-  }
 }
+// final class AuthEventSignUpWithPhone extends AuthEvent {
+//   const AuthEventSignUpWithPhone({required this.phone}) : super();
 
-final class AuthEventSignInWithPhone extends AuthEvent {
-  const AuthEventSignInWithPhone({required this.phone}) : super();
+//   final String phone;
 
-  final String phone;
+//   @override
+//   String toString() {
+//     final buffer = StringBuffer()
+//       ..write('AuthEvent.signUp(')
+//       ..write('phone: $phone')
+//       ..write(')');
+//     return buffer.toString();
+//   }
+// }
 
-  @override
-  String toString() {
-    final buffer = StringBuffer()
-      ..write('AuthEvent.signIn(')
-      ..write('phone: $phone')
-      ..write(')');
-    return buffer.toString();
-  }
-}
+// final class AuthEventSignInWithPhone extends AuthEvent {
+//   const AuthEventSignInWithPhone({required this.phone}) : super();
+
+//   final String phone;
+
+//   @override
+//   String toString() {
+//     final buffer = StringBuffer()
+//       ..write('AuthEvent.signIn(')
+//       ..write('phone: $phone')
+//       ..write(')');
+//     return buffer.toString();
+//   }
+// }
 
 // final class AuthEventSignInAnonymously extends AuthEvent {
 //   const AuthEventSignInAnonymously() : super();
@@ -65,14 +73,16 @@ abstract base class _$AuthEventBase {
   const _$AuthEventBase();
 
   R map<R>({
-    required AuthEventMatch<R, AuthEventSignInWithPhone> signInWithPhone,
-    required AuthEventMatch<R, AuthEventSignUpWithPhone> signUpWithPhone,
+    required AuthEventMatch<R, AuthEvent$SendCode> sendCode,
+    // required AuthEventMatch<R, AuthEventSignInWithPhone> signInWithPhone,
+    // required AuthEventMatch<R, AuthEventSignUpWithPhone> signUpWithPhone,
     // required AuthEventMatch<R, AuthEventSignInAnonymously> signInAnonymously,
     required AuthEventMatch<R, AuthEventSignOut> signOut,
   }) =>
       switch (this) {
-        final AuthEventSignInWithPhone s => signInWithPhone(s),
-        final AuthEventSignUpWithPhone s => signUpWithPhone(s),
+        final AuthEvent$SendCode s => sendCode(s),
+        // final AuthEventSignInWithPhone s => signInWithPhone(s),
+        // final AuthEventSignUpWithPhone s => signUpWithPhone(s),
         // final AuthEventSignInAnonymously s => signInAnonymously(s),
         final AuthEventSignOut s => signOut(s),
         _ => throw AssertionError(),
@@ -80,28 +90,32 @@ abstract base class _$AuthEventBase {
 
   R maybeMap<R>({
     required R Function() orElse,
-    AuthEventMatch<R, AuthEventSignInWithPhone>? signInWithPhone,
-    AuthEventMatch<R, AuthEventSignUpWithPhone>? signUpWithPhone,
+    AuthEventMatch<R, AuthEvent$SendCode>? sendCode,
+    // AuthEventMatch<R, AuthEventSignInWithPhone>? signInWithPhone,
+    // AuthEventMatch<R, AuthEventSignUpWithPhone>? signUpWithPhone,
     // AuthEventMatch<R, AuthEventSignInAnonymously>? signInAnonymously,
     AuthEventMatch<R, AuthEventSignOut>? signOut,
   }) =>
       map<R>(
-        signInWithPhone: signInWithPhone ?? (_) => orElse(),
-        signUpWithPhone: signUpWithPhone ?? (_) => orElse(),
+        sendCode: sendCode ?? (_) => orElse(),
+        // signInWithPhone: signInWithPhone ?? (_) => orElse(),
+        // signUpWithPhone: signUpWithPhone ?? (_) => orElse(),
         // signInAnonymously: signInAnonymously ?? (_) => orElse(),
         signOut: signOut ?? (_) => orElse(),
       );
 
   R? mapOrNull<R>({
-    AuthEventMatch<R, AuthEventSignInWithPhone>? signInWithPhone,
-    AuthEventMatch<R, AuthEventSignUpWithPhone>? signUpWithPhone,
+    AuthEventMatch<R, AuthEvent$SendCode>? sendCode,
+    // AuthEventMatch<R, AuthEventSignInWithPhone>? signInWithPhone,
+    // AuthEventMatch<R, AuthEventSignUpWithPhone>? signUpWithPhone,
     // AuthEventMatch<R, AuthEventSignInAnonymously>? signInAnonymously,
     AuthEventMatch<R, AuthEventSignOut>? signOut,
   }) =>
       map<R?>(
-        signInWithPhone: signInWithPhone ?? (_) => null,
+        sendCode: sendCode ?? (_) => null,
+        // signInWithPhone: signInWithPhone ?? (_) => null,
         // signInAnonymously: signInAnonymously ?? (_) => null,
         signOut: signOut ?? (_) => null,
-        signUpWithPhone: signUpWithPhone ?? (_) => null,
+        // signUpWithPhone: signUpWithPhone ?? (_) => null,
       );
 }

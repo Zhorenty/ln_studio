@@ -48,11 +48,13 @@ abstract interface class AuthDataProvider {
   /// Returns the current [User].
   User? getUser();
 
-  /// Attempts to sign in with the given [phone].
-  Future<User> signInWithPhone({required String phone});
+  Future<bool> sendCode({required String phone});
 
-  /// Attempts to sign up with the given [phone].
-  Future<User> signUpWithPhone({required String phone});
+  // /// Attempts to sign in with the given [phone].
+  // Future<User> signInWithPhone({required String phone});
+
+  // /// Attempts to sign up with the given [phone].
+  // Future<User> signUpWithPhone({required String phone});
 
   // /// Attempts to sign in anonymously.
   // Future<User> signInAnonymously();
@@ -64,10 +66,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     required SharedPreferences sharedPreferences,
     @visibleForTesting Dio? httpClient,
   })  : _sharedPreferences = sharedPreferences,
-        client = httpClient ??
-            Dio(
-              BaseOptions(baseUrl: baseUrl),
-            );
+        client = httpClient ?? Dio(BaseOptions(baseUrl: baseUrl));
 
   final SharedPreferences _sharedPreferences;
   final Dio client;
@@ -172,47 +171,56 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   // }
 
   @override
-  Future<User> signInWithPhone({required String phone}) async {
-    final response = await client.post<Map<String, Object?>>(
-      '/api/auth/sign-in',
-      data: jsonEncode({
-        'phone_number': phone,
-        'sms_code': null,
-      }),
+  Future<bool> sendCode({required String phone}) async {
+    final response = await client.post(
+      '/api/auth/sms/send',
+      data: {'phone_number': phone},
     );
-
-    final tokenPair = _decodeTokenPair(response);
-
-    await _saveTokenPair(tokenPair);
-
-    final user = User(phone: phone);
-
-    await _saveUser(user);
-
-    return user;
+    return response.data;
   }
 
-  @override
-  Future<User> signUpWithPhone({
-    required String phone,
-  }) async {
-    final response = await client.post<Map<String, Object?>>(
-      '/api/v1/auth/signup',
-      data: jsonEncode({
-        'phone': phone,
-      }),
-    );
+  // @override
+  // Future<User> signInWithPhone({required String phone}) async {
+  //   final response = await client.post<Map<String, Object?>>(
+  //     '/api/auth/sign-in',
+  //     data: jsonEncode({
+  //       'phone_number': phone,
+  //       'sms_code': null,
+  //     }),
+  //   );
 
-    final tokenPair = _decodeTokenPair(response);
+  //   final tokenPair = _decodeTokenPair(response);
 
-    await _saveTokenPair(tokenPair);
+  //   await _saveTokenPair(tokenPair);
 
-    final user = User(phone: phone);
+  //   final user = User(phone: phone);
 
-    await _saveUser(user);
+  //   await _saveUser(user);
 
-    return user;
-  }
+  //   return user;
+  // }
+
+  // @override
+  // Future<User> signUpWithPhone({
+  //   required String phone,
+  // }) async {
+  //   final response = await client.post<Map<String, Object?>>(
+  //     '/api/v1/auth/signup',
+  //     data: jsonEncode({
+  //       'phone': phone,
+  //     }),
+  //   );
+
+  //   final tokenPair = _decodeTokenPair(response);
+
+  //   await _saveTokenPair(tokenPair);
+
+  //   final user = User(phone: phone);
+
+  //   await _saveUser(user);
+
+  //   return user;
+  // }
 
   @override
   Future<void> signOut() async {

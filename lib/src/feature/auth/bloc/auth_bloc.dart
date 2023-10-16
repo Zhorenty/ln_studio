@@ -15,8 +15,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
 
     on<AuthEvent>(
       (event, emit) => event.map(
-        signInWithPhone: (e) => _signInWithPhone(e, emit),
-        signUpWithPhone: (e) => _signUpWithPhone(e, emit),
+        sendCode: (e) => _sendCode(e, emit),
+        // signInWithPhone: (e) => _signInWithPhone(e, emit),
+        // signUpWithPhone: (e) => _signUpWithPhone(e, emit),
         // signInAnonymously: (e) => _signInAnonymously(e, emit),
         signOut: (e) => _signOut(e, emit),
       ),
@@ -25,16 +26,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
 
   final AuthRepository authRepository;
 
-  Future<void> _signUpWithPhone(
-    AuthEventSignUpWithPhone event,
+  Future<void> _sendCode(
+    AuthEvent$SendCode event,
     Emitter<AuthState> emit,
   ) async {
     emit(AuthState.processing(user: state.user));
     try {
-      final user = await authRepository.signUpWithPhone(
-        phone: event.phone,
-      );
-      emit(AuthState.idle(user: user));
+      await authRepository.sendCode(phone: event.phone);
+      emit(const AuthState.idle());
     } on Object catch (e) {
       emit(
         AuthState.idle(error: ErrorUtil.formatError(e)),
@@ -43,21 +42,39 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     }
   }
 
-  Future<void> _signInWithPhone(
-    AuthEventSignInWithPhone event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthState.processing(user: state.user));
-    try {
-      final user = await authRepository.signInWithPhone(phone: event.phone);
-      emit(AuthState.idle(user: user));
-    } on Object catch (e) {
-      emit(
-        AuthState.idle(error: ErrorUtil.formatError(e)),
-      );
-      rethrow;
-    }
-  }
+  // Future<void> _signUpWithPhone(
+  //   AuthEventSignUpWithPhone event,
+  //   Emitter<AuthState> emit,
+  // ) async {
+  //   emit(AuthState.processing(user: state.user));
+  //   try {
+  //     final user = await authRepository.signUpWithPhone(
+  //       phone: event.phone,
+  //     );
+  //     emit(AuthState.idle(user: user));
+  //   } on Object catch (e) {
+  //     emit(
+  //       AuthState.idle(error: ErrorUtil.formatError(e)),
+  //     );
+  //     rethrow;
+  //   }
+  // }
+
+  // Future<void> _signInWithPhone(
+  //   AuthEventSignInWithPhone event,
+  //   Emitter<AuthState> emit,
+  // ) async {
+  //   emit(AuthState.processing(user: state.user));
+  //   try {
+  //     final user = await authRepository.signInWithPhone(phone: event.phone);
+  //     emit(AuthState.idle(user: user));
+  //   } on Object catch (e) {
+  //     emit(
+  //       AuthState.idle(error: ErrorUtil.formatError(e)),
+  //     );
+  //     rethrow;
+  //   }
+  // }
 
   // Future<void> _signInAnonymously(
   //   AuthEventSignInAnonymously event,

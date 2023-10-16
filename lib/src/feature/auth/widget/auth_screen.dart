@@ -87,36 +87,52 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    fixedSize: Size(MediaQuery.sizeOf(context).width, 50),
-                    backgroundColor: context.colorScheme.primary,
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      auth.signInWithPhone(phoneController.text);
-                      // TODO: Implement auth logic
-                      context.goNamed('home');
-                    }
-                  },
-                  child: Text(
-                    'Продолжить',
-                    style: context.textTheme.bodyLarge?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                      color: context.colorScheme.onBackground,
-                    ),
-                  ),
-                ),
-              ),
+              // const Spacer(),
+              // Padding(
+              //   padding: const EdgeInsets.only(bottom: 8.0),
+              //   child: ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(16),
+              //       ),
+              //       fixedSize: Size(MediaQuery.sizeOf(context).width, 50),
+              //       backgroundColor: context.colorScheme.primary,
+              //     ),
+              //     onPressed: () {
+              //       if (_formKey.currentState!.validate()) {
+              //         auth.signInWithPhone(phoneController.text);
+              //         // TODO: Implement auth logic
+              //         context.goNamed('home');
+              //       }
+              //     },
+              //     child: Text(
+              //       'Продолжить',
+              //       style: context.textTheme.bodyLarge?.copyWith(
+              //         fontFamily: FontFamily.geologica,
+              //         color: context.colorScheme.onBackground,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text(
+          'Продолжить',
+          style: context.textTheme.bodyLarge?.copyWith(
+            fontFamily: FontFamily.geologica,
+            color: context.colorScheme.onBackground,
+          ),
+        ),
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            auth.signInWithPhone(phoneController.text);
+            // TODO: Implement auth logic
+            context.goNamed('home');
+          }
+        },
       ),
     );
   }

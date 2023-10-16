@@ -10,14 +10,16 @@ import '/src/feature/initialization/widget/dependencies_scope.dart';
 
 ///
 abstract mixin class AuthenticationController {
+  void sendCode(String phone);
+
   /// Sign in with [phone].
-  void signInWithPhone(String phone);
+  // void signInWithPhone(String phone);
 
   /// Sign in as a guest
   // void signInAnonymously();
 
   /// Sign up with [phone].
-  void signUpWithPhone(String phone);
+  // void signUpWithPhone(String phone);
 
   /// Sign out the current user
   void signOut();
@@ -102,15 +104,15 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   //       const AuthEvent.signInAnonymously(),
   //     );
 
-  @override
-  void signInWithPhone(String phone) => _authBloc.add(
-        AuthEvent.signInWithPhone(phone: phone),
-      );
+  // @override
+  // void signInWithPhone(String phone) => _authBloc.add(
+  //       AuthEvent.signInWithPhone(phone: phone),
+  //     );
 
-  @override
-  void signUpWithPhone(String phone) => _authBloc.add(
-        AuthEvent.signUpWithPhone(phone: phone),
-      );
+  // @override
+  // void signUpWithPhone(String phone) => _authBloc.add(
+  //       AuthEvent.signUpWithPhone(phone: phone),
+  //     );
 
   @override
   void signOut() => _authBloc.add(const AuthEvent.signOut());

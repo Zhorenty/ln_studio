@@ -81,10 +81,10 @@ class GeneratedLocalization {
     );
   }
 
-  /// `ЧЕГОООООО`
+  /// `Здесь записи`
   String get wardrobeEmpty {
     return Intl.message(
-      'ЧЕГОООООО',
+      'Здесь записи',
       name: 'wardrobeEmpty',
       desc: '',
       args: [],

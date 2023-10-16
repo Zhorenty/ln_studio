@@ -37,11 +37,13 @@ abstract interface class AuthRepository {
   /// Clear the current [TokenPair].
   Future<void> signOut();
 
-  /// Attempts to sign in with the given [phone].
-  Future<User> signInWithPhone({required String phone});
+  Future<bool> sendCode({required String phone});
 
-  /// Attempts to sign up with the given [phone].
-  Future<User> signUpWithPhone({required String phone});
+  // /// Attempts to sign in with the given [phone].
+  // Future<User> signInWithPhone({required String phone});
+
+  // /// Attempts to sign up with the given [phone].
+  // Future<User> signUpWithPhone({required String phone});
 
   /// Attempts to sign in anonymously.
   // Future<User> signInAnonymously();
@@ -70,12 +72,16 @@ final class AuthRepositoryImpl implements AuthRepository {
   Future<void> signOut() => _authDataProvider.signOut();
 
   @override
-  Future<User> signInWithPhone({required String phone}) =>
-      _authDataProvider.signInWithPhone(phone: phone);
+  Future<bool> sendCode({required String phone}) =>
+      _authDataProvider.sendCode(phone: phone);
 
-  @override
-  Future<User> signUpWithPhone({required String phone}) =>
-      _authDataProvider.signUpWithPhone(phone: phone);
+  // @override
+  // Future<User> signInWithPhone({required String phone}) =>
+  //     _authDataProvider.signInWithPhone(phone: phone);
+
+  // @override
+  // Future<User> signUpWithPhone({required String phone}) =>
+  //     _authDataProvider.signUpWithPhone(phone: phone);
 
   // @override
   // Future<User> signInAnonymously() => _authDataProvider.signInAnonymously();
