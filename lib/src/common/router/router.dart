@@ -22,8 +22,7 @@ final _parentKey = GlobalKey<NavigatorState>();
 
 /// Router of this application.
 final router = GoRouter(
-  // TODO: Replace before merge
-  initialLocation: '/profile',
+  initialLocation: '/home',
   navigatorKey: _parentKey,
   routes: [
     StatefulShellRoute.indexedStack(
