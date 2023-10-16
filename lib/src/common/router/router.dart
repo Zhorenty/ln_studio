@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/feature/profile/widget/booking_history_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/edit_profile_screen.dart';
+import 'package:ln_studio/src/feature/profile/widget/settings_screen.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/widget/congratulation_screen.dart';
@@ -183,16 +184,22 @@ final router = GoRouter(
               builder: (context, state) => const ProfileScreen(),
               routes: [
                 GoRoute(
+                  path: 'edit',
+                  name: 'profile_edit',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => const EditProfileScreen(),
+                ),
+                GoRoute(
                   path: 'booking_history',
                   name: 'booking_history',
                   parentNavigatorKey: _parentKey,
                   builder: (context, state) => const BookingHistoryScreen(),
                 ),
                 GoRoute(
-                  path: 'edit',
-                  name: 'profile_edit',
+                  path: 'notifications',
+                  name: 'notifications',
                   parentNavigatorKey: _parentKey,
-                  builder: (context, state) => const EditProfileScreen(),
+                  builder: (context, state) => const NotificationsScreen(),
                 ),
               ],
             ),
