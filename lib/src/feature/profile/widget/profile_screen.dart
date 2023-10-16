@@ -37,19 +37,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SliverList.list(
             children: [
               HeaderListTile(
-                onPressed: () => context.pushNamed('profile_edit'),
+                onPressed: () => context.goNamed('profile_edit'),
               ),
               const CustomDivider(),
               CategoryListTile(
                 icon: Icons.history_rounded,
                 title: 'Мои записи',
                 size: 23,
-                onTap: () => context.pushNamed('booking_history'),
+                onTap: () => context.goNamed('booking_history'),
               ),
               const CustomDivider(),
-              const CategoryListTile(
-                icon: Icons.settings_rounded,
-                title: 'Настройки',
+              CategoryListTile(
+                icon: Icons.notifications_rounded,
+                title: 'Уведомления',
+                onTap: () => context.goNamed('notifications'),
               ),
               const CustomDivider(),
               const CategoryListTile(
