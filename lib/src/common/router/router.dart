@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/feature/profile/widget/booking_history_screen.dart';
+import 'package:ln_studio/src/feature/profile/widget/discounts_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/edit_profile_screen.dart';
-import 'package:ln_studio/src/feature/profile/widget/settings_screen.dart';
+import 'package:ln_studio/src/feature/profile/widget/notifications_screen.dart';
+import 'package:ln_studio/src/feature/profile/widget/payment_screen.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/widget/congratulation_screen.dart';
@@ -22,7 +24,7 @@ final _parentKey = GlobalKey<NavigatorState>();
 
 /// Router of this application.
 final router = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/profile',
   navigatorKey: _parentKey,
   routes: [
     StatefulShellRoute.indexedStack(
@@ -200,6 +202,18 @@ final router = GoRouter(
                   name: 'notifications',
                   parentNavigatorKey: _parentKey,
                   builder: (context, state) => const NotificationsScreen(),
+                ),
+                GoRoute(
+                  path: 'discounts',
+                  name: 'discounts',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => const DiscountsScreen(),
+                ),
+                GoRoute(
+                  path: 'payment',
+                  name: 'payment',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => const PaymentScreen(),
                 ),
               ],
             ),
