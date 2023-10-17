@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 typedef TokenPair = ({
   String accessToken,
-  String refreshToken,
+  String? refreshToken,
 });
 
 @immutable

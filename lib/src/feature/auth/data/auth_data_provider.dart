@@ -81,10 +81,12 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       'auth.token_pair.access_token',
       pair.accessToken,
     );
-    await _sharedPreferences.setString(
-      'auth.token_pair.refresh_token',
-      pair.refreshToken,
-    );
+    if (pair.refreshToken != null) {
+      await _sharedPreferences.setString(
+        'auth.token_pair.refresh_token',
+        pair.refreshToken as String,
+      );
+    }
     _tokenPairController.add(pair);
   }
 
@@ -117,8 +119,8 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     if (json
         case {
           'data': {
-            'accessToken': final String accessToken,
-            'refreshToken': final String refreshToken,
+            'access_token': final String accessToken,
+            'refresh_token': final String? refreshToken,
           },
         }) {
       return (
@@ -132,11 +134,11 @@ final class AuthDataProviderImpl implements AuthDataProvider {
 
   @override
   Future<TokenPair> refreshTokenPair() async {
-    // final tokenPair = getTokenPair();
+    final tokenPair = getTokenPair();
 
-    // if (tokenPair == null) {
-    //   throw Exception('Failed to refresh token pair');
-    // }
+    if (tokenPair == null) {
+      throw Exception('Failed to refresh token pair');
+    }
 
     final response = await client.post(
       '/api/auth/refresh',
@@ -186,8 +188,6 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     required String phone,
     required int smsCode,
   }) async {
-    // TODO: Implement refresh fetching
-    // ignore: unused_local_variable
     final response = await client.post<Map<String, Object?>>(
       '/api/auth/sms/validate',
       data: {
@@ -196,9 +196,9 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       },
     );
 
-    // final tokenPair = _decodeTokenPair(response);
+    final tokenPair = _decodeTokenPair(response);
 
-    // await _saveTokenPair(tokenPair);
+    await _saveTokenPair(tokenPair);
 
     final user = User(phone: phone);
 
@@ -245,11 +245,12 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     final accessToken = _sharedPreferences.getString(
       'auth.token_pair.access_token',
     );
+
     final refreshToken = _sharedPreferences.getString(
       'auth.token_pair.refresh_token',
     );
 
-    if (accessToken == null || refreshToken == null) {
+    if (accessToken == null) {
       return null;
     }
 
