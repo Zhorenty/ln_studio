@@ -30,10 +30,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     AuthEvent$SendCode event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthState.processing(user: state.user, phone: event.phone));
+    emit(AuthState.processing(
+      user: state.user,
+      phone: event.phone,
+      smsCode: null,
+    ));
     try {
       await authRepository.sendCode(phone: event.phone);
-      emit(AuthState.successful(user: state.user, phone: event.phone));
+      emit(AuthState.successful(
+        user: state.user,
+        phone: event.phone,
+        smsCode: null,
+      ));
     } on Object catch (e) {
       emit(
         AuthState.idle(error: ErrorUtil.formatError(e)),
@@ -66,18 +74,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     AuthEventSignInWithPhone event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthState.processing(user: state.user, phone: state.phone));
+    emit(AuthState.processing(
+      user: state.user,
+      phone: state.phone,
+      smsCode: null,
+    ));
     try {
       final user = await authRepository.signInWithPhone(
         phone: state.phone!,
         smsCode: event.smsCode,
       );
-      emit(AuthState.idle(user: user));
+      emit(AuthState.successful(
+        user: user,
+        phone: state.phone,
+        smsCode: event.smsCode,
+      ));
     } on Object catch (e) {
       emit(
         AuthState.idle(error: ErrorUtil.formatError(e)),
       );
       rethrow;
+    } finally {
+      emit(AuthState.idle(
+        user: state.user,
+        phone: state.phone,
+        smsCode: state.smsCode,
+      ));
     }
   }
 
@@ -103,7 +125,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     AuthEventSignOut event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthState.processing(user: state.user, phone: null));
+    emit(AuthState.processing(
+      user: state.user,
+      phone: null,
+      smsCode: null,
+    ));
     try {
       await authRepository.signOut();
       emit(

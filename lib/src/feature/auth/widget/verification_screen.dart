@@ -69,7 +69,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          auth.signInWithPhone(controller.text);
+          auth.signInWithPhone(int.parse(controller.text));
         },
         label: const Text('Войти'),
       ),

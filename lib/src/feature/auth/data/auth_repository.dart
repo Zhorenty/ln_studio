@@ -42,7 +42,7 @@ abstract interface class AuthRepository {
   /// Attempts to sign in with the given [phone].
   Future<User> signInWithPhone({
     required String phone,
-    required String smsCode,
+    required int smsCode,
   });
 
   // /// Attempts to sign up with the given [phone].
@@ -81,7 +81,7 @@ final class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<User> signInWithPhone({
     required String phone,
-    required String smsCode,
+    required int smsCode,
   }) =>
       _authDataProvider.signInWithPhone(phone: phone, smsCode: smsCode);
 

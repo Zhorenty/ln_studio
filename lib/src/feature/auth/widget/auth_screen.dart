@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/utils/phone_input_formatter.dart';
 
 import '/src/common/assets/generated/assets.gen.dart';

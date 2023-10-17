@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_studio/src/common/router/router.dart';
 
 import '../bloc/auth_event.dart';
 import '/src/common/router/app_router_scope.dart';
@@ -13,7 +14,7 @@ abstract mixin class AuthenticationController {
   void sendCode(String phone);
 
   /// Sign in with [phone].
-  void signInWithPhone(String smsCode);
+  void signInWithPhone(int smsCode);
 
   /// Sign in as a guest
   // void signInAnonymously();
@@ -27,6 +28,7 @@ abstract mixin class AuthenticationController {
   /// The current user
   User? get user;
 
+  ///
   String? get phone;
 
   /// Whether the current user is being processed
@@ -83,19 +85,15 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   void _onAuthStateChanged(AuthState state) {
     if (!identical(state, _state)) {
       // Если надо сравнивать states
-      final router = AppRouterScope.of(context, listen: false);
-      if (state is AuthState$Successful &&
-          _state?.phone != null &&
-          !isAuthenticated) {
-        router.goNamed('verify');
-      } else if (state is AuthState$Successful && isAuthenticated) {
-        router.go('/home');
-      }
+      // final router = AppRouterScope.of(context, listen: false);
+      // if (state is AuthState$Successful && _state?.phone != null) {
+      //   router.goNamed('verify');
+      // }
 
       setState(() => _state = state);
 
       // TODO: Возможно, надо поменять
-      // isAuthenticated
+      // !isAuthenticated
       //     ? router.replaceNamed('home')
       //     : router.replaceNamed('auth');
     }
@@ -114,8 +112,12 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   bool get isProcessing => _state?.isProcessing ?? false;
 
   @override
-  void sendCode(String phone) =>
-      _authBloc.add(AuthEvent.sendCode(phone: phone));
+  void sendCode(String phone) {
+    _authBloc.add(AuthEvent.sendCode(phone: phone));
+    if (_state!.isIdling) {
+      router.goNamed('verify');
+    }
+  }
 
   // @override
   // void signInAnonymously() => _authBloc.add(
@@ -123,9 +125,12 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   //     );
 
   @override
-  void signInWithPhone(String smsCode) => _authBloc.add(
-        AuthEvent.signInWithPhone(smsCode),
-      );
+  void signInWithPhone(int smsCode) {
+    _authBloc.add(AuthEvent.signInWithPhone(smsCode));
+    if (_state!.isIdling) {
+      router.go('/home');
+    }
+  }
 
   // @override
   // void signUpWithPhone(String phone) => _authBloc.add(

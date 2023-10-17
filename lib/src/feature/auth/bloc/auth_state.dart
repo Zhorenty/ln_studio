@@ -11,6 +11,7 @@ sealed class AuthState extends _$AuthStateBase {
     required super.user,
     required super.phone,
     required super.message,
+    required super.smsCode,
   });
 
   /// Idling state
@@ -18,6 +19,7 @@ sealed class AuthState extends _$AuthStateBase {
   const factory AuthState.idle({
     User? user,
     String? phone,
+    int? smsCode,
     String message,
     String? error,
   }) = AuthState$Idle;
@@ -27,6 +29,7 @@ sealed class AuthState extends _$AuthStateBase {
   const factory AuthState.processing({
     required User? user,
     required String? phone,
+    required int? smsCode,
     String message,
   }) = AuthState$Processing;
 
@@ -35,6 +38,7 @@ sealed class AuthState extends _$AuthStateBase {
   const factory AuthState.successful({
     required User? user,
     required String? phone,
+    required int? smsCode,
     String message,
   }) = AuthState$Successful;
 }
@@ -46,6 +50,7 @@ final class AuthState$Idle extends AuthState with _$AuthState {
   const AuthState$Idle({
     super.user,
     super.phone,
+    super.smsCode,
     super.message = 'Idling',
     this.error,
   });
@@ -61,6 +66,7 @@ final class AuthState$Processing extends AuthState with _$AuthState {
   const AuthState$Processing({
     required super.user,
     required super.phone,
+    required super.smsCode,
     super.message = 'Successful',
   });
 
@@ -75,6 +81,7 @@ final class AuthState$Successful extends AuthState with _$AuthState {
   const AuthState$Successful({
     super.user,
     super.phone,
+    super.smsCode,
     super.message = 'Successful',
   });
 
@@ -96,6 +103,7 @@ abstract base class _$AuthStateBase {
     required this.user,
     required this.phone,
     required this.message,
+    required this.smsCode,
   });
 
   /// Data entity payload.
@@ -104,6 +112,9 @@ abstract base class _$AuthStateBase {
 
   @nonVirtual
   final String? phone;
+
+  @nonVirtual
+  final int? smsCode;
 
   /// Message or state description.
   @nonVirtual
@@ -116,8 +127,16 @@ abstract base class _$AuthStateBase {
   bool get hasError => error != null;
 
   /// Is in progress state?
-  bool get isProcessing =>
-      maybeMap<bool>(orElse: () => false, processing: (_) => true);
+  bool get isSuccessful => maybeMap<bool>(
+        orElse: () => false,
+        successful: (_) => true,
+      );
+
+  /// Is in progress state?
+  bool get isProcessing => maybeMap<bool>(
+        orElse: () => false,
+        processing: (_) => true,
+      );
 
   /// Is in idle state?
   bool get isIdling => !isProcessing;

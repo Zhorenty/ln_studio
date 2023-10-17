@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +52,7 @@ abstract interface class AuthDataProvider {
   // /// Attempts to sign in with the given [phone].
   Future<User> signInWithPhone({
     required String phone,
-    required String smsCode,
+    required int smsCode,
   });
 
   // /// Attempts to sign up with the given [phone].
@@ -133,24 +132,24 @@ final class AuthDataProviderImpl implements AuthDataProvider {
 
   @override
   Future<TokenPair> refreshTokenPair() async {
-    final tokenPair = getTokenPair();
+    // final tokenPair = getTokenPair();
 
-    if (tokenPair == null) {
-      throw Exception('Failed to refresh token pair');
-    }
+    // if (tokenPair == null) {
+    //   throw Exception('Failed to refresh token pair');
+    // }
 
-    final response = await client.get<Map<String, Object?>>(
-      '/api/v1/auth/refresh',
-      queryParameters: {
-        'refreshToken': tokenPair.refreshToken,
-      },
+    final response = await client.post(
+      '/api/auth/refresh',
+      // queryParameters: {
+      //   'refreshToken': tokenPair.refreshToken,
+      // },
     );
 
     if (response.statusCode != 200) {
       throw Exception('Failed to refresh token pair');
     }
 
-    final newTokenPair = _decodeTokenPair(response);
+    final newTokenPair = _decodeTokenPair(response.data);
     await _saveTokenPair(newTokenPair);
 
     return newTokenPair;
@@ -185,19 +184,21 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   @override
   Future<User> signInWithPhone({
     required String phone,
-    required String smsCode,
+    required int smsCode,
   }) async {
+    // TODO: Implement refresh fetching
+    // ignore: unused_local_variable
     final response = await client.post<Map<String, Object?>>(
       '/api/auth/sms/validate',
       data: {
-        'phone_number': phone,
-        'sms_code': int.parse(smsCode),
+        'phone': phone,
+        'sms_code': smsCode,
       },
     );
 
-    final tokenPair = _decodeTokenPair(response);
+    // final tokenPair = _decodeTokenPair(response);
 
-    await _saveTokenPair(tokenPair);
+    // await _saveTokenPair(tokenPair);
 
     final user = User(phone: phone);
 

@@ -35,7 +35,7 @@ base class OAuthInterceptor extends QueuedInterceptor {
         handler.resolve(response);
       } on DioException catch (e) {
         if (e.response?.statusCode == 401) {
-          // await clearTokens();
+          await clearTokens();
           handler.reject(e);
         } else {
           handler.next(e);
