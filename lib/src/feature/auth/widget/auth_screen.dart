@@ -29,6 +29,8 @@ class _AuthScreenState extends State<AuthScreen> {
   ///
   late final FocusNode phoneFocusNode;
 
+  bool visible = false;
+
   @override
   void initState() {
     super.initState();
@@ -60,7 +62,9 @@ class _AuthScreenState extends State<AuthScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Добро пожаловать',
-                  style: context.textTheme.headlineMedium,
+                  style: context.textTheme.headlineMedium!.copyWith(
+                    fontFamily: FontFamily.geologica,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -75,9 +79,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   keyboardType: TextInputType.phone,
                   hintText: '+7 (123) 456-78-90',
-                  inputFormatters: [
-                    RuPhoneInputFormatter(),
-                  ],
+                  inputFormatters: [RuPhoneInputFormatter()],
                   // TODO: Implement phone number validation
                   validator: (text) {
                     return null;
@@ -88,61 +90,49 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              // const Spacer(),
-              // Padding(
-              //   padding: const EdgeInsets.only(bottom: 8.0),
-              //   child: ElevatedButton(
-              //     style: ElevatedButton.styleFrom(
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(16),
-              //       ),
-              //       fixedSize: Size(MediaQuery.sizeOf(context).width, 50),
-              //       backgroundColor: context.colorScheme.primary,
-              //     ),
-              //     onPressed: () {
-              //       if (_formKey.currentState!.validate()) {
-              //         auth.signInWithPhone(phoneController.text);
-              //         // TODO: Implement auth logic
-              //         context.goNamed('home');
-              //       }
-              //     },
-              //     child: Text(
-              //       'Продолжить',
-              //       style: context.textTheme.bodyLarge?.copyWith(
-              //         fontFamily: FontFamily.geologica,
-              //         color: context.colorScheme.onBackground,
-              //       ),
-              //     ),
-              //   ),
-              // ),
+              const Spacer(),
+              AnimatedOpacity(
+                opacity: visible ? 1 : 0,
+                duration: const Duration(milliseconds: 300),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      fixedSize: Size(
+                        MediaQuery.sizeOf(context).width - 50,
+                        50,
+                      ),
+                      backgroundColor: context.colorScheme.primary,
+                    ),
+                    onPressed: () => _formKey.currentState!.validate()
+                        ? auth.sendCode(phoneController.text)
+                        : null,
+                    child: Text(
+                      'Продолжить',
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        fontFamily: FontFamily.geologica,
+                        color: context.colorScheme.onBackground,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text(
-          'Продолжить',
-          style: context.textTheme.bodyLarge?.copyWith(
-            fontFamily: FontFamily.geologica,
-            color: context.colorScheme.onBackground,
-          ),
-        ),
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            auth.sendCode(phoneController.text);
-            // TODO: Implement auth logic
-            // context.goNamed('home');
-          }
-        },
-      ),
     );
   }
 
-  /// Phone number FocusNode condition.
+  /// Phone number [FocusNode] condition.
   void _checkPhoneNumber(String value) {
     if ((value.length == 18 && value.startsWith('+')) ||
         (value.length == 17 && value.startsWith('8'))) {
       phoneFocusNode.unfocus();
+      setState(() => visible = true);
     }
   }
 }

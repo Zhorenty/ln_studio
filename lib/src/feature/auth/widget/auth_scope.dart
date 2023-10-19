@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ln_studio/src/common/router/router.dart';
 
 import '../bloc/auth_event.dart';
-import '/src/common/router/app_router_scope.dart';
 import '/src/common/utils/mixin/scope_mixin.dart';
 import '/src/feature/auth/bloc/auth_bloc.dart';
 import '/src/feature/auth/bloc/auth_state.dart';
@@ -38,7 +37,7 @@ abstract mixin class AuthenticationController {
   String? get error;
 
   /// Whether the current user is authenticated
-  bool get isAuthenticated => user?.phone != null;
+  bool get isAuthenticated => user != null;
 }
 
 ///
@@ -93,7 +92,7 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
       setState(() => _state = state);
 
       // TODO: Возможно, надо поменять
-      // !isAuthenticated
+      // isAuthenticated
       //     ? router.replaceNamed('home')
       //     : router.replaceNamed('auth');
     }

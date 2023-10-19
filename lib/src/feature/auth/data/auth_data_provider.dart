@@ -55,11 +55,15 @@ abstract interface class AuthDataProvider {
     required int smsCode,
   });
 
-  // /// Attempts to sign up with the given [phone].
-  // Future<User> signUpWithPhone({required String phone});
-
-  // /// Attempts to sign in anonymously.
-  // Future<User> signInAnonymously();
+  Future<void> signUp({
+    required String phone,
+    required String firstName,
+    required String lastName,
+    // TODO: make nullable.
+    required DateTime birthDate,
+    // TODO: make nullable.
+    required String email,
+  });
 }
 
 final class AuthDataProviderImpl implements AuthDataProvider {
@@ -76,6 +80,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   final _tokenPairController = StreamController<TokenPair?>();
   final _userController = StreamController<User?>();
 
+  ///
   Future<void> _saveTokenPair(TokenPair pair) async {
     await _sharedPreferences.setString(
       'auth.token_pair.access_token',
@@ -90,17 +95,15 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     _tokenPairController.add(pair);
   }
 
+  ///
   Future<void> _saveUser(User user) async {
     if (user.phone != null) {
       await _sharedPreferences.setString('auth.user.phone', user.phone!);
     }
-    // await _sharedPreferences.setBool(
-    //   'auth.user.is_anonymous',
-    //   user.isAnonymous,
-    // );
     _userController.add(user);
   }
 
+  ///
   TokenPair _decodeTokenPair(Response<Map<String, Object?>> response) {
     final json = response.data;
 
@@ -140,12 +143,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       throw Exception('Failed to refresh token pair');
     }
 
-    final response = await client.post(
-      '/api/auth/refresh',
-      // queryParameters: {
-      //   'refreshToken': tokenPair.refreshToken,
-      // },
-    );
+    final response = await client.post('/api/auth/refresh');
 
     if (response.statusCode != 200) {
       throw Exception('Failed to refresh token pair');
@@ -156,23 +154,6 @@ final class AuthDataProviderImpl implements AuthDataProvider {
 
     return newTokenPair;
   }
-
-  // @override
-  // Future<User> signInAnonymously() async {
-  //   final response = await client.post<Map<String, Object?>>(
-  //     '/api/v1/auth/guest',
-  //   );
-
-  //   final tokenPair = _decodeTokenPair(response);
-
-  //   await _saveTokenPair(tokenPair);
-
-  //   const user = User(isAnonymous: true);
-
-  //   await _saveUser(user);
-
-  //   return user;
-  // }
 
   @override
   Future<bool> sendCode({required String phone}) async {
@@ -207,34 +188,35 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     return user;
   }
 
-  // @override
-  // Future<User> signUpWithPhone({
-  //   required String phone,
-  // }) async {
-  //   final response = await client.post<Map<String, Object?>>(
-  //     '/api/v1/auth/signup',
-  //     data: jsonEncode({
-  //       'phone': phone,
-  //     }),
-  //   );
+  @override
+  Future<void> signUp({
+    required String phone,
+    required String firstName,
+    required String lastName,
+    required DateTime birthDate,
+    required String email,
+  }) async {
+    final response = await client.post<Map<String, Object?>>(
+      '/api/auth/sign-up',
+      data: {
+        'phone_number': phone,
+        "first_name": firstName,
+        "last_name": lastName,
+        "birth_date": birthDate,
+        "email": email,
+      },
+    );
 
-  //   final tokenPair = _decodeTokenPair(response);
+    final tokenPair = _decodeTokenPair(response);
 
-  //   await _saveTokenPair(tokenPair);
-
-  //   final user = User(phone: phone);
-
-  //   await _saveUser(user);
-
-  //   return user;
-  // }
+    await _saveTokenPair(tokenPair);
+  }
 
   @override
   Future<void> signOut() async {
     await _sharedPreferences.remove('auth.token_pair.access_token');
     await _sharedPreferences.remove('auth.token_pair.refresh_token');
     await _sharedPreferences.remove('auth.user.phone');
-    // await _sharedPreferences.remove('auth.user.is_anonymous');
     _tokenPairController.add(null);
     _userController.add(null);
     return;
