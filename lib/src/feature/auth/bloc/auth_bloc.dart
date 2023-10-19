@@ -17,8 +17,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       (event, emit) => event.map(
         sendCode: (e) => _sendCode(e, emit),
         signInWithPhone: (e) => _signInWithPhone(e, emit),
-        // signUpWithPhone: (e) => _signUpWithPhone(e, emit),
-        // signInAnonymously: (e) => _signInAnonymously(e, emit),
         signOut: (e) => _signOut(e, emit),
       ),
     );
@@ -52,24 +50,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     }
   }
 
-  // Future<void> _signUpWithPhone(
-  //   AuthEventSignUpWithPhone event,
-  //   Emitter<AuthState> emit,
-  // ) async {
-  //   emit(AuthState.processing(user: state.user));
-  //   try {
-  //     final user = await authRepository.signUpWithPhone(
-  //       phone: event.phone,
-  //     );
-  //     emit(AuthState.idle(user: user));
-  //   } on Object catch (e) {
-  //     emit(
-  //       AuthState.idle(error: ErrorUtil.formatError(e)),
-  //     );
-  //     rethrow;
-  //   }
-  // }
-
   Future<void> _signInWithPhone(
     AuthEventSignInWithPhone event,
     Emitter<AuthState> emit,
@@ -90,10 +70,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
         smsCode: event.smsCode,
       ));
     } on Object catch (e) {
+      // if (e is RestClientException) {
+      //   // Sign up
+      //   add(event);
+      // } else {
       emit(
         AuthState.idle(error: ErrorUtil.formatError(e)),
       );
       rethrow;
+      // }
     } finally {
       emit(AuthState.idle(
         user: state.user,
@@ -102,24 +87,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       ));
     }
   }
-
-  // Future<void> _signInAnonymously(
-  //   AuthEventSignInAnonymously event,
-  //   Emitter<AuthState> emit,
-  // ) async {
-  //   emit(AuthState.processing(user: state.user));
-  //   try {
-  //     final user = await authRepository.signInAnonymously();
-  //     emit(
-  //       AuthState.idle(user: user),
-  //     );
-  //   } on Object catch (e) {
-  //     emit(
-  //       AuthState.idle(error: ErrorUtil.formatError(e)),
-  //     );
-  //     rethrow;
-  //   }
-  // }
 
   Future<void> _signOut(
     AuthEventSignOut event,

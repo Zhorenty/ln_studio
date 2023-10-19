@@ -31,6 +31,8 @@ class _AuthScreenState extends State<AuthScreen> {
 
   bool visible = false;
 
+  bool isAgree = false;
+
   @override
   void initState() {
     super.initState();
@@ -88,6 +90,23 @@ class _AuthScreenState extends State<AuthScreen> {
                       phoneFocusNode.hasFocus ? phoneFocusNode.unfocus() : null,
                   onChanged: _checkPhoneNumber,
                 ),
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                    splashRadius: 0,
+                    value: isAgree,
+                    onChanged: (_) => setState(() => isAgree = !isAgree),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Я соглашаюсь с политикой конфиденциальности и условиями сервиса',
+                      style: context.textTheme.bodySmall?.copyWith(
+                        fontFamily: FontFamily.geologica,
+                      ),
+                    ),
+                  )
+                ],
               ),
               const SizedBox(height: 16),
               const Spacer(),

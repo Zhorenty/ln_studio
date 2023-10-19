@@ -10,11 +10,6 @@ sealed class AuthEvent extends _$AuthEventBase {
   const factory AuthEvent.signInWithPhone(int smsCode) =
       AuthEventSignInWithPhone;
 
-  // // const factory AuthEvent.signInAnonymously() = AuthEventSignInAnonymously;
-
-  // const factory AuthEvent.signUpWithPhone({required String phone}) =
-  //     AuthEventSignUpWithPhone;
-
   const factory AuthEvent.signOut() = AuthEventSignOut;
 }
 
@@ -23,20 +18,6 @@ final class AuthEvent$SendCode extends AuthEvent {
 
   final String phone;
 }
-// final class AuthEventSignUpWithPhone extends AuthEvent {
-//   const AuthEventSignUpWithPhone({required this.phone}) : super();
-
-//   final String phone;
-
-//   @override
-//   String toString() {
-//     final buffer = StringBuffer()
-//       ..write('AuthEvent.signUp(')
-//       ..write('phone: $phone')
-//       ..write(')');
-//     return buffer.toString();
-//   }
-// }
 
 final class AuthEventSignInWithPhone extends AuthEvent {
   const AuthEventSignInWithPhone(this.smsCode);
@@ -53,13 +34,6 @@ final class AuthEventSignInWithPhone extends AuthEvent {
   }
 }
 
-// final class AuthEventSignInAnonymously extends AuthEvent {
-//   const AuthEventSignInAnonymously() : super();
-
-//   @override
-//   String toString() => 'AuthEvent.signInAnonymously()';
-// }
-
 final class AuthEventSignOut extends AuthEvent {
   const AuthEventSignOut() : super();
 
@@ -75,15 +49,11 @@ abstract base class _$AuthEventBase {
   R map<R>({
     required AuthEventMatch<R, AuthEvent$SendCode> sendCode,
     required AuthEventMatch<R, AuthEventSignInWithPhone> signInWithPhone,
-    // required AuthEventMatch<R, AuthEventSignUpWithPhone> signUpWithPhone,
-    // required AuthEventMatch<R, AuthEventSignInAnonymously> signInAnonymously,
     required AuthEventMatch<R, AuthEventSignOut> signOut,
   }) =>
       switch (this) {
         final AuthEvent$SendCode s => sendCode(s),
         final AuthEventSignInWithPhone s => signInWithPhone(s),
-        // final AuthEventSignUpWithPhone s => signUpWithPhone(s),
-        // final AuthEventSignInAnonymously s => signInAnonymously(s),
         final AuthEventSignOut s => signOut(s),
         _ => throw AssertionError(),
       };
@@ -92,30 +62,22 @@ abstract base class _$AuthEventBase {
     required R Function() orElse,
     AuthEventMatch<R, AuthEvent$SendCode>? sendCode,
     AuthEventMatch<R, AuthEventSignInWithPhone>? signInWithPhone,
-    // AuthEventMatch<R, AuthEventSignUpWithPhone>? signUpWithPhone,
-    // AuthEventMatch<R, AuthEventSignInAnonymously>? signInAnonymously,
     AuthEventMatch<R, AuthEventSignOut>? signOut,
   }) =>
       map<R>(
         sendCode: sendCode ?? (_) => orElse(),
         signInWithPhone: signInWithPhone ?? (_) => orElse(),
-        // signUpWithPhone: signUpWithPhone ?? (_) => orElse(),
-        // signInAnonymously: signInAnonymously ?? (_) => orElse(),
         signOut: signOut ?? (_) => orElse(),
       );
 
   R? mapOrNull<R>({
     AuthEventMatch<R, AuthEvent$SendCode>? sendCode,
     AuthEventMatch<R, AuthEventSignInWithPhone>? signInWithPhone,
-    // AuthEventMatch<R, AuthEventSignUpWithPhone>? signUpWithPhone,
-    // AuthEventMatch<R, AuthEventSignInAnonymously>? signInAnonymously,
     AuthEventMatch<R, AuthEventSignOut>? signOut,
   }) =>
       map<R?>(
         sendCode: sendCode ?? (_) => null,
         signInWithPhone: signInWithPhone ?? (_) => null,
-        // signInAnonymously: signInAnonymously ?? (_) => null,
         signOut: signOut ?? (_) => null,
-        // signUpWithPhone: signUpWithPhone ?? (_) => null,
       );
 }
