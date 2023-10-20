@@ -41,6 +41,15 @@ sealed class AuthState extends _$AuthStateBase {
     required int? smsCode,
     String message,
   }) = AuthState$Successful;
+
+  /// Successful
+  /// {@macro auth_state}
+  const factory AuthState.notRegistered({
+    required User? user,
+    required String? phone,
+    required int? smsCode,
+    String message,
+  }) = AuthState$Successful;
 }
 
 /// Idling state
@@ -83,6 +92,21 @@ final class AuthState$Successful extends AuthState with _$AuthState {
     super.phone,
     super.smsCode,
     super.message = 'Successful',
+  });
+
+  @override
+  String? get error => null;
+}
+
+/// Not Registered
+/// {@nodoc}
+final class AuthState$NotRegistered extends AuthState with _$AuthState {
+  /// {@nodoc}
+  const AuthState$NotRegistered({
+    super.user,
+    super.phone,
+    super.smsCode,
+    super.message = 'Not Registered',
   });
 
   @override

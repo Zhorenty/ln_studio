@@ -15,6 +15,9 @@ abstract mixin class AuthenticationController {
   /// Sign in with [phone].
   void signInWithPhone(int smsCode);
 
+  /// Sign up
+  void signUp(String? phone);
+
   /// Sign in as a guest
   // void signInAnonymously();
 
@@ -85,10 +88,13 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
     if (!identical(state, _state)) {
       // Если надо сравнивать states
       // final router = AppRouterScope.of(context, listen: false);
-      // if (state is AuthState$Successful && _state?.phone != null) {
-      //   router.goNamed('verify');
-      // }
-
+      if (state is AuthState$Successful && _state?.phone != null) {
+        router.goNamed('verify');
+      } else if (state is AuthState$Successful && state.smsCode != null) {
+        router.go('/home');
+      } else if (state is AuthState$NotRegistered) {
+        router.goNamed('register');
+      }
       setState(() => _state = state);
 
       // TODO: Возможно, надо поменять
@@ -113,9 +119,9 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   @override
   void sendCode(String phone) {
     _authBloc.add(AuthEvent.sendCode(phone: phone));
-    if (_state!.isIdling) {
-      router.goNamed('verify');
-    }
+    // if (_state!.isIdling) {
+    //   router.goNamed('verify');
+    // }
   }
 
   // @override
@@ -126,9 +132,17 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   @override
   void signInWithPhone(int smsCode) {
     _authBloc.add(AuthEvent.signInWithPhone(smsCode));
-    if (_state!.isIdling) {
-      router.go('/home');
-    }
+    // if (_state!.isIdling) {
+    //   router.go('/home');
+    // }
+  }
+
+  @override
+  void signUp(String? phone) {
+    _authBloc.add(AuthEvent.signUp(phone));
+    // if (_state!.isIdling) {
+    //   router.go('/home');
+    // }
   }
 
   // @override

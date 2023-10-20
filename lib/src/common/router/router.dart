@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/feature/auth/widget/auth_screen.dart';
+import 'package:ln_studio/src/feature/auth/widget/registration_screen.dart';
 import 'package:ln_studio/src/feature/auth/widget/verification_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/booking_history_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/edit_profile_screen.dart';
@@ -32,10 +33,16 @@ final router = GoRouter(
       builder: (context, state) => const AuthScreen(),
       routes: [
         GoRoute(
-          name: 'verify',
-          path: 'verify',
-          builder: (context, state) => const VerificationScreen(),
-        ),
+            name: 'verify',
+            path: 'verify',
+            builder: (context, state) => const VerificationScreen(),
+            routes: [
+              GoRoute(
+                name: 'register',
+                path: 'register',
+                builder: (context, state) => const RegistrationScreen(),
+              ),
+            ]),
       ],
     ),
     StatefulShellRoute.indexedStack(

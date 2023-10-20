@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_studio/src/common/utils/error_util.dart';
 import 'package:ln_studio/src/common/utils/mixin/set_state_mixin.dart';
+import 'package:rest_client/rest_client.dart';
 
 import '../data/auth_repository.dart';
 import 'auth_event.dart';
@@ -57,7 +59,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     emit(AuthState.processing(
       user: state.user,
       phone: state.phone,
-      smsCode: null,
+      smsCode: event.smsCode,
     ));
     try {
       final user = await authRepository.signInWithPhone(
@@ -67,25 +69,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       emit(AuthState.successful(
         user: user,
         phone: state.phone,
-        smsCode: event.smsCode,
-      ));
-    } on Object catch (e) {
-      // if (e is RestClientException) {
-      //   // Sign up
-      //   add(event);
-      // } else {
-      emit(
-        AuthState.idle(error: ErrorUtil.formatError(e)),
-      );
-      rethrow;
-      // }
-    } finally {
-      emit(AuthState.idle(
-        user: state.user,
-        phone: state.phone,
         smsCode: state.smsCode,
       ));
+    } on Object catch (e) {
+      if (e is DioException) {
+        if (e.response?.statusCode == 400) {
+          emit(AuthState.notRegistered(
+            user: state.user,
+            phone: state.phone,
+            smsCode: state.smsCode,
+          ));
+        }
+        // TODO: Убрать дублирование
+        // emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+        // rethrow;
+      } else {
+        emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+        rethrow;
+      }
     }
+    // finally {
+    //   emit(AuthState.idle(
+    //     user: state.user,
+    //     phone: state.phone,
+    //     smsCode: state.smsCode,
+    //   ));
+    // }
   }
 
   Future<void> _signOut(

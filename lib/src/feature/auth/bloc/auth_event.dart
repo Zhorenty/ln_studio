@@ -10,6 +10,8 @@ sealed class AuthEvent extends _$AuthEventBase {
   const factory AuthEvent.signInWithPhone(int smsCode) =
       AuthEventSignInWithPhone;
 
+  const factory AuthEvent.signUp(String? phone) = AuthEvent$SignUpWithPhone;
+
   const factory AuthEvent.signOut() = AuthEventSignOut;
 }
 
@@ -27,7 +29,7 @@ final class AuthEventSignInWithPhone extends AuthEvent {
   @override
   String toString() {
     final buffer = StringBuffer()
-      ..write('AuthEvent.signIn(')
+      ..write('AuthEvent.signIn()')
       ..write('smsCode: $smsCode')
       ..write(')');
     return buffer.toString();
@@ -35,10 +37,19 @@ final class AuthEventSignInWithPhone extends AuthEvent {
 }
 
 final class AuthEventSignOut extends AuthEvent {
-  const AuthEventSignOut() : super();
+  const AuthEventSignOut();
 
   @override
   String toString() => 'AuthEvent.signOut()';
+}
+
+final class AuthEvent$SignUpWithPhone extends AuthEvent {
+  const AuthEvent$SignUpWithPhone(this.phone);
+
+  final String? phone;
+
+  @override
+  String toString() => 'AuthEvent.signIn()';
 }
 
 typedef AuthEventMatch<R, S extends AuthEvent> = R Function(S event);
