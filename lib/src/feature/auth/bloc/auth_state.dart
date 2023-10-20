@@ -170,11 +170,13 @@ abstract base class _$AuthStateBase {
     required AuthStateMatch<R, AuthState$Idle> idle,
     required AuthStateMatch<R, AuthState$Processing> processing,
     required AuthStateMatch<R, AuthState$Successful> successful,
+    required AuthStateMatch<R, AuthState$NotRegistered> notRegistered,
   }) =>
       switch (this) {
         final AuthState$Idle s => idle(s),
         final AuthState$Processing s => processing(s),
         final AuthState$Successful s => successful(s),
+        final AuthState$NotRegistered s => notRegistered(s),
         _ => throw AssertionError(),
       };
 
@@ -184,11 +186,13 @@ abstract base class _$AuthStateBase {
     AuthStateMatch<R, AuthState$Idle>? idle,
     AuthStateMatch<R, AuthState$Processing>? processing,
     AuthStateMatch<R, AuthState$Successful>? successful,
+    AuthStateMatch<R, AuthState$NotRegistered>? notRegistered,
   }) =>
       map<R>(
         idle: idle ?? (_) => orElse(),
         processing: processing ?? (_) => orElse(),
         successful: successful ?? (_) => orElse(),
+        notRegistered: notRegistered ?? (_) => orElse(),
       );
 
   /// Pattern matching for [AuthState].
@@ -196,11 +200,13 @@ abstract base class _$AuthStateBase {
     AuthStateMatch<R, AuthState$Idle>? idle,
     AuthStateMatch<R, AuthState$Processing>? processing,
     AuthStateMatch<R, AuthState$Successful>? successful,
+    AuthStateMatch<R, AuthState$NotRegistered>? notRegistered,
   }) =>
       map<R?>(
         idle: idle ?? (_) => null,
         processing: processing ?? (_) => null,
         successful: successful ?? (_) => null,
+        notRegistered: notRegistered ?? (_) => null,
       );
 
   @override

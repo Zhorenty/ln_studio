@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_studio/src/common/utils/error_util.dart';
 import 'package:ln_studio/src/common/utils/mixin/set_state_mixin.dart';
-import 'package:rest_client/rest_client.dart';
 
 import '../data/auth_repository.dart';
 import 'auth_event.dart';
@@ -72,14 +71,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
         smsCode: state.smsCode,
       ));
     } on Object catch (e) {
-      if (e is DioException) {
-        if (e.response?.statusCode == 400) {
-          emit(AuthState.notRegistered(
-            user: state.user,
-            phone: state.phone,
-            smsCode: state.smsCode,
-          ));
-        }
+      if (e is DioException && e.response!.statusCode == 400) {
+        emit(AuthState.notRegistered(
+          user: state.user,
+          phone: state.phone,
+          smsCode: state.smsCode,
+        ));
+
         // TODO: Убрать дублирование
         // emit(AuthState.idle(error: ErrorUtil.formatError(e)));
         // rethrow;

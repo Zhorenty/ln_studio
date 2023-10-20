@@ -88,10 +88,12 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
     if (!identical(state, _state)) {
       // Если надо сравнивать states
       // final router = AppRouterScope.of(context, listen: false);
-      if (state is AuthState$Successful && _state?.phone != null) {
-        router.goNamed('verify');
-      } else if (state is AuthState$Successful && state.smsCode != null) {
+      if (state is AuthState$Successful &&
+          _state?.smsCode != null &&
+          _state?.phone != null) {
         router.go('/home');
+      } else if (state is AuthState$Successful && _state?.phone != null) {
+        router.goNamed('verify');
       } else if (state is AuthState$NotRegistered) {
         router.goNamed('register');
       }
@@ -117,38 +119,17 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   bool get isProcessing => _state?.isProcessing ?? false;
 
   @override
-  void sendCode(String phone) {
-    _authBloc.add(AuthEvent.sendCode(phone: phone));
-    // if (_state!.isIdling) {
-    //   router.goNamed('verify');
-    // }
-  }
-
-  // @override
-  // void signInAnonymously() => _authBloc.add(
-  //       const AuthEvent.signInAnonymously(),
-  //     );
+  void sendCode(String phone) => _authBloc.add(
+        AuthEvent.sendCode(phone: phone),
+      );
 
   @override
-  void signInWithPhone(int smsCode) {
-    _authBloc.add(AuthEvent.signInWithPhone(smsCode));
-    // if (_state!.isIdling) {
-    //   router.go('/home');
-    // }
-  }
+  void signInWithPhone(int smsCode) => _authBloc.add(
+        AuthEvent.signInWithPhone(smsCode),
+      );
 
   @override
-  void signUp(String? phone) {
-    _authBloc.add(AuthEvent.signUp(phone));
-    // if (_state!.isIdling) {
-    //   router.go('/home');
-    // }
-  }
-
-  // @override
-  // void signUpWithPhone(String phone) => _authBloc.add(
-  //       AuthEvent.signUpWithPhone(phone: phone),
-  //     );
+  void signUp(String? phone) => _authBloc.add(AuthEvent.signUp(phone));
 
   @override
   void signOut() => _authBloc.add(const AuthEvent.signOut());
