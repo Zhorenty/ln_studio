@@ -49,7 +49,7 @@ sealed class AuthState extends _$AuthStateBase {
     required String? phone,
     required int? smsCode,
     String message,
-  }) = AuthState$Successful;
+  }) = AuthState$NotRegistered;
 }
 
 /// Idling state

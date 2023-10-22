@@ -33,7 +33,7 @@ dependencies:
   shared_preferences: ^2.2.0
 
   # REST
-  dio: ^5.3.3
+  dio: 5.3.2
 
   # Logging
   logging: ^1.2.0

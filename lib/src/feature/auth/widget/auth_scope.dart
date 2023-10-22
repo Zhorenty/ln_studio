@@ -40,7 +40,7 @@ abstract mixin class AuthenticationController {
   String? get error;
 
   /// Whether the current user is authenticated
-  bool get isAuthenticated => user != null;
+  bool get isAuthenticated => user?.phone != null;
 }
 
 ///
@@ -88,18 +88,32 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
     if (!identical(state, _state)) {
       // Если надо сравнивать states
       // final router = AppRouterScope.of(context, listen: false);
-      if (state is AuthState$Successful &&
-          _state?.smsCode != null &&
-          _state?.phone != null) {
-        router.go('/home');
-      } else if (state is AuthState$Successful && _state?.phone != null) {
-        router.goNamed('verify');
-      } else if (state is AuthState$NotRegistered) {
-        router.goNamed('register');
-      }
+      // if (state is AuthState$Successful &&
+      //     _state?.smsCode != null &&
+      //     _state?.phone != null) {
+      //   router.go('/home');
+      // } else if (state is AuthState$Successful && _state?.phone != null) {
+      //   router.goNamed('verify');
+      // } else if (state is AuthState$NotRegistered) {
+      //   router.goNamed('register');
+      // }
       setState(() => _state = state);
 
       // TODO: Возможно, надо поменять
+      // НОМЕР: 8 (960) 487-53-22
+      if (isAuthenticated) {
+        router.go('/home');
+      } else {
+        if (state.smsCode != null && state is AuthState$NotRegistered) {
+          router.goNamed('register');
+        } else {
+          if (state.phone != null) {
+            router.goNamed('verify');
+          } else {
+            router.replaceNamed('auth');
+          }
+        }
+      }
       // isAuthenticated
       //     ? router.replaceNamed('home')
       //     : router.replaceNamed('auth');

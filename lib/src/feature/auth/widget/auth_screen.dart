@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_studio/src/common/router/app_router_scope.dart';
 import 'package:ln_studio/src/common/utils/phone_input_formatter.dart';
 
 import '/src/common/assets/generated/assets.gen.dart';
@@ -126,9 +127,11 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       backgroundColor: context.colorScheme.primary,
                     ),
-                    onPressed: () => _formKey.currentState!.validate()
-                        ? auth.sendCode(phoneController.text)
-                        : null,
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        auth.sendCode(phoneController.text);
+                      }
+                    },
                     child: Text(
                       'Продолжить',
                       style: context.textTheme.bodyLarge?.copyWith(
