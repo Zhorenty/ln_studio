@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '/src/common/assets/generated/assets.gen.dart';
@@ -20,6 +21,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    final auth = AuthenticationScope.of(context);
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -76,7 +79,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: 'Работать с нами',
               ),
               const CustomDivider(),
-              const CategoryListTile(
+              CategoryListTile(
+                onTap: () => auth.signOut(),
                 icon: Icons.exit_to_app,
                 title: 'Выйти',
                 size: 23,
@@ -107,10 +111,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         scale: 25,
                         color: context.colorScheme.secondary,
                       ),
-                    )
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ],

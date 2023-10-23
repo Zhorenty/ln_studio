@@ -45,11 +45,8 @@ abstract interface class AuthRepository {
     required int smsCode,
   });
 
-  // /// Attempts to sign up with the given [phone].
-  // Future<User> signUpWithPhone({required String phone});
-
-  /// Attempts to sign in anonymously.
-  // Future<User> signInAnonymously();
+  /// Attempts to sign up with the given [phone].
+  Future<User> signUp({required User userModel});
 }
 
 final class AuthRepositoryImpl implements AuthRepository {
@@ -85,9 +82,9 @@ final class AuthRepositoryImpl implements AuthRepository {
   }) =>
       _authDataProvider.signInWithPhone(phone: phone, smsCode: smsCode);
 
-  // @override
-  // Future<User> signUpWithPhone({required String phone}) =>
-  //     _authDataProvider.signUpWithPhone(phone: phone);
+  @override
+  Future<User> signUp({required User userModel}) =>
+      _authDataProvider.signUp(userModel: userModel);
 
   // @override
   // Future<User> signInAnonymously() => _authDataProvider.signInAnonymously();

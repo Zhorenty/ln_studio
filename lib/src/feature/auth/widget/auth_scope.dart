@@ -16,13 +16,7 @@ abstract mixin class AuthenticationController {
   void signInWithPhone(int smsCode);
 
   /// Sign up
-  void signUp(String? phone);
-
-  /// Sign in as a guest
-  // void signInAnonymously();
-
-  /// Sign up with [phone].
-  // void signUpWithPhone(String phone);
+  void signUp({required User user});
 
   /// Sign out the current user
   void signOut();
@@ -87,16 +81,6 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   void _onAuthStateChanged(AuthState state) {
     if (!identical(state, _state)) {
       // Если надо сравнивать states
-      // final router = AppRouterScope.of(context, listen: false);
-      // if (state is AuthState$Successful &&
-      //     _state?.smsCode != null &&
-      //     _state?.phone != null) {
-      //   router.go('/home');
-      // } else if (state is AuthState$Successful && _state?.phone != null) {
-      //   router.goNamed('verify');
-      // } else if (state is AuthState$NotRegistered) {
-      //   router.goNamed('register');
-      // }
       setState(() => _state = state);
 
       // TODO: Возможно, надо поменять
@@ -110,13 +94,10 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
           if (state.phone != null) {
             router.goNamed('verify');
           } else {
-            router.replaceNamed('auth');
+            router.goNamed('auth');
           }
         }
       }
-      // isAuthenticated
-      //     ? router.replaceNamed('home')
-      //     : router.replaceNamed('auth');
     }
   }
 
@@ -143,7 +124,9 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
       );
 
   @override
-  void signUp(String? phone) => _authBloc.add(AuthEvent.signUp(phone));
+  void signUp({required User user}) => _authBloc.add(
+        AuthEvent.signUp(user: user),
+      );
 
   @override
   void signOut() => _authBloc.add(const AuthEvent.signOut());

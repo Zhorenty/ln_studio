@@ -18,6 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       (event, emit) => event.map(
         sendCode: (e) => _sendCode(e, emit),
         signInWithPhone: (e) => _signInWithPhone(e, emit),
+        signUp: (e) => _signUp(e, emit),
         signOut: (e) => _signOut(e, emit),
       ),
     );
@@ -86,13 +87,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
         rethrow;
       }
     }
-    // finally {
-    //   emit(AuthState.idle(
-    //     user: state.user,
-    //     phone: state.phone,
-    //     smsCode: state.smsCode,
-    //   ));
-    // }
+  }
+
+  Future<void> _signUp(
+    AuthEvent$SignUp event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthState.processing(
+      user: state.user,
+      phone: state.phone,
+      smsCode: null,
+    ));
+    try {
+      final user = await authRepository.signUp(userModel: event.user);
+      emit(AuthState.successful(user: user, phone: user.phone, smsCode: null));
+    } on Object catch (e) {
+      emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+      rethrow;
+    }
   }
 
   Future<void> _signOut(

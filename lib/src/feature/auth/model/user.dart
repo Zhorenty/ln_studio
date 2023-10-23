@@ -14,6 +14,7 @@ final class User {
     this.firstName,
     this.lastName,
     this.birthDate,
+    this.email,
   });
 
   final int? id;
@@ -28,6 +29,8 @@ final class User {
 
   final DateTime? birthDate;
 
+  final String? email;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -35,4 +38,26 @@ final class User {
 
   @override
   int get hashCode => phone.hashCode;
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      phone: json['phone_number'],
+      photo: json['photo'],
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      birthDate: json['birth_date'],
+      email: json['email'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'phone_number': phone,
+      'first_name': firstName,
+      'last_name': lastName,
+      'birth_date': birthDate,
+      'email': email,
+    };
+  }
 }

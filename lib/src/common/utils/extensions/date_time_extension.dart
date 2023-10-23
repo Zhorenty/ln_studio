@@ -6,6 +6,8 @@ extension DateFormatExtension on DateTime {
 
   String defaultFormat() => DateFormat('d MMM y').format(this);
 
+  String longFormat() => DateFormat('d MMMM y года').format(this);
+
   bool isAfterAsNow() {
     final now = DateTime.now();
     return DateUtils.isSameDay(this, now) || isAfter(now);

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:ln_studio/src/common/exception/error_code.dart';
 import 'package:ln_studio/src/common/utils/error_util.dart';
+import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user.dart';
@@ -55,15 +56,7 @@ abstract interface class AuthDataProvider {
     required int smsCode,
   });
 
-  Future<void> signUp({
-    required String phone,
-    required String firstName,
-    required String lastName,
-    // TODO: make nullable.
-    required DateTime birthDate,
-    // TODO: make nullable.
-    required String email,
-  });
+  Future<User> signUp({required User userModel});
 }
 
 final class AuthDataProviderImpl implements AuthDataProvider {
@@ -197,27 +190,25 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   }
 
   @override
-  Future<void> signUp({
-    required String phone,
-    required String firstName,
-    required String lastName,
-    required DateTime birthDate,
-    required String email,
-  }) async {
+  Future<User> signUp({required User userModel}) async {
     final response = await client.post<Map<String, Object?>>(
       '/api/auth/sign-up',
       data: {
-        'phone_number': phone,
-        "first_name": firstName,
-        "last_name": lastName,
-        "birth_date": birthDate,
-        "email": email,
+        "phone_number": userModel.phone,
+        "first_name": userModel.firstName,
+        "last_name": userModel.lastName,
+        "birth_date": userModel.birthDate?.jsonFormat(),
+        "email": userModel.email,
       },
     );
 
     final tokenPair = _decodeTokenPair(response);
 
     await _saveTokenPair(tokenPair);
+
+    await _saveUser(userModel);
+
+    return userModel;
   }
 
   @override

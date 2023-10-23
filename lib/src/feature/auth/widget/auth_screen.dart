@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ln_studio/src/common/router/app_router_scope.dart';
 import 'package:ln_studio/src/common/utils/phone_input_formatter.dart';
 
 import '/src/common/assets/generated/assets.gen.dart';
@@ -7,12 +6,6 @@ import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/custom_text_field.dart';
 import 'auth_scope.dart';
-
-// final phoneFormatter = MaskTextInputFormatter(
-//   mask: '+7 (###) ###-##-##',
-//   filter: {"#": RegExp(r'[0-9]')},
-//   type: MaskAutoCompletionType.lazy,
-// );
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -153,7 +146,6 @@ class _AuthScreenState extends State<AuthScreen> {
   void _checkPhoneNumber(String value) {
     if ((value.length == 18 && value.startsWith('+')) ||
         (value.length == 17 && value.startsWith('8'))) {
-      phoneFocusNode.unfocus();
       setState(() => visible = true);
     }
   }
