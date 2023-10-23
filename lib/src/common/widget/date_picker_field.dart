@@ -95,7 +95,7 @@ class DatePickerFieldState extends State<DatePickerField> {
     if (picked != null && picked != selectedDate) {
       setState(() => selectedDate = picked);
       widget.onDateSelected?.call(selectedDate);
-      widget.controller?.text = selectedDate.defaultFormat();
+      widget.controller?.text = selectedDate.longFormat();
     }
   }
 }

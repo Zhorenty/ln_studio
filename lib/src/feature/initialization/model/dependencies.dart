@@ -1,3 +1,4 @@
+import 'package:ln_studio/src/feature/auth/data/auth_repository.dart';
 import 'package:ln_studio/src/feature/profile/data/profile_repository.dart';
 import 'package:ln_studio/src/feature/record/data/record_repository.dart';
 import 'package:rest_client/rest_client.dart';
@@ -12,6 +13,9 @@ abstract interface class Dependencies {
 
   /// [RestClient] instance.
   abstract final RestClient restClient;
+
+  ///
+  abstract final AuthRepository authRepository;
 
   /// Salon  repository.
   abstract final SalonRepository salonRepository;
@@ -39,6 +43,9 @@ final class Dependencies$Mutable implements Dependencies {
   late RestClient restClient;
 
   @override
+  late AuthRepository authRepository;
+
+  @override
   late SalonRepository salonRepository;
 
   @override
@@ -51,6 +58,7 @@ final class Dependencies$Mutable implements Dependencies {
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
         restClient: restClient,
+        authRepository: authRepository,
         salonRepository: salonRepository,
         recordRepository: recordRepository,
         profileRepository: profileRepository,
@@ -64,6 +72,7 @@ final class _Dependencies$Immutable implements Dependencies {
   const _Dependencies$Immutable({
     required this.sharedPreferences,
     required this.restClient,
+    required this.authRepository,
     required this.salonRepository,
     required this.recordRepository,
     required this.profileRepository,
@@ -74,6 +83,9 @@ final class _Dependencies$Immutable implements Dependencies {
 
   @override
   final RestClient restClient;
+
+  @override
+  final AuthRepository authRepository;
 
   @override
   final SalonRepository salonRepository;
