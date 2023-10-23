@@ -80,7 +80,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const CustomDivider(),
               CategoryListTile(
-                onTap: () => auth.signOut(),
+                onTap: () {
+                  // TODO: make prettiest
+                  showAdaptiveDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        backgroundColor: context.colorScheme.onBackground,
+                        titlePadding: const EdgeInsets.all(16),
+                        title: Text(
+                          'Вы точно хотите выйти из аккаунта?',
+                          style: context.textTheme.titleLarge?.copyWith(
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                        actionsAlignment: MainAxisAlignment.spaceBetween,
+                        actionsPadding:
+                            const EdgeInsets.symmetric(horizontal: 16),
+                        actions: <Widget>[
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: context.textTheme.bodyLarge?.copyWith(
+                                fontFamily: FontFamily.geologica,
+                              ),
+                            ),
+                            child: const Text('Нет'),
+                            onPressed: () => context.pop(),
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: context.textTheme.bodyLarge?.copyWith(
+                                fontFamily: FontFamily.geologica,
+                              ),
+                            ),
+                            child: const Text('Да, выйти'),
+                            onPressed: () => auth.signOut(),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
                 icon: Icons.exit_to_app,
                 title: 'Выйти',
                 size: 23,

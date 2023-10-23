@@ -74,33 +74,82 @@ class _AuthScreenState extends State<AuthScreen> {
                     color: context.colorScheme.primaryContainer,
                   ),
                   keyboardType: TextInputType.phone,
-                  hintText: '+7 (123) 456-78-90',
+                  hintText: '8 (123) 456-78-90',
                   inputFormatters: [RuPhoneInputFormatter()],
-                  // TODO: Implement phone number validation
-                  validator: (text) {
-                    return null;
-                  },
-                  onTapOutside: (_) =>
-                      phoneFocusNode.hasFocus ? phoneFocusNode.unfocus() : null,
+                  validator: _phoneValidator,
                   onChanged: _checkPhoneNumber,
                 ),
               ),
-              Row(
-                children: [
-                  Checkbox(
-                    splashRadius: 0,
-                    value: isAgree,
-                    onChanged: (_) => setState(() => isAgree = !isAgree),
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Я соглашаюсь с политикой конфиденциальности и условиями сервиса',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontFamily: FontFamily.geologica,
+              GestureDetector(
+                onTap: () => setState(() {
+                  isAgree = !isAgree;
+                  visible = !visible;
+                }),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      splashRadius: 0,
+                      value: isAgree,
+                      onChanged: (_) => setState(() {
+                        isAgree = !isAgree;
+                        visible = !visible;
+                      }),
+                    ),
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: 'Я соглашаюсь с ',
+                            ),
+                            TextSpan(
+                              text: 'политикой конфиденциальности ',
+                              style: context.textTheme.bodySmall?.copyWith(
+                                fontFamily: FontFamily.geologica,
+                                fontWeight: FontWeight.w300,
+                                shadows: [
+                                  const Shadow(
+                                    color: Colors.white,
+                                    offset: Offset(0, -0.75),
+                                  )
+                                ],
+                                color: Colors.transparent,
+                                decoration: TextDecoration.underline,
+                                decorationColor: context.colorScheme.secondary,
+                                decorationThickness: 1,
+                                decorationStyle: TextDecorationStyle.dashed,
+                              ),
+                            ),
+                            const TextSpan(
+                              text: 'и ',
+                            ),
+                            TextSpan(
+                              text: 'условиями сервиса',
+                              style: context.textTheme.bodySmall?.copyWith(
+                                fontFamily: FontFamily.geologica,
+                                fontWeight: FontWeight.w300,
+                                shadows: [
+                                  const Shadow(
+                                    color: Colors.white,
+                                    offset: Offset(0, -0.75),
+                                  )
+                                ],
+                                color: Colors.transparent,
+                                decoration: TextDecoration.underline,
+                                decorationColor: context.colorScheme.secondary,
+                                decorationThickness: 1,
+                                decorationStyle: TextDecorationStyle.dashed,
+                              ),
+                            ),
+                          ],
+                        ),
+                        style: context.textTheme.bodySmall?.copyWith(
+                          fontFamily: FontFamily.geologica,
+                        ),
                       ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
               const SizedBox(height: 16),
               const Spacer(),
@@ -146,7 +195,19 @@ class _AuthScreenState extends State<AuthScreen> {
   void _checkPhoneNumber(String value) {
     if ((value.length == 18 && value.startsWith('+')) ||
         (value.length == 17 && value.startsWith('8'))) {
-      setState(() => visible = true);
+      phoneFocusNode.unfocus();
     }
+  }
+
+  /// Empty value validator.
+  String? _phoneValidator(String? value) {
+    if (value!.isEmpty) {
+      return 'Обязательное поле';
+    } else if ((value.length != 18 && value.startsWith('+')) ||
+        (value.length != 17 && value.startsWith('8'))) {
+      return 'Некорректный формат номера';
+    }
+
+    return null;
   }
 }

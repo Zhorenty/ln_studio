@@ -188,7 +188,7 @@ class Cell extends StatelessWidget {
     const borderColor = primaryColor;
     const borderRadius = 16.0;
 
-    final textStyle = context.textTheme.bodyLarge?.copyWith(
+    final textStyle = context.textTheme.titleLarge?.copyWith(
       fontFamily: FontFamily.geologica,
       color: context.colorScheme.secondary,
       fontWeight: FontWeight.bold,

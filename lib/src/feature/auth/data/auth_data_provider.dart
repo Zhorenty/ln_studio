@@ -93,13 +93,13 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     // await _sharedPreferences.setInt('auth.user.phone', user.id!);
     await _sharedPreferences.setString('auth.user.phone', user.phone!);
     // await _sharedPreferences.setString('auth.user.photo', user.photo!);
-    // await _sharedPreferences.setString(
-    //     'auth.user.first_name', user.firstName!);
+    // await _sharedPreferences.setString('auth.user.first_name', user.firstName!);
     // await _sharedPreferences.setString('auth.user.last_name', user.lastName!);
     // await _sharedPreferences.setString(
     //   'auth.user.birth_date',
     //   user.birthDate.toString(),
     // );
+    // await _sharedPreferences.setString('auth.user.email', user.email!);
 
     _userController.add(user);
   }
@@ -160,7 +160,9 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   Future<bool> sendCode({required String phone}) async {
     final response = await client.post(
       '/api/auth/sms/send',
-      data: {'phone_number': phone},
+      data: {
+        'phone_number': phone,
+      },
     );
     return response.data['data'];
   }
@@ -216,6 +218,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     await _sharedPreferences.remove('auth.token_pair.access_token');
     await _sharedPreferences.remove('auth.token_pair.refresh_token');
     await _sharedPreferences.remove('auth.user.phone');
+    // TODO: remove remaining variables
     _tokenPairController.add(null);
     _userController.add(null);
     return;
