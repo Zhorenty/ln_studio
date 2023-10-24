@@ -25,8 +25,28 @@ final class AuthException$Unknown extends AuthException {
       : super(code: ErrorCode.unknown);
 }
 
+final class AuthException$UserNotFound extends AuthException {
+  const AuthException$UserNotFound()
+      : super(message: 'Phone not found', code: ErrorCode.phoneNotFound);
+}
+
 /// Phone already exists exception.
 final class AuthException$PhoneExists extends AuthException {
   const AuthException$PhoneExists({super.message = 'Phone exists'})
       : super(code: ErrorCode.phoneExists);
+}
+
+final class AuthException$InvalidBody extends AuthException {
+  const AuthException$InvalidBody()
+      : super(message: 'Invalid body', code: ErrorCode.invalidBody);
+}
+
+final class AuthException$TokenMalformed extends AuthException {
+  const AuthException$TokenMalformed()
+      : super(message: 'Token malformed', code: ErrorCode.tokenMalformed);
+}
+
+final class AuthException$RefreshTokenExpired extends AuthException {
+  const AuthException$RefreshTokenExpired()
+      : super(message: 'Refresh token expired', code: ErrorCode.tokenExpired);
 }

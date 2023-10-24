@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ln_studio/src/common/widget/scope_widgets.dart';
+import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
 
 import '/src/common/router/app_router_scope.dart';
 import '/src/common/localization/app_localization.dart';
@@ -27,6 +29,12 @@ class _AppContextState extends State<AppContext> {
       theme: $lightThemeData,
       darkTheme: $darkThemeData,
       locale: const Locale('ru', 'RU'),
+      builder: (context, child) => ScopesProvider(
+        providers: const [
+          ScopeProvider(buildScope: AuthenticationScope.new),
+        ],
+        child: child!,
+      ),
     );
   }
 }

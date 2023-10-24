@@ -45,11 +45,7 @@ class App extends StatelessWidget {
                 child: child,
               ),
             ),
-            ScopeProvider(
-              buildScope: (child) => AppRouterScope(
-                child: child,
-              ),
-            ),
+            ScopeProvider(buildScope: (child) => AppRouterScope(child: child)),
           ],
           child: const AppContext(),
         ),

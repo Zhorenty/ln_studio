@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '/src/common/assets/generated/assets.gen.dart';
@@ -20,6 +21,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    final auth = AuthenticationScope.of(context);
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -37,30 +40,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SliverList.list(
             children: [
               HeaderListTile(
-                onPressed: () => context.pushNamed('profile_edit'),
+                onPressed: () => context.goNamed('profile_edit'),
               ),
               const CustomDivider(),
               CategoryListTile(
                 icon: Icons.history_rounded,
                 title: 'Мои записи',
                 size: 23,
-                onTap: () => context.pushNamed('booking_history'),
+                onTap: () => context.goNamed('booking_history'),
               ),
               const CustomDivider(),
-              const CategoryListTile(
-                icon: Icons.settings_rounded,
-                title: 'Настройки',
+              CategoryListTile(
+                icon: Icons.notifications_rounded,
+                title: 'Уведомления',
+                onTap: () => context.goNamed('notifications'),
               ),
               const CustomDivider(),
-              const CategoryListTile(
+              CategoryListTile(
                 icon: Icons.loyalty_rounded,
                 title: 'Персональные скидки',
+                onTap: () => context.goNamed('discounts'),
               ),
               const CustomDivider(),
-              const CategoryListTile(
+              CategoryListTile(
                 icon: Icons.payment_rounded,
                 title: 'Способы оплаты',
                 size: 23,
+                onTap: () => context.goNamed('payment'),
               ),
               const CustomDivider(),
               CategoryListTile(
@@ -75,7 +81,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: 'Работать с нами',
               ),
               const CustomDivider(),
-              const CategoryListTile(
+              CategoryListTile(
+                onTap: () {
+                  // TODO: make prettiest
+                  showAdaptiveDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        backgroundColor: context.colorScheme.onBackground,
+                        titlePadding: const EdgeInsets.all(16),
+                        title: Text(
+                          'Вы точно хотите выйти из аккаунта?',
+                          style: context.textTheme.titleLarge?.copyWith(
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                        actionsAlignment: MainAxisAlignment.spaceBetween,
+                        actionsPadding:
+                            const EdgeInsets.symmetric(horizontal: 16),
+                        actions: <Widget>[
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: context.textTheme.bodyLarge?.copyWith(
+                                fontFamily: FontFamily.geologica,
+                              ),
+                            ),
+                            child: const Text('Нет'),
+                            onPressed: () => context.pop(),
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: context.textTheme.bodyLarge?.copyWith(
+                                fontFamily: FontFamily.geologica,
+                              ),
+                            ),
+                            child: const Text('Да, выйти'),
+                            onPressed: () => auth.signOut(),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
                 icon: Icons.exit_to_app,
                 title: 'Выйти',
                 size: 23,
@@ -106,10 +153,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         scale: 25,
                         color: context.colorScheme.secondary,
                       ),
-                    )
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ],

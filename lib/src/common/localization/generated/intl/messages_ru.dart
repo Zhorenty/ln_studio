@@ -37,7 +37,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "phoneExists":
             MessageLookupByLibrary.simpleMessage("Данный номер уже занят"),
         "unknownError": m1,
-        "wardrobeEmpty": MessageLookupByLibrary.simpleMessage("ЧЕГОООООО"),
+        "wardrobeEmpty": MessageLookupByLibrary.simpleMessage("Здесь записи"),
         "workShedule": MessageLookupByLibrary.simpleMessage("График работы")
       };
 }
