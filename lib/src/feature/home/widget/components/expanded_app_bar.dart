@@ -8,25 +8,20 @@ import 'package:ln_studio/src/common/widget/overlay/message_popup.dart';
 class ExpandedAppBar extends StatelessWidget {
   const ExpandedAppBar({
     super.key,
-    required this.title,
-    required this.leading,
-    required this.trailing,
-    this.label,
+    required this.bottom,
+    this.title,
+    this.subtitle,
     this.additionalTrailing = const <Widget>[],
     this.onExit,
   });
 
   ///
-  final String? label;
+  final String? title;
+
+  final String? subtitle;
 
   /// Primary widget displayed in the app bar under the [CircleAvatar].
-  final Widget title;
-
-  /// Leading widget of this [ExpandedAppBar].
-  final Widget leading;
-
-  /// Trailing widget of this [ExpandedAppBar].
-  final Widget trailing;
+  final Widget bottom;
 
   /// Additional trailing widgets.
   final List<Widget> additionalTrailing;
@@ -41,7 +36,7 @@ class ExpandedAppBar extends StatelessWidget {
       surfaceTintColor: context.colorScheme.background,
       toolbarHeight: 130,
       centerTitle: true,
-      title: AvatarWidget(radius: 60, title: label),
+      title: AvatarWidget(radius: 60, title: title),
       floating: true,
       pinned: true,
       leading: Align(
@@ -66,7 +61,6 @@ class ExpandedAppBar extends StatelessWidget {
             highlightColor: context.colorScheme.scrim,
             onPressed: () => MessagePopup.bottomSheet(
               context,
-              // scrolled: false,
               'Действия с сотрудником',
               additional: additionalTrailing,
             ),
@@ -77,7 +71,7 @@ class ExpandedAppBar extends StatelessWidget {
         preferredSize: const Size(300, 48),
         child: Padding(
           padding: const EdgeInsets.only(top: 5, bottom: 15),
-          child: title,
+          child: bottom,
         ),
       ),
     );

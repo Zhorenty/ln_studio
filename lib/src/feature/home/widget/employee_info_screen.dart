@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
+import 'package:ln_studio/src/common/widget/star_rating.dart';
 import 'package:ln_studio/src/feature/home/widget/components/expanded_app_bar.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 
@@ -23,21 +24,10 @@ class EmployeeInfoScreen extends StatelessWidget {
           CustomScrollView(
             slivers: [
               ExpandedAppBar(
-                label: employee.fullName,
-                title: Text(
+                title: employee.fullName,
+                subtitle: employee.jobModel.name,
+                bottom: Text(
                   employee.fullName,
-                  style: context.textTheme.titleLarge!.copyWith(
-                    fontFamily: FontFamily.geologica,
-                  ),
-                ),
-                leading: Text(
-                  '0',
-                  style: context.textTheme.titleLarge!.copyWith(
-                    fontFamily: FontFamily.geologica,
-                  ),
-                ),
-                trailing: Text(
-                  '0',
                   style: context.textTheme.titleLarge!.copyWith(
                     fontFamily: FontFamily.geologica,
                   ),
@@ -48,27 +38,47 @@ class EmployeeInfoScreen extends StatelessWidget {
                   // TODO: Implement fetching by id.
                 },
               ),
-              SliverFillViewport(
-                delegate: SliverChildListDelegate([
-                  Container(
-                    decoration: BoxDecoration(
-                      color: context.colorScheme.onBackground,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Отзывы',
-                          style: context.textTheme.titleLarge?.copyWith(
-                            fontFamily: FontFamily.geologica,
-                          ),
-                        ),
-                      ],
-                    ),
+              SliverFillRemaining(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.onBackground,
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                ]),
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Рейтинг',
+                            style: context.textTheme.titleLarge?.copyWith(
+                              fontFamily: FontFamily.geologica,
+                            ),
+                          ),
+                          StarRating(initialRating: employee.stars),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${employee.userModel.firstName} является компетентным и опытным специалистом в области красоты и ухода за внешностью. Он обладает разносторонними знаниями и навыками, которые позволяют ему предоставить высококачественные услуги для клиентов.'
+                        '\nИмеет богатый опыт работы с различными типами кожи, волос и ногтей, и способен справиться с любыми проблемами, связанными с уходом за ними.',
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          fontFamily: FontFamily.geologica,
+                          color: context.colorScheme.primaryContainer,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Отзывы',
+                        style: context.textTheme.titleLarge?.copyWith(
+                          fontFamily: FontFamily.geologica,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

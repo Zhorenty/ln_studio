@@ -58,10 +58,7 @@ class EmployeeCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 2),
-            StarRating(
-              size: 18.5,
-              initialRating: employee.stars,
-            ),
+            StarRating(size: 18.5, initialRating: employee.stars),
           ],
         ),
       ),

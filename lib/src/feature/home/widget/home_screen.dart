@@ -131,13 +131,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: 192,
                   child: BlocBuilder<EmployeeBloc, EmployeeState>(
-                    builder: (context, state) => ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: state.employees.length,
-                      itemBuilder: (context, index) => EmployeeCard(
-                        employee: state.employees[index],
-                      ),
-                    ),
+                    builder: (context, state) {
+                      final employees = state.employees
+                          .where((employee) => !employee.isDismiss)
+                          .toList();
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: employees.length,
+                        itemBuilder: (context, index) => EmployeeCard(
+                          employee: employees[index],
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const CustomHeader(label: 'Новости'),

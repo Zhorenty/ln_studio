@@ -7,8 +7,8 @@ class StarRating extends StatefulWidget {
   const StarRating({
     super.key,
     required this.initialRating,
-    this.size = 25.0,
     this.onRatingChanged,
+    this.size = 25.0,
     this.mainAxisAlignment = MainAxisAlignment.start,
   });
 
@@ -57,8 +57,9 @@ class StarRatingState extends State<StarRating> {
       children: List.generate(
         5,
         (index) => GestureDetector(
-          onTap: () =>
-              widget.onRatingChanged != null ? _updateRating(index + 1) : null,
+          onTap: widget.onRatingChanged != null
+              ? () => _updateRating(index + 1)
+              : null,
           child: Icon(
             index < _currentRating
                 ? Icons.star_rounded
