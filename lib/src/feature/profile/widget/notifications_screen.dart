@@ -54,18 +54,16 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     SwitcherRow(
                       label: 'За час до визита',
                       value: hourNotification,
-                      onChanged: (value) {
-                        hourNotification = !hourNotification;
-                        setState(() {});
-                      },
+                      onChanged: (_) => setState(
+                        () => hourNotification = !hourNotification,
+                      ),
                     ),
                     SwitcherRow(
                       label: 'За день до визита',
                       value: dayNotification,
-                      onChanged: (value) {
-                        dayNotification = !dayNotification;
-                        setState(() {});
-                      },
+                      onChanged: (_) => setState(
+                        () => dayNotification = !dayNotification,
+                      ),
                     ),
                   ],
                 ),

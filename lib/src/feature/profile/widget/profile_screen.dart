@@ -56,15 +56,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () => context.goNamed('notifications'),
               ),
               const CustomDivider(),
-              const CategoryListTile(
+              CategoryListTile(
                 icon: Icons.loyalty_rounded,
                 title: 'Персональные скидки',
+                onTap: () => context.goNamed('discounts'),
               ),
               const CustomDivider(),
-              const CategoryListTile(
+              CategoryListTile(
                 icon: Icons.payment_rounded,
                 title: 'Способы оплаты',
                 size: 23,
+                onTap: () => context.goNamed('payment'),
               ),
               const CustomDivider(),
               CategoryListTile(
