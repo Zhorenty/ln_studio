@@ -7,6 +7,7 @@ import '/src/common/widget/custom_text_field.dart';
 import '/src/common/widget/date_picker_field.dart';
 import 'auth_scope.dart';
 
+///
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
 
@@ -32,6 +33,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late final TextEditingController _emailController;
   late final TextEditingController _birthDateController;
 
+  late final FocusNode _firstNameFocusNode;
+  late final FocusNode _lastNameFocusNode;
+  late final FocusNode _emailFocusNode;
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +44,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     _lastNameController = TextEditingController();
     _emailController = TextEditingController();
     _birthDateController = TextEditingController();
+
+    _firstNameFocusNode = FocusNode();
+    _lastNameFocusNode = FocusNode();
+    _emailFocusNode = FocusNode();
   }
 
   @override
@@ -47,6 +56,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     _lastNameController.dispose();
     _emailController.dispose();
     _birthDateController.dispose();
+
+    _firstNameFocusNode.dispose();
+    _lastNameFocusNode.dispose();
+    _emailFocusNode.dispose();
     super.dispose();
   }
 
@@ -120,19 +133,37 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 child: Column(
                   children: [
                     CustomTextField(
+                      textInputAction: TextInputAction.next,
                       controller: _firstNameController,
+                      focusNode: _firstNameFocusNode,
                       label: 'Имя',
                       labelStyle: labelStyle,
+                      validator: _emptyValidator,
+                      onTapOutside: (_) => _firstNameFocusNode.hasFocus
+                          ? _firstNameFocusNode.unfocus()
+                          : null,
                     ),
                     CustomTextField(
+                      textInputAction: TextInputAction.next,
                       controller: _lastNameController,
+                      focusNode: _lastNameFocusNode,
                       label: 'Фамилия',
                       labelStyle: labelStyle,
+                      validator: _emptyValidator,
+                      onTapOutside: (_) => _lastNameFocusNode.hasFocus
+                          ? _lastNameFocusNode.unfocus()
+                          : null,
                     ),
                     CustomTextField(
+                      textInputAction: TextInputAction.done,
                       controller: _emailController,
+                      focusNode: _emailFocusNode,
                       label: 'Электронная почта',
                       labelStyle: labelStyle,
+                      validator: _emailValidator,
+                      onTapOutside: (_) => _emailFocusNode.hasFocus
+                          ? _emailFocusNode.unfocus()
+                          : null,
                     ),
                     DatePickerField(
                       controller: _birthDateController,
@@ -142,30 +173,83 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         Icons.arrow_forward_ios_rounded,
                         color: context.colorScheme.primary,
                       ),
-                      onDateSelected: (day) {
-                        birthDate = day;
-                      },
+                      onDateSelected: (day) => birthDate = day,
+                      validator: _emptyValidator,
                     ),
                     GestureDetector(
                       onTap: () => setState(() {
                         isAgree = !isAgree;
-                        visible = true;
+                        visible = !visible;
                       }),
                       child: Row(
                         children: [
                           Checkbox(
                             splashRadius: 0,
                             value: isAgree,
-                            onChanged: (_) {},
+                            onChanged: (_) => setState(() {
+                              isAgree = !isAgree;
+                              visible = !visible;
+                            }),
                           ),
                           Expanded(
-                            child: Text(
-                              'Я соглашаюсь с политикой конфиденциальности и условиями сервиса',
+                            child: Text.rich(
+                              TextSpan(
+                                children: [
+                                  const TextSpan(
+                                    text: 'Я соглашаюсь с ',
+                                  ),
+                                  TextSpan(
+                                    text: 'политикой конфиденциальности ',
+                                    style:
+                                        context.textTheme.bodySmall?.copyWith(
+                                      fontFamily: FontFamily.geologica,
+                                      fontWeight: FontWeight.w300,
+                                      shadows: [
+                                        const Shadow(
+                                          color: Colors.white,
+                                          offset: Offset(0, -0.75),
+                                        )
+                                      ],
+                                      color: Colors.transparent,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor:
+                                          context.colorScheme.secondary,
+                                      decorationThickness: 1,
+                                      decorationStyle:
+                                          TextDecorationStyle.dashed,
+                                    ),
+                                  ),
+                                  const TextSpan(
+                                    text: 'и ',
+                                  ),
+                                  TextSpan(
+                                    text: 'условиями сервиса',
+                                    style:
+                                        context.textTheme.bodySmall?.copyWith(
+                                      fontFamily: FontFamily.geologica,
+                                      fontWeight: FontWeight.w300,
+                                      shadows: [
+                                        const Shadow(
+                                          color: Colors.white,
+                                          offset: Offset(0, -0.75),
+                                        )
+                                      ],
+                                      color: Colors.transparent,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor:
+                                          context.colorScheme.secondary,
+                                      decorationThickness: 1,
+                                      decorationStyle:
+                                          TextDecorationStyle.dashed,
+                                    ),
+                                  ),
+                                ],
+                              ),
                               style: context.textTheme.bodySmall?.copyWith(
                                 fontFamily: FontFamily.geologica,
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -177,5 +261,26 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
       ),
     );
+  }
+
+  /// Empty value validator.
+  String? _emptyValidator(String? value) {
+    if (value!.isEmpty) {
+      return 'Обязательное поле';
+    } else {
+      return null;
+    }
+  }
+
+  /// Validate email address.
+  String? _emailValidator(String? value) {
+    final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    if (value!.isEmpty) {
+      return 'Обязательное поле';
+    } else if (!emailRegExp.hasMatch(value)) {
+      return 'Введите корректный e-mail';
+    } else {
+      return null;
+    }
   }
 }
