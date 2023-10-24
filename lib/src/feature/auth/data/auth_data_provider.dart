@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -184,6 +185,10 @@ final class AuthDataProviderImpl implements AuthDataProvider {
 
     await _saveTokenPair(tokenPair);
 
+    log(
+      'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',
+    );
+
     final user = User(phone: phone);
 
     await _saveUser(user);
@@ -205,6 +210,10 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     );
 
     final tokenPair = _decodeTokenPair(response);
+
+    log(
+      'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',
+    );
 
     await _saveTokenPair(tokenPair);
 
