@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 
-@Deprecated('Must be deleted')
+// TODO: Deprecated, must be deleted soon
 class ProductCard extends StatefulWidget {
   const ProductCard({
     super.key,
