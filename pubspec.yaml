@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
 
   # BLoC
-  flutter_bloc: ^8.1.3
+  flutter_bloc: 8.1.3
 
   # TODO: Should be move into dev_deps after splash screen approve.
   flutter_native_splash: ^2.2.0+1
