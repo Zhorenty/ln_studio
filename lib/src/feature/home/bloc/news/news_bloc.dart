@@ -11,7 +11,7 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
   })  : _repository = repository,
         super(
           initialState ??
-              const NewsState.idle(news: null, message: 'Initial idle state'),
+              const NewsState.idle(news: [], message: 'Initial idle state'),
         ) {
     on<NewsEvent>(
       (event, emit) => switch (event) {

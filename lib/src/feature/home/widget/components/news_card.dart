@@ -7,10 +7,10 @@ import 'package:ln_studio/src/common/widget/animated_button.dart';
 
 ///
 class NewsCard extends StatelessWidget {
-  const NewsCard({super.key, required this.asset, this.label});
+  const NewsCard({super.key, required this.child, this.label});
 
   ///
-  final Image? asset;
+  final Widget child;
 
   ///
   final String? label;
@@ -35,7 +35,7 @@ class NewsCard extends StatelessWidget {
               width: width,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: asset,
+                child: child,
               ),
             ),
             Positioned(

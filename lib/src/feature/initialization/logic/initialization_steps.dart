@@ -19,7 +19,7 @@ import '/src/feature/salon/data/salon_repository.dart';
 
 typedef StepAction = FutureOr<void>? Function(InitializationProgress progress);
 
-const _baseUrl = 'http://31.129.104.75';
+const kBaseUrl = 'http://31.129.104.75';
 
 /// Handles initialization steps.
 mixin InitializationSteps {
@@ -30,11 +30,11 @@ mixin InitializationSteps {
     },
     'Auth Repository & Rest Client': (progress) async {
       final authDataProvider = AuthDataProviderImpl(
-        baseUrl: _baseUrl,
+        baseUrl: kBaseUrl,
         sharedPreferences: progress.dependencies.sharedPreferences,
       );
       final restClient = RestClient(
-        Dio(BaseOptions(baseUrl: _baseUrl))
+        Dio(BaseOptions(baseUrl: kBaseUrl))
           ..interceptors.add(
             OAuthInterceptor(
               refresh: authDataProvider.refreshTokenPair,

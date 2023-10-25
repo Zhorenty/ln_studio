@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_bloc.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_state.dart';
+import 'package:ln_studio/src/feature/initialization/logic/initialization_steps.dart';
 
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_event.dart';
@@ -155,10 +157,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: BlocBuilder<NewsBLoC, NewsState>(
                     builder: (context, state) => ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: state.news?.length,
+                      itemCount: state.news.length,
                       itemBuilder: (context, index) => NewsCard(
-                        label: state.news?[index].title,
-                        asset: Assets.images.placeholder2.image(
+                        label: state.news[index].title,
+                        child: CachedNetworkImage(
+                          imageUrl: '$kBaseUrl/${state.news[index].photo!}',
                           fit: BoxFit.cover,
                         ),
                       ),
