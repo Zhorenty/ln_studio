@@ -123,8 +123,10 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     if (json
         case {
           'data': {
-            'access_token': final String accessToken,
-            'refresh_token': final String? refreshToken,
+            'tokens': {
+              'access_token': final String accessToken,
+              'refresh_token': final String? refreshToken,
+            }
           },
         }) {
       return (

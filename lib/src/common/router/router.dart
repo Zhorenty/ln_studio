@@ -3,9 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/feature/auth/widget/auth_screen.dart';
 import 'package:ln_studio/src/feature/auth/widget/registration_screen.dart';
 import 'package:ln_studio/src/feature/auth/widget/verification_screen.dart';
+import 'package:ln_studio/src/feature/home/widget/employee_info_screen.dart';
+import 'package:ln_studio/src/feature/home/widget/news_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/booking_history_screen.dart';
+import 'package:ln_studio/src/feature/profile/widget/discounts_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/edit_profile_screen.dart';
-import 'package:ln_studio/src/feature/profile/widget/settings_screen.dart';
+import 'package:ln_studio/src/feature/profile/widget/notifications_screen.dart';
+import 'package:ln_studio/src/feature/profile/widget/payment_screen.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/widget/congratulation_screen.dart';
@@ -58,6 +62,20 @@ final router = GoRouter(
               name: 'home',
               builder: (context, state) => const HomeScreen(),
               routes: [
+                GoRoute(
+                  name: 'employee_info',
+                  path: 'employee',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => EmployeeInfoScreen(
+                    employee: state.extra as EmployeeModel,
+                  ),
+                ),
+                GoRoute(
+                  name: 'news',
+                  path: 'news',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => const NewsScreen(),
+                ),
                 GoRoute(
                   name: 'salon_choice_from_home',
                   path: 'salon_choice',
@@ -221,6 +239,18 @@ final router = GoRouter(
                   name: 'notifications',
                   parentNavigatorKey: _parentKey,
                   builder: (context, state) => const NotificationsScreen(),
+                ),
+                GoRoute(
+                  path: 'discounts',
+                  name: 'discounts',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => const DiscountsScreen(),
+                ),
+                GoRoute(
+                  path: 'payment',
+                  name: 'payment',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => const PaymentScreen(),
                 ),
               ],
             ),

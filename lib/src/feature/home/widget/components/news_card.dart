@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
@@ -20,9 +21,7 @@ class NewsCard extends StatelessWidget {
     const double width = 175;
 
     return AnimatedButton(
-      onPressed: () {
-        // TODO(zhorenty): Navigate to NewsScreen by id.
-      },
+      onPressed: () => context.goNamed('news'),
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         color: context.colorScheme.onBackground,

@@ -25,6 +25,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     Emitter<EmployeeState> emit,
   ) async {
     try {
+      emit(const EmployeeState.idle());
       final employees = await repository.getEmployees(
         salonId: event.salonId,
         serviceId: event.serviceId,

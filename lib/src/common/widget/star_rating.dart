@@ -7,9 +7,13 @@ class StarRating extends StatefulWidget {
   const StarRating({
     super.key,
     required this.initialRating,
-    this.size = 25.0,
     this.onRatingChanged,
+    this.size = 25.0,
+    this.mainAxisAlignment = MainAxisAlignment.start,
   });
+
+  ///
+  final MainAxisAlignment mainAxisAlignment;
 
   /// Initial rating value.
   final int initialRating;
@@ -49,11 +53,13 @@ class StarRatingState extends State<StarRating> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: widget.mainAxisAlignment,
       children: List.generate(
         5,
         (index) => GestureDetector(
-          onTap: () =>
-              widget.onRatingChanged != null ? _updateRating(index + 1) : null,
+          onTap: widget.onRatingChanged != null
+              ? () => _updateRating(index + 1)
+              : null,
           child: Icon(
             index < _currentRating
                 ? Icons.star_rounded

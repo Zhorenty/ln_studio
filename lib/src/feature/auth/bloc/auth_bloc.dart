@@ -43,9 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
         smsCode: null,
       ));
     } on Object catch (e) {
-      emit(
-        AuthState.idle(error: ErrorUtil.formatError(e)),
-      );
+      emit(AuthState.idle(error: ErrorUtil.formatError(e)));
       rethrow;
     } finally {
       emit(AuthState.idle(user: state.user, phone: state.phone));
