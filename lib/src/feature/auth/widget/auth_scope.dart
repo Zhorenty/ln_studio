@@ -90,6 +90,7 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
       final isNeedToVerify =
           state.phone != null && state is AuthState$Successful;
       final isLogOuted = !isAuthenticated && state is AuthState$Successful;
+
       if (isAuthenticated) {
         return router.go('/home');
       } else {
