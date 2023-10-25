@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:ln_studio/src/feature/auth/data/auth_data_provider.dart';
 import 'package:ln_studio/src/feature/auth/data/auth_repository.dart';
 import 'package:ln_studio/src/feature/auth/logic/oauth_interceptor.dart';
+import 'package:ln_studio/src/feature/home/data/home_data_provider.dart';
+import 'package:ln_studio/src/feature/home/data/home_repository.dart';
 import 'package:ln_studio/src/feature/profile/data/profile_data_provider.dart';
 import 'package:ln_studio/src/feature/profile/data/profile_repository.dart';
 import 'package:ln_studio/src/feature/record/data/record_data_provider.dart';
@@ -54,6 +56,13 @@ mixin InitializationSteps {
       );
       final salonRepository = SalonRepositoryImpl(salonDataProvider);
       progress.dependencies.salonRepository = salonRepository;
+    },
+    'Home repository': (progress) async {
+      final homeDataProvider = HomeDataProviderImpl(
+        restClient: progress.dependencies.restClient,
+      );
+      final homeRepository = HomeRepositoryImpl(homeDataProvider);
+      progress.dependencies.homeRepository = homeRepository;
     },
     'Record repository': (progress) async {
       final recordDataProvider = RecordDataProviderImpl(

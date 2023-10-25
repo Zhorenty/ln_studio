@@ -7,6 +7,9 @@ import '/src/common/utils/pattern_match.dart';
 sealed class EmployeeEvent extends _$EmployeeEventBase {
   const EmployeeEvent();
 
+  /// Factory for fetching employee by id.
+  const factory EmployeeEvent.fetch({required int id}) = EmployeeEvent$Fetch;
+
   /// Factory for fetching Employee.
   const factory EmployeeEvent.fetchEmployees({
     required int salonId,
@@ -14,6 +17,14 @@ sealed class EmployeeEvent extends _$EmployeeEventBase {
     required int? timeblockId,
     required String? dateAt,
   }) = EmployeeEvent$FetchEmployees;
+}
+
+/// [EmployeeEvent.fetch] event.
+final class EmployeeEvent$Fetch extends EmployeeEvent {
+  const EmployeeEvent$Fetch({required this.id});
+
+  /// Employee's id.
+  final int id;
 }
 
 /// [EmployeeEvent.fetchEmployees] event.

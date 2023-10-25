@@ -8,7 +8,6 @@ import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
-import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_event.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_state.dart';
@@ -32,10 +31,19 @@ class EmployeeChoiceScreen extends StatefulWidget {
     this.dateAt,
   });
 
+  ///
   final EmployeeModel? employeePreset;
+
+  ///
   final int salonId;
+
+  ///
   final int? serviceId;
+
+  ///
   final int? timeblockId;
+
+  ///
   final String? dateAt;
 
   @override
@@ -59,9 +67,7 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
   @override
   void initState() {
     super.initState();
-    employeesBloc = EmployeeBloc(
-      repository: DependenciesScope.of(context).recordRepository,
-    );
+    employeesBloc = context.read<EmployeeBloc>();
     _fetchSalonEmployees();
     initController();
     selectedEmployee = widget.employeePreset;
@@ -74,24 +80,21 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocListener<SalonBLoC, SalonState>(
-      listener: (context, state) {},
-      listenWhen: (previous, current) {
-        if (previous.currentSalon?.id != current.currentSalon?.id) {
-          employeesBloc.add(
-            EmployeeEvent.fetchEmployees(
-              salonId: widget.salonId,
-              serviceId: widget.serviceId,
-              timeblockId: widget.timeblockId,
-              dateAt: widget.dateAt,
-            ),
-          );
-        }
-        return false;
-      },
-      child: BlocProvider(
-        create: (context) => employeesBloc,
+  Widget build(BuildContext context) => BlocListener<SalonBLoC, SalonState>(
+        listener: (context, state) {},
+        listenWhen: (previous, current) {
+          if (previous.currentSalon?.id != current.currentSalon?.id) {
+            employeesBloc.add(
+              EmployeeEvent.fetchEmployees(
+                salonId: widget.salonId,
+                serviceId: widget.serviceId,
+                timeblockId: widget.timeblockId,
+                dateAt: widget.dateAt,
+              ),
+            );
+          }
+          return false;
+        },
         child: BlocBuilder<EmployeeBloc, EmployeeState>(
           builder: (context, state) => Scaffold(
             backgroundColor: context.colorScheme.onBackground,
@@ -122,8 +125,8 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                     ),
                     CupertinoSliverRefreshControl(onRefresh: _refresh),
                     SliverAnimatedOpacity(
-                      opacity: state.hasEmployee ? 1 : .5,
-                      duration: const Duration(milliseconds: 400),
+                      opacity: state.isLoaded ? 1 : .5,
+                      duration: const Duration(milliseconds: 1000),
                       sliver: SliverPadding(
                         padding: const EdgeInsets.all(8),
                         sliver: state.hasEmployee
@@ -182,9 +185,7 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   ///
   void initController() {

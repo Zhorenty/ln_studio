@@ -1,4 +1,5 @@
 import 'package:ln_studio/src/feature/auth/data/auth_repository.dart';
+import 'package:ln_studio/src/feature/home/data/home_repository.dart';
 import 'package:ln_studio/src/feature/profile/data/profile_repository.dart';
 import 'package:ln_studio/src/feature/record/data/record_repository.dart';
 import 'package:rest_client/rest_client.dart';
@@ -19,6 +20,9 @@ abstract interface class Dependencies {
 
   /// Salon  repository.
   abstract final SalonRepository salonRepository;
+
+  /// Home  repository.
+  abstract final HomeRepository homeRepository;
 
   /// Record repository.
   abstract final RecordRepository recordRepository;
@@ -49,6 +53,9 @@ final class Dependencies$Mutable implements Dependencies {
   late SalonRepository salonRepository;
 
   @override
+  late HomeRepository homeRepository;
+
+  @override
   late RecordRepository recordRepository;
 
   @override
@@ -60,6 +67,7 @@ final class Dependencies$Mutable implements Dependencies {
         restClient: restClient,
         authRepository: authRepository,
         salonRepository: salonRepository,
+        homeRepository: homeRepository,
         recordRepository: recordRepository,
         profileRepository: profileRepository,
       );
@@ -74,6 +82,7 @@ final class _Dependencies$Immutable implements Dependencies {
     required this.restClient,
     required this.authRepository,
     required this.salonRepository,
+    required this.homeRepository,
     required this.recordRepository,
     required this.profileRepository,
   });
@@ -89,6 +98,9 @@ final class _Dependencies$Immutable implements Dependencies {
 
   @override
   final SalonRepository salonRepository;
+
+  @override
+  final HomeRepository homeRepository;
 
   @override
   final RecordRepository recordRepository;
