@@ -85,16 +85,21 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
 
       // TODO: Возможно, надо поменять
       // НОМЕР: 8 (960) 487-53-22
+      final isNeedToRegister =
+          state.smsCode != null && state is AuthState$NotRegistered;
+      final isNeedToVerify =
+          state.phone != null && state is AuthState$Successful;
+      final isLogOuted = !isAuthenticated && state is AuthState$Successful;
       if (isAuthenticated) {
-        router.go('/home');
+        return router.go('/home');
       } else {
-        if (state.smsCode != null && state is AuthState$NotRegistered) {
-          router.goNamed('register');
+        if (isNeedToRegister) {
+          return router.goNamed('register');
         } else {
-          if (state.phone != null) {
-            router.goNamed('verify');
-          } else {
-            router.goNamed('auth');
+          if (isNeedToVerify) {
+            return router.goNamed('verify');
+          } else if (isLogOuted) {
+            return router.goNamed('auth');
           }
         }
       }
