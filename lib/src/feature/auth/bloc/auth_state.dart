@@ -76,7 +76,7 @@ final class AuthState$Processing extends AuthState with _$AuthState {
     required super.user,
     required super.phone,
     required super.smsCode,
-    super.message = 'Successful',
+    super.message = 'Processing',
   });
 
   @override

@@ -76,10 +76,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
           phone: state.phone,
           smsCode: state.smsCode,
         ));
-
-        // TODO: Убрать дублирование
-        // emit(AuthState.idle(error: ErrorUtil.formatError(e)));
-        // rethrow;
       } else {
         emit(AuthState.idle(error: ErrorUtil.formatError(e)));
         rethrow;
