@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
+import 'package:ln_studio/src/common/widget/avatar_widget.dart';
 import 'package:ln_studio/src/common/widget/star_rating.dart';
 import 'package:ln_studio/src/feature/home/widget/components/expanded_app_bar.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
@@ -38,7 +39,7 @@ class EmployeeInfoScreen extends StatelessWidget {
                   // TODO: Implement fetching by id.
                 },
               ),
-              SliverFillRemaining(
+              SliverToBoxAdapter(
                 child: Container(
                   decoration: BoxDecoration(
                     color: context.colorScheme.onBackground,
@@ -76,6 +77,15 @@ class EmployeeInfoScreen extends StatelessWidget {
                           fontFamily: FontFamily.geologica,
                         ),
                       ),
+                      const SizedBox(height: 8),
+                      const ReviewContainer(),
+                      const SizedBox(height: 8),
+                      const ReviewContainer(),
+                      const SizedBox(height: 8),
+                      const ReviewContainer(),
+                      const SizedBox(height: 8),
+                      const ReviewContainer(),
+                      SizedBox(height: MediaQuery.sizeOf(context).height / 10)
                     ],
                   ),
                 ),
@@ -108,6 +118,59 @@ class EmployeeInfoScreen extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+///
+class ReviewContainer extends StatelessWidget {
+  const ReviewContainer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.colorScheme.background,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF272727)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const AvatarWidget(title: 'Алевтина'),
+              const SizedBox(width: 16),
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Алевтина\n',
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        fontFamily: FontFamily.geologica,
+                      ),
+                    ),
+                    TextSpan(
+                      text: 'Сегодня, 10:23',
+                      style: context.textTheme.bodySmall?.copyWith(
+                        fontFamily: FontFamily.geologica,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Я очень довольна результатом работы с моими бровями! Они выглядят идеально – аккуратные, форма подходит идеально к моему лицу.',
+            style: context.textTheme.bodyMedium?.copyWith(
+              fontFamily: FontFamily.geologica,
             ),
           ),
         ],
