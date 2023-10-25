@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
@@ -7,7 +6,7 @@ import 'package:ln_studio/src/common/widget/animated_button.dart';
 
 ///
 class NewsCard extends StatelessWidget {
-  const NewsCard({super.key, required this.child, this.label});
+  const NewsCard({super.key, required this.child, this.label, this.onPressed});
 
   ///
   final Widget child;
@@ -15,16 +14,18 @@ class NewsCard extends StatelessWidget {
   ///
   final String? label;
 
+  final void Function()? onPressed;
+
   @override
   Widget build(BuildContext context) {
     ///
     const double width = 175;
 
     return AnimatedButton(
-      onPressed: () => context.goNamed('news'),
+      onPressed: onPressed,
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        color: context.colorScheme.onBackground,
+        color: context.colorScheme.background,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: const BorderSide(color: Color(0xFF272727)),

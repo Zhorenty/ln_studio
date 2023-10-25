@@ -159,10 +159,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       scrollDirection: Axis.horizontal,
                       itemCount: state.news.length,
                       itemBuilder: (context, index) => NewsCard(
+                        onPressed: () => context.goNamed(
+                          'news',
+                          extra: state.news[index],
+                        ),
                         label: state.news[index].title,
                         child: CachedNetworkImage(
                           imageUrl: '$kBaseUrl/${state.news[index].photo!}',
                           fit: BoxFit.cover,
+                          placeholder: (_, __) => ColoredBox(
+                            color: context.colorScheme.onBackground,
+                            child: Assets.images.logoWhite.image(
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                         ),
                       ),
                     ),

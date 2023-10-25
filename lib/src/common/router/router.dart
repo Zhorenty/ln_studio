@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/feature/auth/widget/auth_screen.dart';
 import 'package:ln_studio/src/feature/auth/widget/registration_screen.dart';
 import 'package:ln_studio/src/feature/auth/widget/verification_screen.dart';
+import 'package:ln_studio/src/feature/home/model/news.dart';
 import 'package:ln_studio/src/feature/home/widget/employee_info_screen.dart';
 import 'package:ln_studio/src/feature/home/widget/news_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/booking_history_screen.dart';
@@ -74,7 +75,9 @@ final router = GoRouter(
                   name: 'news',
                   path: 'news',
                   parentNavigatorKey: _parentKey,
-                  builder: (context, state) => const NewsScreen(),
+                  builder: (context, state) => NewsScreen(
+                    news: state.extra as NewsModel,
+                  ),
                 ),
                 GoRoute(
                   name: 'salon_choice_from_home',
