@@ -4,6 +4,7 @@ import 'package:ln_studio/src/feature/auth/widget/auth_screen.dart';
 import 'package:ln_studio/src/feature/auth/widget/registration_screen.dart';
 import 'package:ln_studio/src/feature/auth/widget/verification_screen.dart';
 import 'package:ln_studio/src/feature/home/widget/employee_info_screen.dart';
+import 'package:ln_studio/src/feature/home/widget/news_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/booking_history_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/discounts_screen.dart';
 import 'package:ln_studio/src/feature/profile/widget/edit_profile_screen.dart';
@@ -62,6 +63,20 @@ final router = GoRouter(
               builder: (context, state) => const HomeScreen(),
               routes: [
                 GoRoute(
+                  name: 'employee_info',
+                  path: 'employee',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => EmployeeInfoScreen(
+                    employee: state.extra as EmployeeModel,
+                  ),
+                ),
+                GoRoute(
+                  name: 'news',
+                  path: 'news',
+                  parentNavigatorKey: _parentKey,
+                  builder: (context, state) => const NewsScreen(),
+                ),
+                GoRoute(
                   name: 'salon_choice_from_home',
                   path: 'salon_choice',
                   parentNavigatorKey: _parentKey,
@@ -98,14 +113,6 @@ final router = GoRouter(
                     salonId: int.parse(
                       state.uri.queryParameters['salon_id']!,
                     ),
-                  ),
-                ),
-                GoRoute(
-                  name: 'employee_info',
-                  path: 'employee',
-                  parentNavigatorKey: _parentKey,
-                  builder: (context, state) => EmployeeInfoScreen(
-                    employee: state.extra as EmployeeModel,
                   ),
                 ),
                 GoRoute(

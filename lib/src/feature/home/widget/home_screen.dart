@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
+import 'package:ln_studio/src/feature/home/bloc/news/news_bloc.dart';
+import 'package:ln_studio/src/feature/home/bloc/news/news_state.dart';
+
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_event.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_state.dart';
@@ -35,9 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocListener<SalonBLoC, SalonState>(
       listener: (context, state) {},
       listenWhen: (previous, current) {
-        if (previous.currentSalon?.id != current.currentSalon?.id) {
-          _fetchSalonEmployees();
-        }
+        previous.currentSalon?.id != current.currentSalon?.id
+            ? _fetchSalonEmployees()
+            : null;
+
         return false;
       },
       child: BlocBuilder<SalonBLoC, SalonState>(
@@ -148,37 +152,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 const CustomHeader(label: 'Новости'),
                 SizedBox(
                   height: 115,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      NewsCard(
-                        label: 'Секреты маникюра\nв ЛН Студии',
+                  child: BlocBuilder<NewsBLoC, NewsState>(
+                    builder: (context, state) => ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: state.news?.length,
+                      itemBuilder: (context, index) => NewsCard(
+                        label: state.news?[index].title,
                         asset: Assets.images.placeholder2.image(
                           fit: BoxFit.cover,
                         ),
                       ),
-                      NewsCard(
-                        label: 'Осенний уход за волосами',
-                        asset: Assets.images.placeholder.image(
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      NewsCard(
-                        label: 'Макияж как искусство:\nтехники и трюки',
-                        asset: Assets.images.placeholder31.image(
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      NewsCard(
-                        label: 'Важность посещения салона для мужчин',
-                        asset: Assets.images.placeholder4.image(
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 100)
               ],
             ),
           ],

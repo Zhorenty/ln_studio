@@ -78,13 +78,13 @@ class EmployeeInfoScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const ReviewContainer(),
+                      const ReviewContainer(title: 'Алевтина'),
                       const SizedBox(height: 8),
-                      const ReviewContainer(),
+                      const ReviewContainer(title: 'Алексей'),
                       const SizedBox(height: 8),
-                      const ReviewContainer(),
+                      const ReviewContainer(title: 'Ксения'),
                       const SizedBox(height: 8),
-                      const ReviewContainer(),
+                      const ReviewContainer(title: 'Татьяна'),
                       SizedBox(height: MediaQuery.sizeOf(context).height / 10)
                     ],
                   ),
@@ -128,7 +128,10 @@ class EmployeeInfoScreen extends StatelessWidget {
 
 ///
 class ReviewContainer extends StatelessWidget {
-  const ReviewContainer({super.key});
+  const ReviewContainer({super.key, required this.title});
+
+  ///
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -144,13 +147,13 @@ class ReviewContainer extends StatelessWidget {
         children: [
           Row(
             children: [
-              const AvatarWidget(title: 'Алевтина'),
+              AvatarWidget(title: title),
               const SizedBox(width: 16),
               Text.rich(
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Алевтина\n',
+                      text: '$title\n',
                       style: context.textTheme.bodyLarge?.copyWith(
                         fontFamily: FontFamily.geologica,
                       ),
