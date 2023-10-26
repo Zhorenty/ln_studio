@@ -155,28 +155,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: 115,
                   child: BlocBuilder<NewsBLoC, NewsState>(
-                    builder: (context, state) => ListView.builder(
+                      builder: (context, state) {
+                    final news =
+                        state.news.where((news) => !news.isDeleted).toList();
+                    return ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: state.news.length,
+                      itemCount: news.length,
                       itemBuilder: (context, index) => NewsCard(
                         onPressed: () => context.goNamed(
                           'news',
-                          extra: state.news[index],
+                          extra: news[index],
                         ),
-                        label: state.news[index].title,
-                        child: CachedNetworkImage(
-                          imageUrl: '$kBaseUrl/${state.news[index].photo!}',
-                          fit: BoxFit.cover,
-                          placeholder: (_, __) => ColoredBox(
-                            color: context.colorScheme.onBackground,
-                            child: Assets.images.logoWhite.image(
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
+                        label: news[index].title,
+                        child: news[index].photo != null
+                            ? CachedNetworkImage(
+                                imageUrl: '$kBaseUrl/${news[index].photo!}',
+                                fit: BoxFit.cover,
+                                placeholder: (_, __) => ColoredBox(
+                                  color: context.colorScheme.onBackground,
+                                  child: Assets.images.logoWhite.image(
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              )
+                            : Assets.images.logoWhite.image(
+                                fit: BoxFit.contain,
+                              ),
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                 ),
               ],
             ),
