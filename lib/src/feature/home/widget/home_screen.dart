@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_bloc.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_state.dart';
+import 'package:ln_studio/src/feature/initialization/logic/initialization_steps.dart';
 
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_event.dart';
@@ -153,17 +155,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: 115,
                   child: BlocBuilder<NewsBLoC, NewsState>(
-                    builder: (context, state) => ListView.builder(
+                      builder: (context, state) {
+                    final news =
+                        state.news.where((news) => !news.isDeleted).toList();
+                    return ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: state.news?.length,
+                      itemCount: news.length,
                       itemBuilder: (context, index) => NewsCard(
-                        label: state.news?[index].title,
-                        asset: Assets.images.placeholder2.image(
-                          fit: BoxFit.cover,
+                        onPressed: () => context.goNamed(
+                          'news',
+                          extra: news[index],
                         ),
+                        label: news[index].title,
+                        child: news[index].photo != null
+                            ? CachedNetworkImage(
+                                imageUrl: '$kBaseUrl/${news[index].photo!}',
+                                fit: BoxFit.cover,
+                                placeholder: (_, __) => ColoredBox(
+                                  color: context.colorScheme.onBackground,
+                                  child: Assets.images.logoWhite.image(
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              )
+                            : Assets.images.logoWhite.image(
+                                fit: BoxFit.contain,
+                              ),
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                 ),
               ],
             ),

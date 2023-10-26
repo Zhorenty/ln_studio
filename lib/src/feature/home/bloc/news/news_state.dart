@@ -15,28 +15,28 @@ sealed class NewsState extends _$NewsStateBase {
   /// Idling state
   /// {@macro News_state}
   const factory NewsState.idle({
-    required NewsEntity? news,
+    required NewsEntity news,
     String message,
   }) = NewsState$Idle;
 
   /// Processing
   /// {@macro News_state}
   const factory NewsState.processing({
-    required NewsEntity? news,
+    required NewsEntity news,
     String message,
   }) = NewsState$Processing;
 
   /// Successful
   /// {@macro News_state}
   const factory NewsState.successful({
-    required NewsEntity? news,
+    required NewsEntity news,
     String message,
   }) = NewsState$Successful;
 
   /// An error has occurred
   /// {@macro News_state}
   const factory NewsState.error({
-    required NewsEntity? news,
+    required NewsEntity news,
     String message,
   }) = NewsState$Error;
 
@@ -101,17 +101,26 @@ abstract base class _$NewsStateBase {
 
   /// Data entity payload.
   @nonVirtual
-  final NewsEntity? news;
+  final NewsEntity news;
 
   /// Message or state description.
   @nonVirtual
   final String message;
 
   /// Has data?
-  bool get hasNews => news != null;
+  bool get hasNews => news.isNotEmpty;
 
   /// If an error has occurred?
-  bool get hasError => maybeMap<bool>(orElse: () => false, error: (_) => true);
+  bool get hasError => maybeMap<bool>(
+        orElse: () => false,
+        error: (_) => true,
+      );
+
+  bool get isImageLoaded => maybeMap(
+        idle: (_) => true,
+        processing: (s) => s.hasNews,
+        orElse: () => false,
+      );
 
   /// Is in progress state?
   bool get isProcessing => maybeMap<bool>(
