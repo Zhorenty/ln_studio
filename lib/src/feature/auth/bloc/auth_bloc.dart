@@ -9,10 +9,12 @@ import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
   AuthBloc(this.authRepository) : super(const AuthState$Idle()) {
-    authRepository.userStream
-        .map((user) => AuthState$Idle(user: user))
-        .where(($state) => !identical($state, state))
-        .listen(setState);
+    if (!authRepository.userStream.isBroadcast) {
+      authRepository.userStream
+          .map((user) => AuthState$Idle(user: user))
+          .where(($state) => !identical($state, state))
+          .listen(setState);
+    }
 
     on<AuthEvent>(
       (event, emit) => event.map(
