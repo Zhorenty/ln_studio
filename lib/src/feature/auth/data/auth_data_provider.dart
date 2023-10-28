@@ -106,9 +106,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   }
 
   ///
-  TokenPair _decodeTokenPair(Response<Map<String, Object?>> response) {
-    final json = response.data;
-
+  TokenPair _decodeTokenPair(Map<String, Object?>? json) {
     if (json
         case {
           'error': {
@@ -121,6 +119,21 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       ErrorUtil.throwAuthException(errorCode, message);
     }
 
+    // For refresh tokens
+    if (json
+        case {
+          'data': {
+            'access_token': final String accessToken,
+            'refresh_token': final String refreshToken,
+          },
+        }) {
+      return (
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
+    }
+
+    // For auth tokens
     if (json
         case {
           'data': {
@@ -147,7 +160,12 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       throw Exception('Failed to refresh token pair');
     }
 
-    final response = await client.post('/api/auth/refresh');
+    final response = await client.post(
+      '/api/auth/refresh',
+      data: {
+        'token': tokenPair.refreshToken,
+      },
+    );
 
     if (response.statusCode != 200) {
       throw Exception('Failed to refresh token pair');
@@ -183,7 +201,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       },
     );
 
-    final tokenPair = _decodeTokenPair(response);
+    final tokenPair = _decodeTokenPair(response.data);
 
     await _saveTokenPair(tokenPair);
 
@@ -211,7 +229,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       },
     );
 
-    final tokenPair = _decodeTokenPair(response);
+    final tokenPair = _decodeTokenPair(response.data);
 
     log(
       'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',

@@ -82,47 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const CustomDivider(),
               CategoryListTile(
-                onTap: () {
-                  // TODO: make prettiest
-                  showAdaptiveDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        backgroundColor: context.colorScheme.onBackground,
-                        titlePadding: const EdgeInsets.all(16),
-                        title: Text(
-                          'Вы точно хотите выйти из аккаунта?',
-                          style: context.textTheme.titleLarge?.copyWith(
-                            fontFamily: FontFamily.geologica,
-                          ),
-                        ),
-                        actionsAlignment: MainAxisAlignment.spaceBetween,
-                        actionsPadding:
-                            const EdgeInsets.symmetric(horizontal: 16),
-                        actions: <Widget>[
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle: context.textTheme.bodyLarge?.copyWith(
-                                fontFamily: FontFamily.geologica,
-                              ),
-                            ),
-                            child: const Text('Нет'),
-                            onPressed: () => context.pop(),
-                          ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle: context.textTheme.bodyLarge?.copyWith(
-                                fontFamily: FontFamily.geologica,
-                              ),
-                            ),
-                            child: const Text('Да, выйти'),
-                            onPressed: () => auth.signOut(),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
+                onTap: () => showExit(auth.signOut),
                 icon: Icons.exit_to_app,
                 title: 'Выйти',
                 size: 23,
@@ -163,6 +123,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
+  Future<dynamic> showExit(void Function()? onPressed) => showAdaptiveDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: context.colorScheme.onBackground,
+            titlePadding: const EdgeInsets.all(16),
+            title: Text(
+              'Вы точно хотите выйти из аккаунта?',
+              style: context.textTheme.titleLarge?.copyWith(
+                fontFamily: FontFamily.geologica,
+              ),
+            ),
+            actionsAlignment: MainAxisAlignment.spaceBetween,
+            actionsPadding: const EdgeInsets.symmetric(horizontal: 16),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: context.textTheme.bodyLarge?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                  ),
+                ),
+                child: const Text('Нет'),
+                onPressed: () => context.pop(),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: context.textTheme.bodyLarge?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                  ),
+                ),
+                onPressed: onPressed,
+                child: const Text('Да, выйти'),
+              ),
+            ],
+          );
+        },
+      );
 
   void _launchVk() async {
     final url = Uri.parse('https://vk.com/salonokolashes');
