@@ -14,10 +14,10 @@ sealed class EmployeeState extends _$EmployeeStateBase {
   }) = _EmployeeState$Idle;
 
   /// Employee is loaded.
-  const factory EmployeeState.loaded({
+  const factory EmployeeState.processing({
     required List<EmployeeModel> employees,
     String? error,
-  }) = _EmployeeState$Loaded;
+  }) = _EmployeeState$Processing;
 }
 
 /// [EmployeeState.idle] state matcher.
@@ -28,9 +28,9 @@ final class _EmployeeState$Idle extends EmployeeState {
   }) : super._();
 }
 
-/// [EmployeeState.loaded] state matcher.
-final class _EmployeeState$Loaded extends EmployeeState {
-  const _EmployeeState$Loaded({
+/// [EmployeeState.processing] state matcher.
+final class _EmployeeState$Processing extends EmployeeState {
+  const _EmployeeState$Processing({
     required super.employees,
     super.error,
   }) : super._();
@@ -54,8 +54,8 @@ abstract base class _$EmployeeStateBase {
   bool get hasEmployee => employees.isNotEmpty;
 
   /// Indicator whether state is already loaded.
-  bool get isLoaded => maybeMap(
-        loaded: (_) => true,
+  bool get isProcessing => maybeMap(
+        isProcessing: (_) => true,
         orElse: () => false,
       );
 
@@ -68,11 +68,12 @@ abstract base class _$EmployeeStateBase {
   /// Map over state union.
   R map<R>({
     required PatternMatch<R, _EmployeeState$Idle> idle,
-    required PatternMatch<R, _EmployeeState$Loaded> loaded,
+    required PatternMatch<R, _EmployeeState$Processing> isProcessing,
   }) =>
       switch (this) {
         final _EmployeeState$Idle idleState => idle(idleState),
-        final _EmployeeState$Loaded loadedState => loaded(loadedState),
+        final _EmployeeState$Processing processingState =>
+          isProcessing(processingState),
         _ => throw UnsupportedError('Unsupported state: $this'),
       };
 
@@ -80,11 +81,11 @@ abstract base class _$EmployeeStateBase {
   R maybeMap<R>({
     required R Function() orElse,
     PatternMatch<R, _EmployeeState$Idle>? idle,
-    PatternMatch<R, _EmployeeState$Loaded>? loaded,
+    PatternMatch<R, _EmployeeState$Processing>? isProcessing,
   }) =>
       map(
         idle: idle ?? (_) => orElse(),
-        loaded: loaded ?? (_) => orElse(),
+        isProcessing: isProcessing ?? (_) => orElse(),
       );
 
   @override

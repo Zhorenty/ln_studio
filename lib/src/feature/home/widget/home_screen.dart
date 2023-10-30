@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
+import 'package:ln_studio/src/common/widget/data_widget.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_bloc.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_state.dart';
 import 'package:ln_studio/src/feature/initialization/logic/initialization_steps.dart';
@@ -37,15 +38,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SalonBLoC, SalonState>(
-      listener: (context, state) {},
-      listenWhen: (previous, current) {
-        previous.currentSalon?.id != current.currentSalon?.id
-            ? _fetchSalonEmployees()
-            : null;
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SalonBLoC, SalonState>(
+          listener: (context, state) {},
+          listenWhen: (previous, current) {
+            previous.currentSalon?.id != current.currentSalon?.id
+                ? _fetchSalonEmployees()
+                : null;
 
-        return false;
-      },
+            return false;
+          },
+        ),
+      ],
       child: BlocBuilder<SalonBLoC, SalonState>(
         builder: (context, state) => CustomScrollView(
           slivers: [
@@ -141,11 +146,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       final employees = state.employees
                           .where((employee) => !employee.isDismiss)
                           .toList();
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: employees.length,
-                        itemBuilder: (context, index) => EmployeeCard(
-                          employee: employees[index],
+                      return DataWidget(
+                        hasData: !state.hasEmployee,
+                        isProcessing: state.isProcessing,
+                        error: state.error,
+                        onRefresh: _fetchSalonEmployees,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: employees.length,
+                          itemBuilder: (context, index) => EmployeeCard(
+                            employee: employees[index],
+                          ),
                         ),
                       );
                     },
