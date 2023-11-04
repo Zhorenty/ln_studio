@@ -11,7 +11,8 @@ class DataWidget extends StatelessWidget {
     super.key,
     required this.hasData,
     required this.isProcessing,
-    required this.error,
+    required this.hasError,
+    required this.message,
     required this.onRefresh,
     this.customSkeleton,
     this.customErrorWidget,
@@ -20,13 +21,12 @@ class DataWidget extends StatelessWidget {
 
   final bool hasData;
   final bool isProcessing;
-  final String? error;
+  final bool hasError;
+  final String? message;
   final VoidCallback onRefresh;
   final Widget? customSkeleton;
-  final Widget? customErrorWidget;
+  final Widget Function(VoidCallback onRefresh)? customErrorWidget;
   final Widget child;
-
-  bool get hasError => error != null;
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +40,17 @@ class DataWidget extends StatelessWidget {
             ),
       );
     } else if (!hasData && hasError) {
-      return InformationWidget.error(
-        reloadFunc: onRefresh,
-      );
+      return customErrorWidget?.call(onRefresh) ??
+          InformationWidget.error(
+            reloadFunc: onRefresh,
+            description: message,
+          );
     } else if (!hasData) {
-      return InformationWidget.empty(
-        reloadFunc: onRefresh,
-      );
+      return customErrorWidget?.call(onRefresh) ??
+          InformationWidget.empty(
+            reloadFunc: onRefresh,
+            description: message,
+          );
     } else {
       return child;
     }

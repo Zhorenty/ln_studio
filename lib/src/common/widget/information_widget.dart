@@ -17,9 +17,10 @@ class InformationWidget extends StatelessWidget {
     String? imagePath,
     this.isNeedToShowImage = false,
     this.title = 'Упс',
-    this.description = 'Страница не найдена',
+    String? description = 'Данные отсутствуют',
     this.reloadFunc,
   })  : imagePath = imagePath ?? Assets.images.placeholder.path, // emptyImage
+        description = description ?? 'Данные отсутствуют',
         super(key: key);
 
   InformationWidget.error({
@@ -27,9 +28,10 @@ class InformationWidget extends StatelessWidget {
     String? imagePath,
     this.isNeedToShowImage = false,
     this.title = 'Ошибка',
-    this.description = 'Что-то пошло не так',
+    String? description = 'Что-то пошло не так',
     required this.reloadFunc,
   })  : imagePath = imagePath ?? Assets.images.placeholder.path, // errorImage
+        description = description ?? 'Что-то пошло не так',
         super(key: key);
 
   final String imagePath;
