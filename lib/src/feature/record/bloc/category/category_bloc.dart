@@ -24,13 +24,18 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     Emitter<CategoryState> emit,
   ) async {
     try {
+      emit(
+        CategoryState.processing(
+          categoryWithServices: state.categoryWithServices,
+        ),
+      );
       final categories = await repository.getServiceCategories(
         salonId: event.salonId,
         employeeId: event.employeeId,
         timeblockId: event.timetableItemId,
         dateAt: event.dateAt,
       );
-      emit(CategoryState.loaded(categoryWithServices: categories));
+      emit(CategoryState.successful(categoryWithServices: categories));
     } on Object catch (e) {
       emit(
         CategoryState.idle(

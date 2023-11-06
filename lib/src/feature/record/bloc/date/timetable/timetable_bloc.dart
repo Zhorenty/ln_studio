@@ -26,12 +26,13 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
     Emitter<TimetableState> emit,
   ) async {
     try {
+      emit(TimetableState.processing(timetables: state.timetables));
       final timetables = await repository.getTimetable(
         salonId: event.salonId,
         serviceId: event.serviceId,
         employeeId: event.employeeId,
       );
-      emit(TimetableState.loaded(timetables: timetables));
+      emit(TimetableState.successful(timetables: timetables));
     } on Object catch (e) {
       emit(
         TimetableState.idle(

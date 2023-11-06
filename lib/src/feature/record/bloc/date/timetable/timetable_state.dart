@@ -13,11 +13,17 @@ sealed class TimetableState extends _$TimetableStateBase {
     String? error,
   }) = _TimetableState$Idle;
 
-  /// Timetable is loaded.
-  const factory TimetableState.loaded({
+  /// Timetable is idle.
+  const factory TimetableState.processing({
+    List<TimetableItem> timetables,
+    String? error,
+  }) = _TimetableState$Processing;
+
+  /// Timetable is successful.
+  const factory TimetableState.successful({
     required List<TimetableItem> timetables,
     String? error,
-  }) = _TimetableState$Loaded;
+  }) = _TimetableState$Successful;
 }
 
 /// [TimetableState.idle] state matcher.
@@ -28,9 +34,17 @@ final class _TimetableState$Idle extends TimetableState {
   }) : super._();
 }
 
-/// [TimetableState.loaded] state matcher.
-final class _TimetableState$Loaded extends TimetableState {
-  const _TimetableState$Loaded({
+/// [TimetableState.processing] state matcher.
+final class _TimetableState$Processing extends TimetableState {
+  const _TimetableState$Processing({
+    super.timetables = const [],
+    super.error,
+  }) : super._();
+}
+
+/// [TimetableState.successful] state matcher.
+final class _TimetableState$Successful extends TimetableState {
+  const _TimetableState$Successful({
     required super.timetables,
     super.error,
   }) : super._();
@@ -53,9 +67,9 @@ abstract base class _$TimetableStateBase {
   /// Indicator whether Timetable is not empty.
   bool get hasTimetable => timetables.isNotEmpty;
 
-  /// Indicator whether state is already loaded.
-  bool get isLoaded => maybeMap(
-        loaded: (_) => true,
+  /// Indicator whether state is already Successful.
+  bool get isSuccessful => maybeMap(
+        successful: (_) => true,
         orElse: () => false,
       );
 
@@ -65,14 +79,24 @@ abstract base class _$TimetableStateBase {
         orElse: () => false,
       );
 
+  /// Indicator whether state is already idling.
+  bool get isProcessing => maybeMap(
+        idle: (_) => true,
+        orElse: () => false,
+      );
+
   /// Map over state union.
   R map<R>({
     required PatternMatch<R, _TimetableState$Idle> idle,
-    required PatternMatch<R, _TimetableState$Loaded> loaded,
+    required PatternMatch<R, _TimetableState$Processing> processing,
+    required PatternMatch<R, _TimetableState$Successful> successful,
   }) =>
       switch (this) {
         final _TimetableState$Idle idleState => idle(idleState),
-        final _TimetableState$Loaded loadedState => loaded(loadedState),
+        final _TimetableState$Processing processingState =>
+          processing(processingState),
+        final _TimetableState$Successful successfulState =>
+          successful(successfulState),
         _ => throw UnsupportedError('Unsupported state: $this'),
       };
 
@@ -80,11 +104,13 @@ abstract base class _$TimetableStateBase {
   R maybeMap<R>({
     required R Function() orElse,
     PatternMatch<R, _TimetableState$Idle>? idle,
-    PatternMatch<R, _TimetableState$Loaded>? loaded,
+    PatternMatch<R, _TimetableState$Processing>? processing,
+    PatternMatch<R, _TimetableState$Successful>? successful,
   }) =>
       map(
         idle: idle ?? (_) => orElse(),
-        loaded: loaded ?? (_) => orElse(),
+        processing: processing ?? (_) => orElse(),
+        successful: successful ?? (_) => orElse(),
       );
 
   @override

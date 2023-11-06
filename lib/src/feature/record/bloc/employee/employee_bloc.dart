@@ -32,7 +32,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
         timeblockId: event.timeblockId,
         dateAt: event.dateAt,
       );
-      emit(EmployeeState.idle(employees: employees));
+      emit(EmployeeState.successful(employees: employees));
     } on Object catch (e) {
       emit(
         EmployeeState.idle(

@@ -13,11 +13,17 @@ sealed class CategoryState extends _$CategoryStateBase {
     String? error,
   }) = _CategoryState$Idle;
 
-  /// Category is loaded.
-  const factory CategoryState.loaded({
+  /// Category is Successful.
+  const factory CategoryState.processing({
     required List<CategoryModel> categoryWithServices,
     String? error,
-  }) = _CategoryState$Loaded;
+  }) = _CategoryState$Processing;
+
+  /// Category is Successful.
+  const factory CategoryState.successful({
+    required List<CategoryModel> categoryWithServices,
+    String? error,
+  }) = _CategoryState$Successful;
 }
 
 /// [CategoryState.idle] state matcher.
@@ -28,9 +34,17 @@ final class _CategoryState$Idle extends CategoryState {
   }) : super._();
 }
 
-/// [CategoryState.loaded] state matcher.
-final class _CategoryState$Loaded extends CategoryState {
-  const _CategoryState$Loaded({
+/// [CategoryState.processing] state matcher.
+final class _CategoryState$Processing extends CategoryState {
+  const _CategoryState$Processing({
+    super.categoryWithServices = const [],
+    super.error,
+  }) : super._();
+}
+
+/// [CategoryState.successful] state matcher.
+final class _CategoryState$Successful extends CategoryState {
+  const _CategoryState$Successful({
     required super.categoryWithServices,
     super.error,
   }) : super._();
@@ -53,9 +67,9 @@ abstract base class _$CategoryStateBase {
   /// Indicator whether Category is not empty.
   bool get hasCategory => categoryWithServices.isNotEmpty;
 
-  /// Indicator whether state is already loaded.
-  bool get isLoaded => maybeMap(
-        loaded: (_) => true,
+  /// Indicator whether state is already Successful.
+  bool get isSuccessful => maybeMap(
+        successful: (_) => true,
         orElse: () => false,
       );
 
@@ -68,11 +82,15 @@ abstract base class _$CategoryStateBase {
   /// Map over state union.
   R map<R>({
     required PatternMatch<R, _CategoryState$Idle> idle,
-    required PatternMatch<R, _CategoryState$Loaded> loaded,
+    required PatternMatch<R, _CategoryState$Processing> processing,
+    required PatternMatch<R, _CategoryState$Successful> successful,
   }) =>
       switch (this) {
         final _CategoryState$Idle idleState => idle(idleState),
-        final _CategoryState$Loaded loadedState => loaded(loadedState),
+        final _CategoryState$Processing processingState =>
+          processing(processingState),
+        final _CategoryState$Successful successfulState =>
+          successful(successfulState),
         _ => throw UnsupportedError('Unsupported state: $this'),
       };
 
@@ -80,11 +98,13 @@ abstract base class _$CategoryStateBase {
   R maybeMap<R>({
     required R Function() orElse,
     PatternMatch<R, _CategoryState$Idle>? idle,
-    PatternMatch<R, _CategoryState$Loaded>? loaded,
+    PatternMatch<R, _CategoryState$Processing>? processing,
+    PatternMatch<R, _CategoryState$Successful>? successful,
   }) =>
       map(
         idle: idle ?? (_) => orElse(),
-        loaded: loaded ?? (_) => orElse(),
+        processing: processing ?? (_) => orElse(),
+        successful: successful ?? (_) => orElse(),
       );
 
   @override
