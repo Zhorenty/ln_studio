@@ -41,7 +41,7 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) => NewsBLoC(
               repository: result.dependencies.homeRepository,
-            )..add(const NewsEvent.fetchAll()),
+            ),
           ),
         ],
         child: ScopesProvider(

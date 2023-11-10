@@ -7,6 +7,7 @@ import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 import 'package:ln_studio/src/common/widget/information_widget.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_bloc.dart';
+import 'package:ln_studio/src/feature/home/bloc/news/news_event.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_state.dart';
 import 'package:ln_studio/src/feature/initialization/logic/initialization_steps.dart';
 
@@ -71,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ignoring: state.currentSalon == null,
                 child: PopupButton(
                   smoothAnimate: false,
-                  label: Text(state.currentSalon!.address),
+                  label: Text(state.currentSalon?.address ?? ''),
                   child: CurrentSalonScreen(
                     pathName: 'home',
                     currentSalon: state.currentSalon,
@@ -174,6 +175,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context, state) {
                     final news =
                         state.news.where((news) => !news.isDeleted).toList();
+                    if (state.hasError) {
+                      return InformationWidget.error(
+                        reloadFunc: _fetchNews,
+                      );
+                    } else if (state.isProcessing) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 10,
+                        ),
+                        child: Shimmer(
+                          size: Size.fromHeight(
+                            MediaQuery.sizeOf(context).height / 5.5,
+                          ),
+                        ),
+                      );
+                    }
                     return SizedBox(
                       height: 115,
                       child: ListView.builder(
@@ -226,4 +244,6 @@ class _HomeScreenState extends State<HomeScreen> {
           );
     }
   }
+
+  void _fetchNews() => context.read<NewsBLoC>().add(const NewsEvent.fetchAll());
 }
