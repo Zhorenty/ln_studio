@@ -9,8 +9,10 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc({required this.profileRepository})
       : super(const ProfileState.idle()) {
     on<ProfileEvent>(
-      (event, emit) =>
-          event.map(fetch: (e) => _fetch(e, emit), edit: (e) => _edit(e, emit)),
+      (event, emit) => event.map(
+        fetch: (e) => _fetch(e, emit),
+        edit: (e) => _edit(e, emit),
+      ),
     );
   }
 
@@ -24,7 +26,7 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try {
       final profileFromCache = profileRepository.getProfile();
       if (profileFromCache != null) {
-        emit(ProfileState.idle(profile: profileFromCache));
+        // emit(ProfileState.idle(profile: profileFromCache));
       }
     } on Object catch (e) {
       emit(ProfileState.idle(error: ErrorUtil.formatError(e)));
@@ -38,6 +40,8 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ) async {
     emit(const ProfileState.processing());
     try {
+      // final editedProfile = await profileRepository.editProfile(event.profile);
+
       // emit(ProfileState.idle(profile: profileFromCache));
     } on Object catch (e) {
       emit(ProfileState.idle(error: ErrorUtil.formatError(e)));

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:ln_studio/src/common/utils/pattern_match.dart';
-import 'package:ln_studio/src/feature/profile/model/profile.dart';
+import 'package:ln_studio/src/feature/record/model/employee.dart';
 
 sealed class ProfileState extends _$ProfileStateBase {
   const ProfileState._({
@@ -9,14 +9,19 @@ sealed class ProfileState extends _$ProfileStateBase {
   });
 
   const factory ProfileState.idle({
-    ProfileModel? profile,
+    UserModel? profile,
     String? error,
   }) = _ProfileState$Idle;
 
   const factory ProfileState.processing({
-    ProfileModel? profile,
+    UserModel? profile,
     String? error,
   }) = _ProfileState$Processing;
+
+  const factory ProfileState.successful({
+    UserModel? profile,
+    String? error,
+  }) = _ProfileState$Successful;
 }
 
 final class _ProfileState$Idle extends ProfileState {
@@ -33,6 +38,13 @@ final class _ProfileState$Processing extends ProfileState {
   }) : super._();
 }
 
+final class _ProfileState$Successful extends ProfileState {
+  const _ProfileState$Successful({
+    super.profile,
+    super.error,
+  }) : super._();
+}
+
 @immutable
 abstract base class _$ProfileStateBase {
   const _$ProfileStateBase({
@@ -41,7 +53,7 @@ abstract base class _$ProfileStateBase {
   });
 
   @nonVirtual
-  final ProfileModel? profile;
+  final UserModel? profile;
 
   @nonVirtual
   final String? error;
@@ -60,14 +72,22 @@ abstract base class _$ProfileStateBase {
         orElse: () => false,
       );
 
+  bool get isSuccessful => maybeMap(
+        successful: (_) => true,
+        orElse: () => false,
+      );
+
   R map<R>({
     required PatternMatch<R, _ProfileState$Idle> idle,
     required PatternMatch<R, _ProfileState$Processing> processing,
+    required PatternMatch<R, _ProfileState$Successful> successful,
   }) =>
       switch (this) {
         final _ProfileState$Idle idleState => idle(idleState),
         final _ProfileState$Processing processingState =>
           processing(processingState),
+        final _ProfileState$Successful successfulState =>
+          successful(successfulState),
         _ => throw UnsupportedError('Unsupported state: $this'),
       };
 
@@ -75,10 +95,12 @@ abstract base class _$ProfileStateBase {
     required R Function() orElse,
     PatternMatch<R, _ProfileState$Idle>? idle,
     PatternMatch<R, _ProfileState$Processing>? processing,
+    PatternMatch<R, _ProfileState$Successful>? successful,
   }) =>
       map(
         idle: idle ?? (_) => orElse(),
         processing: processing ?? (_) => orElse(),
+        successful: successful ?? (_) => orElse(),
       );
 
   @override

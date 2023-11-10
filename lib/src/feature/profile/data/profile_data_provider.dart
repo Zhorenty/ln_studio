@@ -1,13 +1,19 @@
+import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/feature/profile/model/booking.dart';
 import 'package:ln_studio/src/feature/profile/model/profile.dart';
+import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Datasource for profile data.
 abstract interface class ProfileDataProvider {
+  ///
   Future<void> saveProfile(ProfileModel profile);
 
+  ///
   ProfileModel? getProfile();
+
+  Future<UserModel> editProfile(UserModel profile);
 
   /// Fetch .
   Future<List<BookingModel>> fetchAllBookings();
@@ -39,6 +45,21 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
       return ProfileModel.fromJson(jsonString as Map<String, dynamic>);
     }
     return null;
+  }
+
+  @override
+  Future<UserModel> editProfile(UserModel user) async {
+    final response = await restClient.put(
+      '/api/v1/user/${user.id}/edit',
+      body: {
+        'first_name': user.firstName,
+        'last_name': user.lastName,
+        'birth_date': user.birthDate.jsonFormat(),
+        'email': user.email,
+      },
+    );
+
+    return UserModel.fromJson(response['data'] as Map<String, dynamic>);
   }
 
   @override

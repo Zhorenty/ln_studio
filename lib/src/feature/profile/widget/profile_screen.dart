@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -82,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const CustomDivider(),
               CategoryListTile(
-                onTap: () => showExit(auth.signOut),
+                onTap: () => showExit(context, auth.signOut),
                 icon: Icons.exit_to_app,
                 title: 'Выйти',
                 size: 23,
@@ -124,42 +125,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Future<dynamic> showExit(void Function()? onPressed) => showAdaptiveDialog(
+  Future<dynamic> showExit(
+    BuildContext context,
+    void Function()? onPressed,
+  ) =>
+      ModalPopup.show(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: context.colorScheme.onBackground,
-            titlePadding: const EdgeInsets.all(16),
-            title: Text(
-              'Вы точно хотите выйти из аккаунта?',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Уже уходите?',
               style: context.textTheme.titleLarge?.copyWith(
                 fontFamily: FontFamily.geologica,
               ),
             ),
-            actionsAlignment: MainAxisAlignment.spaceBetween,
-            actionsPadding: const EdgeInsets.symmetric(horizontal: 16),
-            actions: <Widget>[
-              TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: context.textTheme.bodyLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                  ),
+            const SizedBox(height: 16),
+            Assets.images.exit.image(scale: 8),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => context.pop(),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Text('Нет'),
-                onPressed: () => context.pop(),
+                fixedSize: Size(MediaQuery.sizeOf(context).width - 50, 50),
+                backgroundColor: context.colorScheme.primary,
               ),
-              TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: context.textTheme.bodyLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                  ),
+              child: Text(
+                'Я остаюсь',
+                style: context.textTheme.bodyLarge?.copyWith(
+                  fontFamily: FontFamily.geologica,
+                  color: context.colorScheme.onBackground,
                 ),
-                onPressed: onPressed,
-                child: const Text('Да, выйти'),
               ),
-            ],
-          );
-        },
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: onPressed,
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                fixedSize: Size(MediaQuery.sizeOf(context).width - 50, 50),
+                backgroundColor: context.colorScheme.onBackground,
+              ),
+              child: Text(
+                'Выйти',
+                style: context.textTheme.bodyLarge?.copyWith(
+                  fontFamily: FontFamily.geologica,
+                ),
+              ),
+            ),
+          ],
+        ),
       );
 
   void _launchVk() async {

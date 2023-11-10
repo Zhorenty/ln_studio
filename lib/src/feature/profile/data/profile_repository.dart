@@ -1,5 +1,6 @@
 import 'package:ln_studio/src/feature/profile/model/booking.dart';
 import 'package:ln_studio/src/feature/profile/model/profile.dart';
+import 'package:ln_studio/src/feature/record/model/employee.dart';
 
 import 'profile_data_provider.dart';
 
@@ -11,6 +12,8 @@ abstract interface class ProfileRepository {
   Future<void> saveProfile(ProfileModel profile);
 
   ProfileModel? getProfile();
+
+  Future<UserModel> editProfile(UserModel profile);
 }
 
 /// Implementation of the employee repository.
@@ -29,4 +32,8 @@ final class ProfileRepositoryImpl implements ProfileRepository {
   @override
   Future<void> saveProfile(ProfileModel profile) =>
       _dataSource.saveProfile(profile);
+
+  @override
+  Future<UserModel> editProfile(UserModel profile) =>
+      _dataSource.editProfile(profile);
 }
