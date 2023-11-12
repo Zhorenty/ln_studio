@@ -209,7 +209,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',
     );
 
-    final user = User(phone: phone);
+    final user = User.fromJson((response.data!['data'] as Map)['user']);
 
     await _saveUser(user);
 

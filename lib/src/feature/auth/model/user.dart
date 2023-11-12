@@ -31,6 +31,8 @@ final class User {
 
   final String? email;
 
+  String get fullName => '$firstName $lastName';
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -42,11 +44,11 @@ final class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
-      phone: json['phone_number'],
+      phone: json['phone'],
       photo: json['photo'],
       firstName: json['first_name'],
       lastName: json['last_name'],
-      birthDate: json['birth_date'],
+      birthDate: DateTime.parse(json['birth_date'] as String),
       email: json['email'],
     );
   }

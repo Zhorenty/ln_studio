@@ -11,6 +11,7 @@ import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/custom_divider.dart';
 import 'components/category_list_tile.dart';
 import 'components/header_list_tile.dart';
+import '/src/common/utils/extensions/string_extension.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -23,6 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = AuthenticationScope.of(context);
+    final user = auth.user;
 
     return Scaffold(
       body: CustomScrollView(
@@ -41,6 +43,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SliverList.list(
             children: [
               HeaderListTile(
+                title: user?.fullName ?? 'Настройте профиль',
+                subtitle: user?.phone?.formatPhoneNumber(),
                 onPressed: () => context.goNamed('profile_edit'),
               ),
               const CustomDivider(),

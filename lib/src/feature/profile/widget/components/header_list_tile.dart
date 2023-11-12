@@ -8,10 +8,18 @@ import '/src/common/utils/extensions/context_extension.dart';
 
 ///
 class HeaderListTile extends StatelessWidget {
-  const HeaderListTile({super.key, this.onPressed, this.title});
+  const HeaderListTile({
+    super.key,
+    this.onPressed,
+    required this.title,
+    this.subtitle,
+  });
 
   ///
-  final String? title;
+  final String title;
+
+  ///
+  final String? subtitle;
 
   ///
   final void Function()? onPressed;
@@ -33,19 +41,21 @@ class HeaderListTile extends StatelessWidget {
         child: ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            title ?? 'Настройте профиль',
+            title,
             style: context.textTheme.headlineSmall?.copyWith(
               fontFamily: FontFamily.geologica,
               color: context.colorScheme.secondary,
             ),
           ),
-          subtitle: Text(
-            '+7 (960) 487-53-29',
-            style: context.textTheme.titleSmall?.copyWith(
-              fontFamily: FontFamily.geologica,
-              color: context.colorScheme.primary,
-            ),
-          ),
+          subtitle: subtitle != null
+              ? Text(
+                  subtitle!,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                    color: context.colorScheme.primary,
+                  ),
+                )
+              : null,
           trailing: const AvatarWidget(radius: 25, title: '794'),
         ),
       ),

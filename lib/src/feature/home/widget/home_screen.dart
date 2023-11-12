@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
+import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_bloc.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_state.dart';
 import 'package:ln_studio/src/feature/initialization/logic/initialization_steps.dart';
@@ -37,6 +38,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final auth = AuthenticationScope.of(context);
     return BlocListener<SalonBLoC, SalonState>(
       listener: (context, state) {},
       listenWhen: (previous, current) {
@@ -50,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, state) => CustomScrollView(
           slivers: [
             CustomSliverAppBar(
-              title: 'Здравствуйте, Евгений',
+              title: 'Здравствуйте, ${auth.user?.firstName}',
               actions: [
                 AnimatedButton(
                   padding: const EdgeInsets.only(right: 8 + 2, bottom: 2),
