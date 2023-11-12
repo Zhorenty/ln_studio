@@ -33,10 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthState.processing(
-      user: state.user,
-      phone: event.phone,
-      smsCode: null,
-    ));
+        user: state.user, phone: event.phone, smsCode: null));
     try {
       await authRepository.sendCode(phone: event.phone);
       emit(AuthState.successful(

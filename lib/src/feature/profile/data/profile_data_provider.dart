@@ -1,6 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:ln_studio/src/feature/profile/model/booking.dart';
 import 'package:ln_studio/src/feature/profile/model/profile.dart';
-import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Datasource for profile data.
@@ -21,7 +21,7 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
   });
 
   /// REST client to call API.
-  final RestClient restClient;
+  final Dio restClient;
 
   final SharedPreferences sharedPreferences;
 
@@ -45,7 +45,7 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
   Future<List<BookingModel>> fetchAllBookings() async {
     final response = await restClient.get('/api/v1/service_sale');
 
-    final bookings = List.from((response['data'] as List))
+    final bookings = List.from((response.data['data'] as List))
         .map((e) => BookingModel.fromJson(e))
         .toList();
 

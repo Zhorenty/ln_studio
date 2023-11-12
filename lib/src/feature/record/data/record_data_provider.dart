@@ -1,7 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/model/record_create.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
-import 'package:rest_client/rest_client.dart';
 
 import '/src/feature/record/model/category.dart';
 
@@ -46,7 +46,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
   RecordDataProviderImpl({required this.restClient});
 
   /// REST client to call API.
-  final RestClient restClient;
+  final Dio restClient;
 
   @override
   Future<List<CategoryModel>> fetchServiceCategories({
@@ -63,10 +63,10 @@ class RecordDataProviderImpl implements RecordDataProvider {
     };
     final response = await restClient.get(
       '/api/v1/book/get_services',
-      queryParams: params,
+      queryParameters: params,
     );
 
-    final categories = List.from((response['data'] as List))
+    final categories = List.from((response.data['data'] as List))
         .map((e) => CategoryModel.fromJson(e))
         .toList();
 
@@ -82,7 +82,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
   }) async {
     final response = await restClient.get(
       '/api/v1/book/get_employees',
-      queryParams: {
+      queryParameters: {
         'salon_id': salonId,
         if (serviceId != null) 'service_id': serviceId,
         if (timeblockId != null) 'timeblock_id': timeblockId,
@@ -90,7 +90,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
       },
     );
 
-    final staff = List.from((response['data'] as List))
+    final staff = List.from((response.data['data'] as List))
         .map((e) => EmployeeModel.fromJson(e))
         .toList();
 
@@ -105,14 +105,14 @@ class RecordDataProviderImpl implements RecordDataProvider {
   }) async {
     final response = await restClient.get(
       '/api/v1/book/get_timetables',
-      queryParams: {
+      queryParameters: {
         'salon_id': salonId,
         if (serviceId != null) 'service_id': serviceId,
         if (employeeId != null) 'employee_id': employeeId,
       },
     );
 
-    final timetables = List.from((response['data'] as List))
+    final timetables = List.from((response.data['data'] as List))
         .map((e) => TimetableItem.fromJson(e))
         .toList();
 
@@ -128,7 +128,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
   }) async {
     final response = await restClient.get(
       '/api/v1/book/get_timeblocks',
-      queryParams: {
+      queryParameters: {
         'salon_id': salonId,
         'date_at': dateAt,
         if (serviceId != null) 'service_id': serviceId,
@@ -136,7 +136,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
       },
     );
 
-    final timeblocks = List.from((response['data'] as List))
+    final timeblocks = List.from((response.data['data'] as List))
         .map((e) => EmployeeTimeblock$Response.fromJson(e))
         .toList();
 
@@ -148,7 +148,7 @@ class RecordDataProviderImpl implements RecordDataProvider {
     final body = recordData.toJson();
     await restClient.post(
       '/api/v1/service_sale/book_service',
-      body: body,
+      data: body,
     );
   }
 }
