@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/common/widget/custom_snackbar.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_bloc.dart';
@@ -41,28 +43,45 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
   ///
   bool visible = false;
 
+  late final CategoryBloc categoryBloc;
+
   @override
   void initState() {
     super.initState();
     selectedService = widget.servicePreset;
+    categoryBloc = CategoryBloc(
+      repository: DependenciesScope.of(context).recordRepository,
+    );
+    _fetchServices();
   }
+
+  Future<void> _onRefresh() async {
+    final stream = categoryBloc.stream.first;
+    _fetchServices();
+    await stream;
+  }
+
+  void _fetchServices() => categoryBloc.add(
+        CategoryEvent.fetchServiceCategories(
+          salonId: widget.salonId,
+          employeeId: widget.employeeId,
+          timetableItemId: widget.timetableItemId,
+          dateAt: widget.dateAt,
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CategoryBloc(
-        repository: DependenciesScope.of(context).recordRepository,
-      )..add(
-          CategoryEvent.fetchServiceCategories(
-            salonId: widget.salonId,
-            employeeId: widget.employeeId,
-            timetableItemId: widget.timetableItemId,
-            dateAt: widget.dateAt,
-          ),
-        ),
+      create: (context) => categoryBloc,
       child: Scaffold(
         backgroundColor: context.colorScheme.onBackground,
-        body: BlocBuilder<CategoryBloc, CategoryState>(
+        body: BlocConsumer<CategoryBloc, CategoryState>(
+          listener: (context, state) {
+            if (state.hasError) {
+              CustomSnackBar.showError(context, message: state.error);
+            }
+          },
           builder: (context, state) {
             return Stack(
               children: [
@@ -82,6 +101,7 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                         onPressed: () => context.pop(),
                       ),
                     ),
+                    CupertinoSliverRefreshControl(onRefresh: _onRefresh),
                     SliverAnimatedOpacity(
                       opacity: state.hasCategory ? 1 : .5,
                       duration: const Duration(milliseconds: 400),

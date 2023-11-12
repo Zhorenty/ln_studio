@@ -78,7 +78,7 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
         ],
         child: BlocConsumer<TimetableBloc, TimetableState>(
           listener: (context, state) => state.hasError
-              ? CustomSnackBar.showError(context, message: state.error!)
+              ? CustomSnackBar.showError(context, message: state.error)
               : null,
           builder: (context, state) => CustomScrollView(
             slivers: [
@@ -151,16 +151,22 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                         visible: visible,
                         expanded: expanded,
                       ),
-                      secondChild: InformationWidget.error(reloadFunc: () {
-                        _timeblockBloc.add(
-                          TimeblockEvent.fetchTimeblocks(
-                            salonId: widget.salonId,
-                            serviceId: widget.serviceId,
-                            employeeId: widget.employeeId,
-                            dateAt: _selectedDay.jsonFormat(),
-                          ),
-                        );
-                      },), crossFadeState: _timeblockBloc.state.hasError ? CrossFadeState.showSecond : CrossFadeState.showFirst, duration: const Duration(milliseconds: 250),
+                      secondChild: InformationWidget.error(
+                        reloadFunc: () {
+                          _timeblockBloc.add(
+                            TimeblockEvent.fetchTimeblocks(
+                              salonId: widget.salonId,
+                              serviceId: widget.serviceId,
+                              employeeId: widget.employeeId,
+                              dateAt: _selectedDay.jsonFormat(),
+                            ),
+                          );
+                        },
+                      ),
+                      crossFadeState: _timeblockBloc.state.hasError
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
+                      duration: const Duration(milliseconds: 250),
                     ),
                   ),
                   const SizedBox(height: 32),

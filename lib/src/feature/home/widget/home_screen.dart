@@ -14,6 +14,7 @@ import 'package:ln_studio/src/feature/initialization/logic/initialization_steps.
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_event.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_state.dart';
+import 'package:ln_studio/src/feature/salon/bloc/salon_event.dart';
 import 'package:ln_studio/src/feature/salon/widget/current_salon_screen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/animated_button.dart';
@@ -38,6 +39,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _fetchNews();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -68,17 +75,48 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {},
                 ),
               ],
-              bottomChild: IgnorePointer(
-                ignoring: state.currentSalon == null,
-                child: PopupButton(
-                  smoothAnimate: false,
-                  label: Text(state.currentSalon?.address ?? ''),
-                  child: CurrentSalonScreen(
-                    pathName: 'home',
-                    currentSalon: state.currentSalon,
+              bottomChild: Builder(builder: (context) {
+                if (state.hasError) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    width: MediaQuery.sizeOf(context).width / 3,
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Ошибка'),
+                        IconButton(
+                          icon: const Icon(Icons.refresh_rounded),
+                          onPressed: () => context
+                              .read<SalonBLoC>()
+                              .add(const SalonEvent.fetchAll()),
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (state.isProcessing) {
+                  return Shimmer(
+                    size: Size(
+                      MediaQuery.sizeOf(context).width / 1.3,
+                      MediaQuery.sizeOf(context).width / 9,
+                    ),
+                  );
+                }
+                return IgnorePointer(
+                  ignoring: state.currentSalon == null,
+                  child: PopupButton(
+                    smoothAnimate: false,
+                    label: Text(state.currentSalon?.address ?? ''),
+                    child: CurrentSalonScreen(
+                      pathName: 'home',
+                      currentSalon: state.currentSalon,
+                    ),
                   ),
-                ),
-              ),
+                );
+              }),
             ),
             SliverList.list(
               children: [

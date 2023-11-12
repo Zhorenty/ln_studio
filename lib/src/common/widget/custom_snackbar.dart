@@ -6,40 +6,40 @@ class CustomSnackBar {
   static void showError(
     BuildContext context, {
     IconData icon = Icons.error_rounded,
-    String title = 'Ошибка',
-    String message = 'Попробовать снова',
-  }) =>
-      _show(
-        context: context,
-        icon: icon,
-        iconColor: Theme.of(context).colorScheme.error,
-        title: title,
-        message: message,
-      );
-
-  static void showSuccessful(
-    BuildContext context, {
-    IconData icon = Icons.done_rounded,
-    String title = 'Информация',
+    String? title,
     String? message,
   }) =>
       _show(
         context: context,
         icon: icon,
-        title: title,
+        iconColor: Theme.of(context).colorScheme.error,
+        title: title ?? 'Ошибка',
+        message: message ?? 'Попробовать снова',
+      );
+
+  static void showSuccessful(
+    BuildContext context, {
+    IconData icon = Icons.done_rounded,
+    String? title,
+    String? message,
+  }) =>
+      _show(
+        context: context,
+        icon: icon,
+        title: title ?? 'Успешно',
         message: message,
       );
 
   static void showInfo(
     BuildContext context, {
     IconData icon = Icons.info_rounded,
-    String title = 'Успешно',
+    String? title,
     String? message,
   }) =>
       _show(
         context: context,
         icon: icon,
-        title: title,
+        title: title ?? 'Информация',
         message: message,
       );
 
