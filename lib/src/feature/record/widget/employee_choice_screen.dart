@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/common/widget/custom_snackbar.dart';
 import 'package:ln_studio/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
@@ -95,7 +96,12 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
           }
           return false;
         },
-        child: BlocBuilder<EmployeeBloc, EmployeeState>(
+        child: BlocConsumer<EmployeeBloc, EmployeeState>(
+          listener: (context, state) {
+            if (state.hasError) {
+              CustomSnackBar.showError(context, message: state.error);
+            }
+          },
           builder: (context, state) => Scaffold(
             backgroundColor: context.colorScheme.onBackground,
             body: Stack(
@@ -125,7 +131,7 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                     ),
                     CupertinoSliverRefreshControl(onRefresh: _refresh),
                     SliverAnimatedOpacity(
-                      opacity: state.isLoaded ? 1 : .5,
+                      opacity: state.isProcessing ? .5 : 1,
                       duration: const Duration(milliseconds: 1000),
                       sliver: SliverPadding(
                         padding: const EdgeInsets.all(8),
@@ -211,9 +217,9 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
 
   ///
   Future<void> _refresh() async {
-    final block = context.read<EmployeeBloc>().stream.first;
+    final bloc = context.read<EmployeeBloc>().stream.first;
     _fetchSalonEmployees();
-    await block;
+    await bloc;
   }
 }
 

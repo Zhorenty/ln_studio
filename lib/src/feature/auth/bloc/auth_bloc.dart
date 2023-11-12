@@ -9,12 +9,12 @@ import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
   AuthBloc(this.authRepository) : super(const AuthState$Idle()) {
-    if (!authRepository.userStream.isBroadcast) {
-      authRepository.userStream
-          .map((user) => AuthState$Idle(user: user))
-          .where(($state) => !identical($state, state))
-          .listen(setState);
-    }
+    // if (!authRepository.userStream.isBroadcast) {
+    authRepository.userStream
+        .map((user) => AuthState$Idle(user: user))
+        .where(($state) => !identical($state, state))
+        .listen(setState);
+    // }
 
     on<AuthEvent>(
       (event, emit) => event.map(
@@ -33,10 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthState.processing(
-      user: state.user,
-      phone: event.phone,
-      smsCode: null,
-    ));
+        user: state.user, phone: event.phone, smsCode: null));
     try {
       await authRepository.sendCode(phone: event.phone);
       emit(AuthState.successful(
