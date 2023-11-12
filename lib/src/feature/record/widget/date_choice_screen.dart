@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/common/widget/custom_snackbar.dart';
+import 'package:ln_studio/src/common/widget/information_widget.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 
@@ -144,10 +145,22 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: TimeblocksWrap(
-                      dateAt: _selectedDay.jsonFormat(),
-                      visible: visible,
-                      expanded: expanded,
+                    child: AnimatedCrossFade(
+                      firstChild: TimeblocksWrap(
+                        dateAt: _selectedDay.jsonFormat(),
+                        visible: visible,
+                        expanded: expanded,
+                      ),
+                      secondChild: InformationWidget.error(reloadFunc: () {
+                        _timeblockBloc.add(
+                          TimeblockEvent.fetchTimeblocks(
+                            salonId: widget.salonId,
+                            serviceId: widget.serviceId,
+                            employeeId: widget.employeeId,
+                            dateAt: _selectedDay.jsonFormat(),
+                          ),
+                        );
+                      },), crossFadeState: _timeblockBloc.state.hasError ? CrossFadeState.showSecond : CrossFadeState.showFirst, duration: const Duration(milliseconds: 250),
                     ),
                   ),
                   const SizedBox(height: 32),
