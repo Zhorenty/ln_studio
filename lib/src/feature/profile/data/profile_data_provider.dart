@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
-import 'package:ln_studio/src/feature/profile/model/booking.dart';
-import 'package:ln_studio/src/feature/record/model/employee.dart';
 
+import '/src/common/utils/extensions/date_time_extension.dart';
+import '/src/feature/profile/model/booking.dart';
 import '../model/profile.dart';
 
 /// Datasource for profile data.
 abstract interface class ProfileDataProvider {
   ///
-  UserModel getProfile();
+  Future<ProfileModel> getProfile();
 
+  ///
   Future<ProfileModel> editProfile(ProfileModel profile);
 
   /// Fetch .
@@ -24,9 +24,12 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
   final Dio restClient;
 
   @override
-  UserModel getProfile() {
-    // TODO: implement getProfile
-    throw UnimplementedError();
+  Future<ProfileModel> getProfile() async {
+    final response = await restClient.get('/api/auth/client');
+
+    return ProfileModel.fromJson(
+      (response.data['data'] as Map<String, dynamic>)['user'],
+    );
   }
 
   @override
@@ -41,7 +44,6 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
       },
     );
 
-    /// TODO: Didn't working, need to
     return ProfileModel.fromJson(response.data['data'] as Map<String, dynamic>);
   }
 
