@@ -1,7 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/feature/profile/model/booking.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
-import 'package:rest_client/rest_client.dart';
 
 import '../model/profile.dart';
 
@@ -21,7 +21,7 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
   ProfileDataProviderImpl({required this.restClient});
 
   /// REST client to call API.
-  final RestClient restClient;
+  final Dio restClient;
 
   @override
   UserModel getProfile() {
@@ -33,7 +33,7 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
   Future<ProfileModel> editProfile(ProfileModel user) async {
     final response = await restClient.put(
       '/api/v1/user/${user.id}/edit',
-      body: {
+      data: {
         'first_name': user.firstName,
         'last_name': user.lastName,
         'birth_date': user.birthDate.jsonFormat(),
@@ -42,14 +42,14 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
     );
 
     /// TODO: Didn't working, need to
-    return ProfileModel.fromJson(response['data'] as Map<String, dynamic>);
+    return ProfileModel.fromJson(response.data['data'] as Map<String, dynamic>);
   }
 
   @override
   Future<List<BookingModel>> fetchAllBookings() async {
     final response = await restClient.get('/api/v1/service_sale');
 
-    final bookings = List.from((response['data'] as List))
+    final bookings = List.from((response.data['data'] as List))
         .map((e) => BookingModel.fromJson(e))
         .toList();
 

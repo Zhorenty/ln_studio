@@ -1,11 +1,5 @@
-# Checks two given strings for equality.
-eq = $(if $(or $(1),$(2)),$(and $(findstring $(1),$(2)),\
-                                $(findstring $(2),$(1))),1)
-
 get:
 	flutter pub get
-
-	cd packages/rest_client && flutter pub get
 
 analyze:
 	flutter analyze
@@ -18,9 +12,11 @@ runner:
 
 	dart run build_runner build --delete-conflicting-outputs
 
-	cd packages/rest_client && flutter pub get
-
 clean:
 	flutter clean
 
-	cd packages/rest_client && flutter clean
+watch:
+	dart run build_runner watch
+
+intl:
+	dart run intl_utils:generate

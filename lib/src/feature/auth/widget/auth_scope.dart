@@ -83,7 +83,6 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
       // Если надо сравнивать states
       setState(() => _state = state);
 
-      // TODO: Возможно, надо поменять
       // НОМЕР: 8 (960) 487-53-22
       final isNeedToRegister =
           state.smsCode != null && state is AuthState$NotRegistered;

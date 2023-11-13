@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:rest_client/rest_client.dart';
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/qr_code/model/qr_code.dart';
@@ -22,7 +22,7 @@ class QRCodeDataProviderImpl implements QRCodeDataProvider {
   });
 
   /// REST client to call API.
-  final RestClient restClient;
+  final Dio restClient;
 
   ///
   final SharedPreferences sharedPreferences;
@@ -32,7 +32,7 @@ class QRCodeDataProviderImpl implements QRCodeDataProvider {
     /// TODO(zhorenty): Wait for backend.
     final response = await restClient.get('/api/v1/qr_code/me');
     sharedPreferences.setString('qr_code', jsonEncode(response)).ignore();
-    return QRCode.fromJson(response);
+    return QRCode.fromJson(response.data['data']);
   }
 
   @override

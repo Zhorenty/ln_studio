@@ -10,7 +10,6 @@ import 'package:ln_studio/src/feature/profile/data/profile_data_provider.dart';
 import 'package:ln_studio/src/feature/profile/data/profile_repository.dart';
 import 'package:ln_studio/src/feature/record/data/record_data_provider.dart';
 import 'package:ln_studio/src/feature/record/data/record_repository.dart';
-import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/initialization/model/initialization_progress.dart';
@@ -33,16 +32,14 @@ mixin InitializationSteps {
         baseUrl: kBaseUrl,
         sharedPreferences: progress.dependencies.sharedPreferences,
       );
-      final restClient = RestClient(
-        Dio(BaseOptions(baseUrl: kBaseUrl))
-          ..interceptors.add(
-            OAuthInterceptor(
-              refresh: authDataProvider.refreshTokenPair,
-              loadTokens: authDataProvider.getTokenPair,
-              clearTokens: authDataProvider.signOut,
-            ),
+      final restClient = Dio(BaseOptions(baseUrl: kBaseUrl))
+        ..interceptors.add(
+          OAuthInterceptor(
+            refresh: authDataProvider.refreshTokenPair,
+            loadTokens: authDataProvider.getTokenPair,
+            clearTokens: authDataProvider.signOut,
           ),
-      );
+        );
       progress.dependencies.restClient = restClient;
       final authRepository = AuthRepositoryImpl(
         authDataProvider: authDataProvider,

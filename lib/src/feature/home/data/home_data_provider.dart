@@ -1,5 +1,5 @@
+import 'package:dio/dio.dart';
 import 'package:ln_studio/src/feature/home/model/news.dart';
-import 'package:rest_client/rest_client.dart';
 
 /// Datasource for Record HomeDataProvider.
 abstract interface class HomeDataProvider {
@@ -14,13 +14,13 @@ class HomeDataProviderImpl implements HomeDataProvider {
   HomeDataProviderImpl({required this.restClient});
 
   /// REST client to call API.
-  final RestClient restClient;
+  final Dio restClient;
 
   @override
   Future<List<NewsModel>> fetchNews() async {
     final response = await restClient.get('/api/v1/news');
 
-    final news = List.from((response['data'] as List))
+    final news = List.from((response.data['data'] as List))
         .map((e) => NewsModel.fromJson(e))
         .toList();
 
