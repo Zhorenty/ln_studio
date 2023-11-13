@@ -9,11 +9,9 @@ abstract interface class ProfileRepository {
   /// Get employee by id.
   Future<List<BookingModel>> getAllBookings();
 
-  Future<void> saveProfile(ProfileModel profile);
+  UserModel getProfile();
 
-  ProfileModel? getProfile();
-
-  Future<UserModel> editProfile(UserModel profile);
+  Future<ProfileModel> editProfile(ProfileModel profile);
 }
 
 /// Implementation of the employee repository.
@@ -27,13 +25,9 @@ final class ProfileRepositoryImpl implements ProfileRepository {
   Future<List<BookingModel>> getAllBookings() => _dataSource.fetchAllBookings();
 
   @override
-  ProfileModel? getProfile() => _dataSource.getProfile();
+  UserModel getProfile() => _dataSource.getProfile();
 
   @override
-  Future<void> saveProfile(ProfileModel profile) =>
-      _dataSource.saveProfile(profile);
-
-  @override
-  Future<UserModel> editProfile(UserModel profile) =>
+  Future<ProfileModel> editProfile(ProfileModel profile) =>
       _dataSource.editProfile(profile);
 }

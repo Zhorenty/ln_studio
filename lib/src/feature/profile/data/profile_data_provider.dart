@@ -1,19 +1,16 @@
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/feature/profile/model/booking.dart';
-import 'package:ln_studio/src/feature/profile/model/profile.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:rest_client/rest_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../model/profile.dart';
 
 /// Datasource for profile data.
 abstract interface class ProfileDataProvider {
   ///
-  Future<void> saveProfile(ProfileModel profile);
+  UserModel getProfile();
 
-  ///
-  ProfileModel? getProfile();
-
-  Future<UserModel> editProfile(UserModel profile);
+  Future<ProfileModel> editProfile(ProfileModel profile);
 
   /// Fetch .
   Future<List<BookingModel>> fetchAllBookings();
@@ -21,34 +18,19 @@ abstract interface class ProfileDataProvider {
 
 /// Implementation of employee datasource.
 class ProfileDataProviderImpl implements ProfileDataProvider {
-  ProfileDataProviderImpl({
-    required this.restClient,
-    required this.sharedPreferences,
-  });
+  ProfileDataProviderImpl({required this.restClient});
 
   /// REST client to call API.
   final RestClient restClient;
 
-  final SharedPreferences sharedPreferences;
-
-  static const String key = 'profile';
-
   @override
-  Future<void> saveProfile(ProfileModel profile) async =>
-      await sharedPreferences.setString(key, profile.toJson() as String);
-
-  @override
-  ProfileModel? getProfile() {
-    final jsonString = sharedPreferences.getString(key);
-
-    if (jsonString != null) {
-      return ProfileModel.fromJson(jsonString as Map<String, dynamic>);
-    }
-    return null;
+  UserModel getProfile() {
+    // TODO: implement getProfile
+    throw UnimplementedError();
   }
 
   @override
-  Future<UserModel> editProfile(UserModel user) async {
+  Future<ProfileModel> editProfile(ProfileModel user) async {
     final response = await restClient.put(
       '/api/v1/user/${user.id}/edit',
       body: {
@@ -59,7 +41,8 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
       },
     );
 
-    return UserModel.fromJson(response['data'] as Map<String, dynamic>);
+    /// TODO: Didn't working, need to
+    return ProfileModel.fromJson(response['data'] as Map<String, dynamic>);
   }
 
   @override

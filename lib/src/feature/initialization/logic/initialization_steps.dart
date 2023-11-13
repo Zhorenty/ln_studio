@@ -74,7 +74,6 @@ mixin InitializationSteps {
     'Profile repository': (progress) async {
       final profileDataProvider = ProfileDataProviderImpl(
         restClient: progress.dependencies.restClient,
-        sharedPreferences: progress.dependencies.sharedPreferences,
       );
       final profileRepository = ProfileRepositoryImpl(profileDataProvider);
       progress.dependencies.profileRepository = profileRepository;

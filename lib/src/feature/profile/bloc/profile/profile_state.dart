@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:ln_studio/src/common/utils/pattern_match.dart';
-import 'package:ln_studio/src/feature/record/model/employee.dart';
+import 'package:ln_studio/src/feature/profile/model/profile.dart';
 
 sealed class ProfileState extends _$ProfileStateBase {
   const ProfileState._({
@@ -9,17 +9,17 @@ sealed class ProfileState extends _$ProfileStateBase {
   });
 
   const factory ProfileState.idle({
-    UserModel? profile,
+    ProfileModel? profile,
     String? error,
   }) = _ProfileState$Idle;
 
   const factory ProfileState.processing({
-    UserModel? profile,
+    ProfileModel? profile,
     String? error,
   }) = _ProfileState$Processing;
 
   const factory ProfileState.successful({
-    UserModel? profile,
+    ProfileModel? profile,
     String? error,
   }) = _ProfileState$Successful;
 }
@@ -53,7 +53,7 @@ abstract base class _$ProfileStateBase {
   });
 
   @nonVirtual
-  final UserModel? profile;
+  final ProfileModel? profile;
 
   @nonVirtual
   final String? error;
