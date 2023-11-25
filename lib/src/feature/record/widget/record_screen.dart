@@ -241,25 +241,21 @@ class _RecordScreenState extends State<RecordScreen> {
                               : const SizedBox.shrink(),
                           const SizedBox(height: 16),
                           AnimatedButton(
-                            onPressed: () {
-                              // TODO: Сделать валидацию
-                              // TODO: Wait until asset in
-                              //  CongratilationScreen was loaded.
-                              if (_formKey.currentState!.validate()) {
-                                recordBLoC.add(
-                                  RecordEvent.create(
-                                    dateAt: currentDate!.$2,
-                                    salonId: salon?.id ?? 1,
-                                    clientId: 1,
-                                    serviceId: currentService!.id,
-                                    employeeId: currentEmployee!.id,
-                                    timeblockId: currentDate!.$1.id,
-                                    price: currentService!.price,
-                                    comment: commentController.text,
-                                  ),
-                                );
-                              }
-                            },
+                            onPressed: () => _formKey.currentState!.validate()
+                                ? recordBLoC.add(
+                                    RecordEvent.create(
+                                      dateAt: currentDate!.$2,
+                                      salonId: salon?.id ?? 1,
+                                      // TODO: MOCK надо подтягивать юзера
+                                      clientId: 1,
+                                      serviceId: currentService!.id,
+                                      employeeId: currentEmployee!.id,
+                                      timeblockId: currentDate!.$1.id,
+                                      price: currentService!.price,
+                                      comment: commentController.text,
+                                    ),
+                                  )
+                                : null,
                             child: Container(
                               height: 48,
                               margin: const EdgeInsets.symmetric(

@@ -81,7 +81,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 size: 23.5,
               ),
               const CustomDivider(),
-              const CategoryListTile(
+              CategoryListTile(
+                onTap: _launchWhatsApp,
                 icon: Icons.work_rounded,
                 title: 'Работать с нами',
               ),

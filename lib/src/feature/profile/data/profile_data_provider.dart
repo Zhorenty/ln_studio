@@ -49,9 +49,8 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
 
   @override
   Future<List<BookingModel>> fetchAllBookings() async {
-    final response = await restClient.get('/api/v1/service_sale');
-
-    final bookings = List.from((response.data['data'] as List))
+    final response = await restClient.get('/api/v1/client/service_sales');
+    final bookings = List.from(response.data['data'] as List)
         .map((e) => BookingModel.fromJson(e))
         .toList();
 
