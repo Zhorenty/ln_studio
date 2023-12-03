@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ln_studio/src/feature/profile/model/booking.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/model/record_create.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
@@ -39,6 +40,8 @@ abstract interface class RecordDataProvider {
   });
 
   Future<void> createRecord(RecordModel$Create recordData);
+
+  Future<BookingModel> fetchLastBooking();
 }
 
 /// Implementation of Record RecordDataProvider.
@@ -150,5 +153,12 @@ class RecordDataProviderImpl implements RecordDataProvider {
       '/api/v1/service_sale/book_service',
       data: body,
     );
+  }
+
+  @override
+  Future<BookingModel> fetchLastBooking() async {
+    final response = await restClient.get('/api/v1/book/get_reentry');
+    final lastBooking = BookingModel.fromJson(response.data['data']);
+    return lastBooking;
   }
 }

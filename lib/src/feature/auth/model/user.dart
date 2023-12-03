@@ -42,18 +42,18 @@ final class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
-      phone: json['phone_number'],
-      photo: json['photo'],
-      firstName: json['first_name'],
-      lastName: json['last_name'],
-      birthDate: json['birth_date'],
-      email: json['email'],
+      phone: json['user']['phone'],
+      photo: json['user']['photo'],
+      firstName: json['user']['first_name'],
+      lastName: json['user']['last_name'],
+      birthDate: DateTime.parse(json['user']['birth_date']),
+      email: json['user']['email'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'phone_number': phone,
+      'phone': phone,
       'first_name': firstName,
       'last_name': lastName,
       'birth_date': birthDate,

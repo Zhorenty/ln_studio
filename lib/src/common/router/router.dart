@@ -132,6 +132,10 @@ final router = GoRouter(
                     datePreset: state.extra is TimeblockWithDate
                         ? state.extra as TimeblockWithDate
                         : null,
+                    needReentry: bool.tryParse(state
+                            .uri.queryParameters['needReentry']
+                            .toString()) ??
+                        false,
                   ),
                   routes: [
                     GoRoute(

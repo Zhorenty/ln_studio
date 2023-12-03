@@ -91,16 +91,18 @@ final class AuthDataProviderImpl implements AuthDataProvider {
 
   ///
   Future<void> _saveUser(User user) async {
-    // await _sharedPreferences.setInt('auth.user.phone', user.id!);
+    await _sharedPreferences.setInt('auth.user.id', user.id!);
     await _sharedPreferences.setString('auth.user.phone', user.phone!);
-    // await _sharedPreferences.setString('auth.user.photo', user.photo!);
-    // await _sharedPreferences.setString('auth.user.first_name', user.firstName!);
-    // await _sharedPreferences.setString('auth.user.last_name', user.lastName!);
-    // await _sharedPreferences.setString(
-    //   'auth.user.birth_date',
-    //   user.birthDate.toString(),
-    // );
-    // await _sharedPreferences.setString('auth.user.email', user.email!);
+    if (user.photo != null) {
+      await _sharedPreferences.setString('auth.user.photo', user.photo!);
+    }
+    await _sharedPreferences.setString('auth.user.first_name', user.firstName!);
+    await _sharedPreferences.setString('auth.user.last_name', user.lastName!);
+    await _sharedPreferences.setString(
+      'auth.user.birth_date',
+      user.birthDate.toString(),
+    );
+    await _sharedPreferences.setString('auth.user.email', user.email!);
 
     _userController.add(user);
   }
@@ -198,6 +200,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       data: {
         'phone': phone,
         'sms_code': smsCode,
+        'is_employee': false,
       },
     );
 
@@ -209,7 +212,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',
     );
 
-    final user = User(phone: phone);
+    final user = User.fromJson((response.data!['data'] as Map)['model']);
 
     await _saveUser(user);
 
@@ -237,9 +240,11 @@ final class AuthDataProviderImpl implements AuthDataProvider {
 
     await _saveTokenPair(tokenPair);
 
-    await _saveUser(userModel);
+    final createdUser = User.fromJson((response.data!['data'] as Map)['user']);
 
-    return userModel;
+    await _saveUser(createdUser);
+
+    return createdUser;
   }
 
   @override
@@ -281,9 +286,23 @@ final class AuthDataProviderImpl implements AuthDataProvider {
 
   @override
   User? getUser() {
+    final id = _sharedPreferences.getInt('auth.user.id');
     final phone = _sharedPreferences.getString('auth.user.phone');
+    final photo = _sharedPreferences.getString('auth.user.photo');
+    final firstName = _sharedPreferences.getString('auth.user.first_name');
+    final lastName = _sharedPreferences.getString('auth.user.last_name');
+    final birthDate = _sharedPreferences.getString('auth.user.birthDate');
+    final email = _sharedPreferences.getString('auth.user.email');
 
-    return User(phone: phone);
+    return User(
+      id: id,
+      phone: phone,
+      photo: photo,
+      firstName: firstName,
+      lastName: lastName,
+      birthDate: DateTime.tryParse(birthDate ?? ''),
+      email: email,
+    );
   }
 
   @override

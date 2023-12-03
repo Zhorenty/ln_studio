@@ -1,3 +1,4 @@
+import 'package:ln_studio/src/feature/profile/model/booking.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/model/record_create.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
@@ -39,6 +40,8 @@ abstract interface class RecordRepository {
   });
 
   Future<void> createRecord(RecordModel$Create recordData);
+
+  Future<BookingModel> fetchLastBooking();
 }
 
 /// Implementation of the Record repository.
@@ -105,4 +108,7 @@ final class RecordRepositoryImpl implements RecordRepository {
   @override
   Future<void> createRecord(RecordModel$Create recordData) =>
       _dataProvider.createRecord(recordData);
+
+  @override
+  Future<BookingModel> fetchLastBooking() => _dataProvider.fetchLastBooking();
 }
