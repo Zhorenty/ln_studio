@@ -1,8 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:ln_studio/src/feature/record/model/category.dart';
-import 'package:ln_studio/src/feature/record/model/employee.dart';
-import 'package:ln_studio/src/feature/record/model/timetable.dart';
-import 'package:ln_studio/src/feature/salon/models/salon.dart';
+import 'package:ln_studio/src/feature/profile/model/booking.dart';
 
 /// {@template record_state}
 /// RecordState.
@@ -11,59 +8,34 @@ sealed class RecordState extends _$RecordStateBase {
   /// Idling state
   /// {@macro record_state}
   const factory RecordState.idle({
-    required ServiceModel? service,
-    required EmployeeModel? employee,
-    required DateTime? date,
-    required Salon? salon,
-    required TimetableItem? timetableItem,
-    required String? comment,
+    required BookingModel? lastBooking,
     String message,
   }) = RecordState$Idle;
 
   /// Processing
   /// {@macro record_state}
   const factory RecordState.processing({
-    required ServiceModel? service,
-    required EmployeeModel? employee,
-    required DateTime? date,
-    required Salon? salon,
-    required TimetableItem? timetableItem,
-    required String? comment,
+    required BookingModel? lastBooking,
     String message,
   }) = RecordState$Processing;
 
   /// Successful
   /// {@macro record_state}
   const factory RecordState.successful({
-    required ServiceModel? service,
-    required EmployeeModel? employee,
-    required DateTime? date,
-    required Salon? salon,
-    required TimetableItem? timetableItem,
-    required String? comment,
+    required BookingModel? lastBooking,
     String message,
   }) = RecordState$Successful;
 
   /// An error has occurred
   /// {@macro record_state}
   const factory RecordState.error({
-    required ServiceModel? service,
-    required EmployeeModel? employee,
-    required DateTime? date,
-    required Salon? salon,
-    required TimetableItem? timetableItem,
-    required String? comment,
+    required BookingModel? lastBooking,
     String message,
   }) = RecordState$Error;
 
   /// {@macro record_state}
   const RecordState({
-    required super.service,
-    required super.employee,
-    required super.date,
-    required super.salon,
-    required super.timetableItem,
-    required super.comment,
+    required super.lastBooking,
     required super.message,
   });
 }
@@ -73,12 +45,7 @@ sealed class RecordState extends _$RecordStateBase {
 final class RecordState$Idle extends RecordState with _$RecordState {
   /// {@nodoc}
   const RecordState$Idle({
-    required super.service,
-    required super.employee,
-    required super.date,
-    required super.salon,
-    required super.timetableItem,
-    required super.comment,
+    required super.lastBooking,
     super.message = 'Idling',
   });
 }
@@ -88,12 +55,7 @@ final class RecordState$Idle extends RecordState with _$RecordState {
 final class RecordState$Processing extends RecordState with _$RecordState {
   /// {@nodoc}
   const RecordState$Processing({
-    required super.service,
-    required super.employee,
-    required super.date,
-    required super.salon,
-    required super.timetableItem,
-    required super.comment,
+    required super.lastBooking,
     super.message = 'Processing',
   });
 }
@@ -103,12 +65,7 @@ final class RecordState$Processing extends RecordState with _$RecordState {
 final class RecordState$Successful extends RecordState with _$RecordState {
   /// {@nodoc}
   const RecordState$Successful({
-    required super.service,
-    required super.employee,
-    required super.date,
-    required super.salon,
-    required super.timetableItem,
-    required super.comment,
+    required super.lastBooking,
     super.message = 'Successful',
   });
 }
@@ -118,12 +75,7 @@ final class RecordState$Successful extends RecordState with _$RecordState {
 final class RecordState$Error extends RecordState with _$RecordState {
   /// {@nodoc}
   const RecordState$Error({
-    required super.service,
-    required super.employee,
-    required super.date,
-    required super.salon,
-    required super.timetableItem,
-    required super.comment,
+    required super.lastBooking,
     super.message = 'An error has occurred.',
   });
 }
@@ -139,41 +91,16 @@ typedef RecordStateMatch<R, S extends RecordState> = R Function(S state);
 abstract base class _$RecordStateBase {
   /// {@nodoc}
   const _$RecordStateBase({
-    required this.service,
-    required this.employee,
-    required this.date,
-    required this.salon,
-    required this.timetableItem,
-    required this.comment,
+    required this.lastBooking,
     required this.message,
   });
 
   @nonVirtual
-  final ServiceModel? service;
-
-  @nonVirtual
-  final EmployeeModel? employee;
-
-  @nonVirtual
-  final DateTime? date;
-
-  @nonVirtual
-  final Salon? salon;
-
-  @nonVirtual
-  final TimetableItem? timetableItem;
-
-  @nonVirtual
-  final String? comment;
+  final BookingModel? lastBooking;
 
   /// Message or state description.
   @nonVirtual
   final String message;
-
-  bool get hasService => service != null;
-  bool get hasEmployee => employee != null;
-  bool get hasDate => date != null;
-  bool get hasSalon => salon != null;
 
   /// If an error has occurred?
   bool get hasError => maybeMap<bool>(orElse: () => false, error: (_) => true);

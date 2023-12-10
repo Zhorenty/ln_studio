@@ -16,18 +16,14 @@ class RecordBLoC extends Bloc<RecordEvent, RecordState>
   }) : super(
           initialState ??
               const RecordState.idle(
-                service: null,
-                employee: null,
-                date: null,
-                salon: null,
-                timetableItem: null,
-                comment: null,
+                lastBooking: null,
                 message: 'Initial idle state',
               ),
         ) {
     on<RecordEvent>(
       (event, emit) => switch (event) {
         RecordEvent$Create() => _create(event, emit),
+        RecordEvent$FetchLastBooking() => _fetchLastBooking(emit),
       },
     );
   }
@@ -35,18 +31,13 @@ class RecordBLoC extends Bloc<RecordEvent, RecordState>
   /// Repository for Employee data.
   final RecordRepository repository;
 
-  /// Fetch event handler
+  /// Create event handler
   Future<void> _create(
-      RecordEvent$Create event, Emitter<RecordState> emit) async {
+    RecordEvent$Create event,
+    Emitter<RecordState> emit,
+  ) async {
     try {
-      emit(RecordState.processing(
-        service: state.service,
-        employee: state.employee,
-        date: state.date,
-        salon: state.salon,
-        timetableItem: state.timetableItem,
-        comment: state.comment,
-      ));
+      emit(RecordState.processing(lastBooking: state.lastBooking));
       await repository.createRecord(
         RecordModel$Create(
           date: event.dateAt,
@@ -57,23 +48,21 @@ class RecordBLoC extends Bloc<RecordEvent, RecordState>
           timeblockId: event.timeblockId,
         ),
       );
-      emit(RecordState.successful(
-        service: state.service,
-        employee: state.employee,
-        date: state.date,
-        salon: state.salon,
-        timetableItem: state.timetableItem,
-        comment: state.comment,
-      ));
+      emit(RecordState.successful(lastBooking: state.lastBooking));
     } on Object catch (err, _) {
-      emit(RecordState.error(
-        service: state.service,
-        employee: state.employee,
-        date: state.date,
-        salon: state.salon,
-        timetableItem: state.timetableItem,
-        comment: state.comment,
-      ));
+      emit(RecordState.error(lastBooking: state.lastBooking));
+      rethrow;
+    }
+  }
+
+  /// Fetch event handler
+  Future<void> _fetchLastBooking(Emitter<RecordState> emit) async {
+    try {
+      emit(RecordState.processing(lastBooking: state.lastBooking));
+      final lastBooking = await repository.fetchLastBooking();
+      emit(RecordState.idle(lastBooking: lastBooking));
+    } on Object catch (err, _) {
+      emit(RecordState.error(lastBooking: state.lastBooking));
       rethrow;
     }
   }

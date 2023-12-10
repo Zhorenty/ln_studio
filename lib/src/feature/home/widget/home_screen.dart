@@ -167,6 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           'record',
                           queryParameters: {
                             'salon_id': state.currentSalon!.id.toString(),
+                            'needReentry': true.toString(),
                           },
                         ),
                       ),
