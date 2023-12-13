@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_studio/src/common/widget/custom_snackbar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -69,69 +70,74 @@ class BookingHistoryScreen extends StatelessWidget {
               ),
             ),
           ),
-          body: BlocBuilder<BookingHistoryBloc, BookingHistoryState>(
+          body: BlocConsumer<BookingHistoryBloc, BookingHistoryState>(
+              listener: (context, state) => state.error != null
+                  ? CustomSnackBar.showError(context, message: state.error)
+                  : null,
               builder: (context, state) {
-            return TabBarView(
-              children: [
-                RefreshIndicator.adaptive(
-                  displacement: 16,
-                  onRefresh: () async => context.read<BookingHistoryBloc>().add(
-                        const BookingHistoryEvent.fetchAll(),
-                      ),
-                  child: ListView(
-                    children: [
-                      ...state.bookingHistory.reversed.map((e) {
-                        if (!_isAfter(
-                          e.dateAt.jsonFormat(),
-                          e.timeblock.time,
-                        )) {
-                          return HistoryItemCard(
-                            title: e.employee.fullName,
-                            subtitle: e.service.name,
-                            dateAt: e.dateAt.defaultFormat(),
-                            timeblock: createTimeWithDuration(
-                              e.timeblock.time,
-                              e.service.duration!,
-                            ),
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      }),
-                    ],
-                  ),
-                ),
-                RefreshIndicator.adaptive(
-                  displacement: 16,
-                  onRefresh: () async => context.read<BookingHistoryBloc>().add(
-                        const BookingHistoryEvent.fetchAll(),
-                      ),
-                  child: ListView(
-                    children: [
-                      ...state.bookingHistory.reversed.map(
-                        (e) {
-                          if (_isAfter(
-                            e.dateAt.jsonFormat(),
-                            e.timeblock.time,
-                          )) {
-                            return HistoryItemCard(
-                              title: e.employee.fullName,
-                              subtitle: e.service.name,
-                              dateAt: e.dateAt.defaultFormat(),
-                              timeblock: createTimeWithDuration(
-                                e.timeblock.time,
-                                e.service.duration!,
+                return TabBarView(
+                  children: [
+                    RefreshIndicator.adaptive(
+                      displacement: 16,
+                      onRefresh: () async =>
+                          context.read<BookingHistoryBloc>().add(
+                                const BookingHistoryEvent.fetchAll(),
                               ),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        },
+                      child: ListView(
+                        children: [
+                          ...state.bookingHistory.reversed.map((e) {
+                            if (!_isAfter(
+                              e.dateAt.jsonFormat(),
+                              e.timeblock.time,
+                            )) {
+                              return HistoryItemCard(
+                                title: e.employee.fullName,
+                                subtitle: e.service.name,
+                                dateAt: e.dateAt.defaultFormat(),
+                                timeblock: createTimeWithDuration(
+                                  e.timeblock.time,
+                                  e.service.duration!,
+                                ),
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          }),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          }),
+                    ),
+                    RefreshIndicator.adaptive(
+                      displacement: 16,
+                      onRefresh: () async =>
+                          context.read<BookingHistoryBloc>().add(
+                                const BookingHistoryEvent.fetchAll(),
+                              ),
+                      child: ListView(
+                        children: [
+                          ...state.bookingHistory.reversed.map(
+                            (e) {
+                              if (_isAfter(
+                                e.dateAt.jsonFormat(),
+                                e.timeblock.time,
+                              )) {
+                                return HistoryItemCard(
+                                  title: e.employee.fullName,
+                                  subtitle: e.service.name,
+                                  dateAt: e.dateAt.defaultFormat(),
+                                  timeblock: createTimeWithDuration(
+                                    e.timeblock.time,
+                                    e.service.duration!,
+                                  ),
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }),
         ),
       ),
     );
