@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/feature/profile/model/booking.dart';
 
 import '/src/common/utils/pattern_match.dart';
@@ -46,6 +47,26 @@ abstract base class _$BookingHistoryStateBase {
 
   @nonVirtual
   final String? error;
+
+  List<BookingModel> get upcomingEvents => bookingHistory.reversed
+      .where(
+        (e) => _isAfter(
+          e.dateAt.jsonFormat(),
+          e.timeblock.time,
+          true,
+        ),
+      )
+      .toList();
+
+  List<BookingModel> get pastEvents => bookingHistory.reversed
+      .where(
+        (e) => _isAfter(
+          e.dateAt.jsonFormat(),
+          e.timeblock.time,
+          false,
+        ),
+      )
+      .toList();
 
   /// Indicator of whether there is an error.
   bool get hasError => error != null;
@@ -96,4 +117,34 @@ abstract base class _$BookingHistoryStateBase {
 
   @override
   int get hashCode => Object.hash(bookingHistory, error);
+}
+
+///
+bool _isAfter(String dateAt, String timeblock, bool isNegative) {
+  // Разделяем значение timeblock на отдельные части
+  List<String> timeblockParts = timeblock.split(':');
+  int hours = int.parse(timeblockParts[0]);
+  int minutes = int.parse(timeblockParts[1]);
+  int seconds = int.parse(timeblockParts[2]);
+
+  // Создаем объект DateTime для dateAt и timeblock
+  DateTime dateAtDateTime = DateTime.parse(dateAt);
+  DateTime timeblockDateTime = DateTime(
+    dateAtDateTime.year,
+    dateAtDateTime.month,
+    dateAtDateTime.day,
+    hours,
+    minutes,
+    seconds,
+  );
+
+  // Сравниваем даты
+  DateTime now = DateTime.now();
+  if (isNegative
+      ? !now.isAfter(timeblockDateTime)
+      : now.isAfter(timeblockDateTime)) {
+    return true;
+  } else {
+    return false;
+  }
 }
