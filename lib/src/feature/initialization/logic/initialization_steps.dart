@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:ln_studio/src/common/utils/firebase_messaging.dart';
 import 'package:ln_studio/src/feature/auth/data/auth_data_provider.dart';
 import 'package:ln_studio/src/feature/auth/data/auth_repository.dart';
 import 'package:ln_studio/src/feature/auth/logic/oauth_interceptor.dart';
@@ -75,6 +76,9 @@ mixin InitializationSteps {
       );
       final profileRepository = ProfileRepositoryImpl(profileDataProvider);
       progress.dependencies.profileRepository = profileRepository;
+    },
+    'Firebase messaging': (progress) async {
+      await firebaseMessagingService.initialize();
     },
   };
 }

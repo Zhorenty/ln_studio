@@ -64,6 +64,9 @@ dev_dependencies:
   # Splash & launcher icon
   flutter_launcher_icons: ^0.11.0
 
+  # Push notifications
+  firebase_messaging: ^14.7.9
+
 flutter_icons:
   android: true
   ios: true
