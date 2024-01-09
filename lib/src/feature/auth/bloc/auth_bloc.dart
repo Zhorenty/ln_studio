@@ -33,19 +33,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthState.processing(
-        user: state.user, phone: event.phone, smsCode: null));
+      user: state.user,
+      phone: event.phone,
+      smsCode: null,
+      uniqueRequestId: state.uniqueRequestId,
+    ));
     try {
-      await authRepository.sendCode(phone: event.phone);
+      final uniqueRequestId = await authRepository.sendCode(phone: event.phone);
       emit(AuthState.successful(
         user: state.user,
         phone: event.phone,
         smsCode: null,
+        uniqueRequestId: uniqueRequestId,
       ));
     } on Object catch (e) {
-      emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+      emit(AuthState.idle(
+        error: ErrorUtil.formatError(e),
+        uniqueRequestId: state.uniqueRequestId,
+      ));
       rethrow;
     } finally {
-      emit(AuthState.idle(user: state.user, phone: state.phone));
+      emit(AuthState.idle(
+        user: state.user,
+        phone: state.phone,
+        uniqueRequestId: state.uniqueRequestId,
+      ));
     }
   }
 
@@ -57,16 +69,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       user: state.user,
       phone: state.phone,
       smsCode: event.smsCode,
+      uniqueRequestId: state.uniqueRequestId,
     ));
     try {
       final user = await authRepository.signInWithPhone(
         phone: state.phone!,
         smsCode: event.smsCode,
+        uniqueRequestId: state.uniqueRequestId ?? '1',
       );
       emit(AuthState.successful(
         user: user,
         phone: state.phone,
         smsCode: state.smsCode,
+        uniqueRequestId: state.uniqueRequestId,
       ));
     } on Object catch (e) {
       if (e is DioException && e.response!.statusCode == 400) {
@@ -74,9 +89,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
           user: state.user,
           phone: state.phone,
           smsCode: state.smsCode,
+          uniqueRequestId: state.uniqueRequestId,
         ));
       } else {
-        emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+        emit(AuthState.idle(
+          error: ErrorUtil.formatError(e),
+          uniqueRequestId: state.uniqueRequestId,
+        ));
         rethrow;
       }
     }
@@ -90,12 +109,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       user: state.user,
       phone: state.phone,
       smsCode: null,
+      uniqueRequestId: state.uniqueRequestId,
     ));
     try {
       final user = await authRepository.signUp(userModel: event.user);
-      emit(AuthState.successful(user: user, phone: user.phone, smsCode: null));
+      emit(AuthState.successful(
+        user: user,
+        phone: user.phone,
+        smsCode: null,
+        uniqueRequestId: state.uniqueRequestId,
+      ));
     } on Object catch (e) {
-      emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+      emit(AuthState.idle(
+        error: ErrorUtil.formatError(e),
+        uniqueRequestId: state.uniqueRequestId,
+      ));
       rethrow;
     }
   }
@@ -108,12 +136,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       user: state.user,
       phone: null,
       smsCode: null,
+      uniqueRequestId: state.uniqueRequestId,
     ));
     try {
       await authRepository.signOut();
-      emit(const AuthState.successful(user: null, phone: null, smsCode: null));
+      emit(const AuthState.successful(
+        user: null,
+        phone: null,
+        smsCode: null,
+        uniqueRequestId: null,
+      ));
     } on Object catch (e) {
-      emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+      emit(AuthState.idle(
+        error: ErrorUtil.formatError(e),
+        uniqueRequestId: state.uniqueRequestId,
+      ));
       rethrow;
     }
   }
