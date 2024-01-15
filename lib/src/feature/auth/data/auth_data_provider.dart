@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ln_studio/src/common/exception/error_code.dart';
 import 'package:ln_studio/src/common/utils/error_util.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
@@ -239,14 +239,16 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     );
 
     final tokenPair = _decodeTokenPair(response.data);
-
-    log(
-      'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',
-    );
+    if (kDebugMode) {
+      log(
+        'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',
+      );
+    }
 
     await _saveTokenPair(tokenPair);
 
-    final createdUser = User.fromJson((response.data!['data'] as Map)['user']);
+    final createdUser = User.fromJson(
+        (response.data!['data'] as Map<String, dynamic>)['client']);
 
     await _saveUser(createdUser);
 

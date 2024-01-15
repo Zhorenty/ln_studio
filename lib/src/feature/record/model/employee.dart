@@ -33,7 +33,7 @@ final class EmployeeModel {
   final int? clients;
 
   /// Residential address of employee.
-  final String address;
+  final String? address;
 
   /// Id of employee's special skill.
   final int jobId;
@@ -42,16 +42,16 @@ final class EmployeeModel {
   final int salonId;
 
   /// Description of employee.
-  final String description;
+  final String? description;
 
   /// Date of employment.
-  final DateTime dateOfEmployment;
+  final DateTime? dateOfEmployment;
 
   /// Contract number of employee.
-  final String contractNumber;
+  final String? contractNumber;
 
   /// Percentage of sales earned by the employee.
-  final double percentageOfSales;
+  final double? percentageOfSales;
 
   /// Number of stars received by the employee.
   final int stars;
@@ -75,17 +75,19 @@ final class EmployeeModel {
   factory EmployeeModel.fromJson(Map<String, dynamic> json) {
     return EmployeeModel(
       id: json['id'] as int,
-      workedDays: json['worked_days'] as int?,
-      clients: json['clients'] as int?,
-      address: json['address'] as String,
+      workedDays: json['worked_days'],
+      clients: json['clients'],
+      address: json['address'],
       jobId: json['job_id'] as int,
       salonId: json['salon_id'] as int,
-      description: json['description'] as String,
-      dateOfEmployment: DateTime.parse(json['date_of_employment'] as String),
-      contractNumber: json['contract_number'] as String,
-      percentageOfSales: json['percentage_of_sales'] as double,
-      stars: json['stars'] as int,
-      isDismiss: json['is_dismiss'] as bool,
+      description: json['description'],
+      dateOfEmployment: json['date_of_employment'] != null
+          ? DateTime.parse(json['date_of_employment'] as String)
+          : null,
+      contractNumber: json['contract_number'],
+      percentageOfSales: json['percentage_of_sales'],
+      stars: json['stars'] ?? 5,
+      isDismiss: json['is_dismiss'] ?? false,
       dismissDate: json['dismiss_date'] != null
           ? DateTime.parse(json['dismiss_date'] as String)
           : null,
@@ -106,7 +108,7 @@ final class EmployeeModel {
         'job_place_id': jobId,
         'salon_id': salonId,
         'description': description,
-        'date_of_employment': dateOfEmployment.jsonFormat(),
+        'date_of_employment': dateOfEmployment?.jsonFormat(),
         'contract_number': contractNumber,
         'percentage_of_sales': percentageOfSales,
         'stars': stars,
