@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 import 'package:ln_studio/src/common/widget/information_widget.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
+import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_bloc.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_event.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_state.dart';
@@ -59,6 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userName =
+        AuthenticationScope.of(context).user?.firstName ?? 'Пользователь';
     return BlocConsumer<SalonBLoC, SalonState>(
       listener: (context, state) {},
       listenWhen: (previous, current) {
@@ -71,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) => CustomScrollView(
         slivers: [
           CustomSliverAppBar(
-            title: 'Здравствуйте, Евгений',
+            title: 'Здравствуйте, $userName',
             actions: [
               AnimatedButton(
                 padding: const EdgeInsets.only(right: 8 + 2, bottom: 2),
