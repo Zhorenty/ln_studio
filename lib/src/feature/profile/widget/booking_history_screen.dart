@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_studio/src/common/widget/custom_snackbar.dart';
 import 'package:ln_studio/src/common/widget/information_widget.dart';
 import 'package:ln_studio/src/feature/profile/model/booking.dart';
 
@@ -71,15 +72,18 @@ class BookingHistoryScreen extends StatelessWidget {
               ),
             ),
           ),
-          body: BlocBuilder<BookingHistoryBloc, BookingHistoryState>(
+          body: BlocConsumer<BookingHistoryBloc, BookingHistoryState>(
+              listener: (context, state) => state.error != null
+                  ? CustomSnackBar.showError(context, message: state.error)
+                  : null,
               builder: (context, state) {
-            return TabBarView(
-              children: [
-                _BookingList(state.upcomingEvents),
-                _BookingList(state.pastEvents),
-              ],
-            );
-          }),
+                return TabBarView(
+                  children: [
+                    _BookingList(state.upcomingEvents),
+                    _BookingList(state.pastEvents),
+                  ],
+                );
+              }),
         ),
       ),
     );
