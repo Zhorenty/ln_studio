@@ -213,10 +213,11 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     final tokenPair = _decodeTokenPair(response.data);
 
     await _saveTokenPair(tokenPair);
-
-    log(
-      'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',
-    );
+    if (kDebugMode) {
+      log(
+        'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',
+      );
+    }
 
     final user = User.fromJson((response.data!['data'] as Map)['model']);
 

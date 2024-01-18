@@ -31,6 +31,8 @@ final class User {
 
   final String? email;
 
+  String get fullName => '$firstName $lastName';
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
