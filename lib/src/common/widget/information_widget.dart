@@ -80,11 +80,13 @@ class InformationWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(height: 8),
-          FilledButton(
-            onPressed: reloadFunc,
-            child: const Text('Попробовать снова'),
-          ),
+          if (reloadFunc != null) ...[
+            const SizedBox(height: 8),
+            FilledButton(
+              onPressed: reloadFunc,
+              child: const Text('Попробовать снова'),
+            ),
+          ]
         ],
       ),
     );

@@ -39,16 +39,17 @@ final router = GoRouter(
       builder: (context, state) => const AuthScreen(),
       routes: [
         GoRoute(
-            name: 'verify',
-            path: 'verify',
-            builder: (context, state) => const VerificationScreen(),
-            routes: [
-              GoRoute(
-                name: 'register',
-                path: 'register',
-                builder: (context, state) => const RegistrationScreen(),
-              ),
-            ]),
+          name: 'verify',
+          path: 'verify',
+          builder: (context, state) => const VerificationScreen(),
+          routes: [
+            GoRoute(
+              name: 'register',
+              path: 'register',
+              builder: (context, state) => const RegistrationScreen(),
+            ),
+          ],
+        ),
       ],
     ),
     StatefulShellRoute.indexedStack(
@@ -132,6 +133,10 @@ final router = GoRouter(
                     datePreset: state.extra is TimeblockWithDate
                         ? state.extra as TimeblockWithDate
                         : null,
+                    needReentry: bool.tryParse(state
+                            .uri.queryParameters['needReentry']
+                            .toString()) ??
+                        false,
                   ),
                   routes: [
                     GoRoute(

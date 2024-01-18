@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_studio/src/common/widget/custom_snackbar.dart';
+import 'package:ln_studio/src/common/widget/information_widget.dart';
+import 'package:ln_studio/src/feature/profile/model/booking.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -69,73 +72,28 @@ class BookingHistoryScreen extends StatelessWidget {
               ),
             ),
           ),
-          body: BlocBuilder<BookingHistoryBloc, BookingHistoryState>(
+          body: BlocConsumer<BookingHistoryBloc, BookingHistoryState>(
+              listener: (context, state) => state.error != null
+                  ? CustomSnackBar.showError(context, message: state.error)
+                  : null,
               builder: (context, state) {
-            return TabBarView(
-              children: [
-                RefreshIndicator.adaptive(
-                  displacement: 16,
-                  onRefresh: () async => context.read<BookingHistoryBloc>().add(
-                        const BookingHistoryEvent.fetchAll(),
-                      ),
-                  child: ListView(
-                    children: [
-                      ...state.bookingHistory.reversed.map((e) {
-                        if (!_isAfter(
-                          e.dateAt.jsonFormat(),
-                          e.timeblock.time,
-                        )) {
-                          return HistoryItemCard(
-                            title: e.employee.fullName,
-                            subtitle: e.service.name,
-                            dateAt: e.dateAt.defaultFormat(),
-                            timeblock: createTimeWithDuration(
-                              e.timeblock.time,
-                              e.service.duration!,
-                            ),
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      }),
-                    ],
-                  ),
-                ),
-                RefreshIndicator.adaptive(
-                  displacement: 16,
-                  onRefresh: () async => context.read<BookingHistoryBloc>().add(
-                        const BookingHistoryEvent.fetchAll(),
-                      ),
-                  child: ListView(
-                    children: [
-                      ...state.bookingHistory.reversed.map(
-                        (e) {
-                          if (_isAfter(
-                            e.dateAt.jsonFormat(),
-                            e.timeblock.time,
-                          )) {
-                            return HistoryItemCard(
-                              title: e.employee.fullName,
-                              subtitle: e.service.name,
-                              dateAt: e.dateAt.defaultFormat(),
-                              timeblock: createTimeWithDuration(
-                                e.timeblock.time,
-                                e.service.duration!,
-                              ),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          }),
+                return TabBarView(
+                  children: [
+                    _BookingList(state.upcomingEvents),
+                    _BookingList(state.pastEvents),
+                  ],
+                );
+              }),
         ),
       ),
     );
   }
+}
+
+class _BookingList extends StatelessWidget {
+  const _BookingList(this.bookingHistory);
+
+  final List<BookingModel> bookingHistory;
 
   ///
   String createTimeWithDuration(String serverTime, int duration) {
@@ -150,25 +108,36 @@ class BookingHistoryScreen extends StatelessWidget {
     return '${formattedStartTime.substring(0, formattedStartTime.length - 3)} - ${formattedEndTime.substring(0, formattedEndTime.length - 3)}';
   }
 
-  ///
-  bool _isAfter(String dateAt, String timeblock) {
-    // Разделяем значение timeblock на отдельные части
-    List<String> timeblockParts = timeblock.split(':');
-    int hours = int.parse(timeblockParts[0]);
-    int minutes = int.parse(timeblockParts[1]);
-    int seconds = int.parse(timeblockParts[2]);
-
-    // Создаем объект DateTime для dateAt и timeblock
-    DateTime dateAtDateTime = DateTime.parse(dateAt);
-    DateTime timeblockDateTime = DateTime(dateAtDateTime.year,
-        dateAtDateTime.month, dateAtDateTime.day, hours, minutes, seconds);
-
-    // Сравниваем даты
-    DateTime now = DateTime.now();
-    if (now.isAfter(timeblockDateTime)) {
-      return true;
-    } else {
-      return false;
-    }
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator.adaptive(
+      displacement: 16,
+      onRefresh: () async => context.read<BookingHistoryBloc>().add(
+            const BookingHistoryEvent.fetchAll(),
+          ),
+      child: bookingHistory.isNotEmpty
+          ? ListView.builder(
+              itemCount: bookingHistory.length,
+              itemBuilder: (context, index) {
+                final item = bookingHistory[index];
+                return HistoryItemCard(
+                  title: item.employee.fullName,
+                  subtitle: item.service.name,
+                  dateAt: item.dateAt.defaultFormat(),
+                  timeblock: createTimeWithDuration(
+                    item.timeblock.time,
+                    item.service.duration!,
+                  ),
+                );
+              },
+            )
+          : InformationWidget.empty(
+              title: 'Предстоящих записей нет',
+              description: null,
+              reloadFunc: () => context.read<BookingHistoryBloc>().add(
+                    const BookingHistoryEvent.fetchAll(),
+                  ),
+            ),
+    );
   }
 }

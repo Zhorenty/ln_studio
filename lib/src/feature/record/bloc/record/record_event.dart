@@ -15,6 +15,8 @@ sealed class RecordEvent {
     required int price,
     String? comment,
   }) = RecordEvent$Create;
+
+  factory RecordEvent.fetchLastBooking() = RecordEvent$FetchLastBooking;
 }
 
 final class RecordEvent$Create extends RecordEvent {
@@ -37,4 +39,8 @@ final class RecordEvent$Create extends RecordEvent {
   final int timeblockId;
   final int price;
   final String? comment;
+}
+
+final class RecordEvent$FetchLastBooking extends RecordEvent {
+  const RecordEvent$FetchLastBooking();
 }

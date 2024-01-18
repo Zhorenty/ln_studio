@@ -6,7 +6,9 @@ import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/common/widget/custom_snackbar.dart';
 import 'package:ln_studio/src/common/widget/field_button.dart';
+import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_event.dart';
@@ -15,6 +17,7 @@ import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
 import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
+import 'package:ln_studio/src/feature/salon/models/salon.dart';
 
 typedef TimeblockWithDate = (EmployeeTimeblock$Response, String);
 
@@ -25,6 +28,7 @@ class RecordScreen extends StatefulWidget {
     this.servicePreset,
     this.employeePreset,
     this.datePreset,
+    this.needReentry = false,
   });
 
   ///
@@ -35,6 +39,8 @@ class RecordScreen extends StatefulWidget {
 
   ///
   final TimeblockWithDate? datePreset;
+
+  final bool needReentry;
 
   @override
   State<RecordScreen> createState() => _RecordScreenState();
@@ -60,21 +66,18 @@ class _RecordScreenState extends State<RecordScreen> {
   ServiceModel? currentService;
   EmployeeModel? currentEmployee;
   TimeblockWithDate? currentDate;
+  Salon? currentSalon;
 
   @override
   void initState() {
     super.initState();
     recordBLoC = RecordBLoC(
-      initialState: const RecordState$Idle(
-        service: null,
-        employee: null,
-        date: null,
-        salon: null,
-        timetableItem: null,
-        comment: null,
-      ),
       repository: DependenciesScope.of(context).recordRepository,
     );
+
+    if (widget.needReentry) {
+      recordBLoC.add(RecordEvent.fetchLastBooking());
+    }
 
     currentService = widget.servicePreset;
     currentEmployee = widget.employeePreset;
@@ -87,6 +90,9 @@ class _RecordScreenState extends State<RecordScreen> {
     commentController = TextEditingController();
 
     commentFocusNode = FocusNode();
+
+    currentSalon = context.read<SalonBLoC>().state.currentSalon;
+    _salonController.text = currentSalon?.name ?? '';
   }
 
   @override
@@ -114,14 +120,16 @@ class _RecordScreenState extends State<RecordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _employeeController.text = currentEmployee?.fullName ?? '';
+
+    _servicesController.text = currentService?.name ?? '';
+
     _dateController.text = currentDate != null
         ? '${DateTime.parse(currentDate!.$2).defaultFormat()}, '
             '${currentDate?.$1.time.substring(0, currentDate!.$1.time.length - 3)}'
         : '';
 
-    _servicesController.text = currentService?.name ?? '';
-
-    _employeeController.text = currentEmployee?.fullName ?? '';
+    final auth = AuthenticationScope.of(context);
 
     return Scaffold(
       backgroundColor: context.colorScheme.onBackground,
@@ -146,12 +154,23 @@ class _RecordScreenState extends State<RecordScreen> {
                 child: BlocConsumer<RecordBLoC, RecordState>(
                   listener: (context, state) => state.mapOrNull(
                     successful: (state) => context.goNamed('congratulation'),
+                    error: (state) => CustomSnackBar.showError(context),
                   ),
                   bloc: recordBLoC,
                   builder: (context, state) {
-                    final salon = context.read<SalonBLoC>().state.currentSalon;
+                    if (state.lastBooking != null && widget.needReentry) {
+                      currentService = state.lastBooking?.service;
+                      currentEmployee = state.lastBooking?.employee;
+                      currentSalon = state.lastBooking?.salon;
 
-                    _salonController.text = salon?.name ?? '';
+                      _servicesController.text =
+                          state.lastBooking?.service.name ?? '';
+                      _employeeController.text =
+                          state.lastBooking?.employee.fullName ?? '';
+                      _salonController.text =
+                          state.lastBooking?.salon.name ?? '';
+                      commentController.text = state.lastBooking?.comment ?? '';
+                    }
 
                     return Form(
                       key: _formKey,
@@ -170,7 +189,7 @@ class _RecordScreenState extends State<RecordScreen> {
                               'choice_service_from_record',
                               extra: currentService,
                               queryParameters: {
-                                'salon_id': salon!.id.toString(),
+                                'salon_id': currentSalon!.id.toString(),
                                 if (currentEmployee != null)
                                   'employee_id': currentEmployee?.id.toString(),
                                 if (currentDate != null)
@@ -193,7 +212,7 @@ class _RecordScreenState extends State<RecordScreen> {
                               'choice_employee_from_record',
                               extra: currentEmployee,
                               queryParameters: {
-                                'salon_id': salon!.id.toString(),
+                                'salon_id': currentSalon!.id.toString(),
                                 if (currentService != null)
                                   'service_id': currentService?.id.toString(),
                                 if (currentDate != null)
@@ -216,7 +235,7 @@ class _RecordScreenState extends State<RecordScreen> {
                               'choice_date_from_record',
                               extra: currentDate,
                               queryParameters: {
-                                'salon_id': salon!.id.toString(),
+                                'salon_id': currentSalon!.id.toString(),
                                 if (currentService != null)
                                   'service_id': currentService?.id.toString(),
                                 if (currentEmployee != null)
@@ -236,26 +255,30 @@ class _RecordScreenState extends State<RecordScreen> {
                             controller: commentController,
                             focusNode: commentFocusNode,
                           ),
-                          state.service?.price != null
-                              ? Text('Стоимость: ${state.service?.price} ₽')
+                          currentService?.price != null
+                              ? Text('Стоимость: ${currentService?.price} ₽')
                               : const SizedBox.shrink(),
                           const SizedBox(height: 16),
                           AnimatedButton(
-                            onPressed: () => _formKey.currentState!.validate()
-                                ? recordBLoC.add(
-                                    RecordEvent.create(
-                                      dateAt: currentDate!.$2,
-                                      salonId: salon?.id ?? 1,
-                                      // TODO: MOCK надо подтягивать юзера
-                                      clientId: 1,
-                                      serviceId: currentService!.id,
-                                      employeeId: currentEmployee!.id,
-                                      timeblockId: currentDate!.$1.id,
-                                      price: currentService!.price,
-                                      comment: commentController.text,
-                                    ),
-                                  )
-                                : null,
+                            onPressed: () {
+                              // TODO: Сделать валидацию
+                              // TODO: Wait until asset in
+                              //  CongratilationScreen was loaded.
+                              if (_formKey.currentState!.validate()) {
+                                recordBLoC.add(
+                                  RecordEvent.create(
+                                    dateAt: currentDate!.$2,
+                                    salonId: currentSalon?.id ?? 1,
+                                    clientId: auth.user?.id ?? 1,
+                                    serviceId: currentService!.id,
+                                    employeeId: currentEmployee!.id,
+                                    timeblockId: currentDate!.$1.id,
+                                    price: currentService!.price,
+                                    comment: commentController.text,
+                                  ),
+                                );
+                              }
+                            },
                             child: Container(
                               height: 48,
                               margin: const EdgeInsets.symmetric(

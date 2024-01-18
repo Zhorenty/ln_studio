@@ -25,6 +25,7 @@ class EmployeeInfoScreen extends StatelessWidget {
           CustomScrollView(
             slivers: [
               ExpandedAppBar(
+                onExit: context.pop,
                 title: employee.fullName,
                 subtitle: employee.jobModel.name,
                 bottom: Text(

@@ -81,7 +81,6 @@ class DatePickerFieldState extends State<DatePickerField> {
       lastDate: DateTime.now().add(const Duration(days: 365)),
       builder: (context, child) => Theme(
         data: ThemeData.dark().copyWith(
-          useMaterial3: true,
           primaryColor: context.colorScheme.primary,
           buttonTheme: const ButtonThemeData(
             textTheme: ButtonTextTheme.primary,

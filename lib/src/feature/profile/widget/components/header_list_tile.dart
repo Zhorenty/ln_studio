@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/common/widget/avatar_widget.dart';
+import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
+import 'package:ln_studio/src/common/utils/extensions/string_extension.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/color_extension.dart';
@@ -47,15 +49,14 @@ class HeaderListTile extends StatelessWidget {
               color: context.colorScheme.secondary,
             ),
           ),
-          subtitle: subtitle != null
-              ? Text(
-                  subtitle!,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                    color: context.colorScheme.primary,
-                  ),
-                )
-              : null,
+          subtitle: Text(
+            AuthenticationScope.of(context).user?.phone?.formatPhoneNumber() ??
+                'Номер не указан',
+            style: context.textTheme.titleSmall?.copyWith(
+              fontFamily: FontFamily.geologica,
+              color: context.colorScheme.primary,
+            ),
+          ),
           trailing: const AvatarWidget(radius: 25, title: '794'),
         ),
       ),

@@ -11,6 +11,7 @@ import 'package:ln_studio/src/feature/home/bloc/news/news_bloc.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_event.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_state.dart';
 import 'package:ln_studio/src/feature/initialization/logic/initialization_steps.dart';
+import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_event.dart';
@@ -40,233 +41,240 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late final EmployeeBloc employeeBloc;
+
   @override
   void initState() {
     super.initState();
+    employeeBloc = EmployeeBloc(
+      repository: DependenciesScope.of(context).recordRepository,
+    );
     _fetchNews();
   }
 
   @override
+  void dispose() {
+    employeeBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final auth = AuthenticationScope.of(context);
+    final userName =
+        AuthenticationScope.of(context).user?.firstName ?? 'Пользователь';
+    return BlocConsumer<SalonBLoC, SalonState>(
+      listener: (context, state) {},
+      listenWhen: (previous, current) {
+        previous.currentSalon?.id != current.currentSalon?.id
+            ? _fetchSalonEmployees()
+            : null;
 
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<SalonBLoC, SalonState>(
-          listener: (context, state) {},
-          listenWhen: (previous, current) {
-            previous.currentSalon?.id != current.currentSalon?.id
-                ? _fetchSalonEmployees()
-                : null;
-
-            return false;
-          },
-        ),
-      ],
-      child: BlocBuilder<SalonBLoC, SalonState>(
-        builder: (context, state) => CustomScrollView(
-          slivers: [
-            CustomSliverAppBar(
-              title: 'Здравствуйте, ${auth.user?.firstName}',
-              actions: [
-                AnimatedButton(
-                  padding: const EdgeInsets.only(right: 8 + 2, bottom: 2),
-                  child: Icon(
-                    Icons.notifications_rounded,
-                    color: context.colorScheme.secondary,
-                  ),
-                  onPressed: () {},
+        return false;
+      },
+      builder: (context, state) => CustomScrollView(
+        slivers: [
+          CustomSliverAppBar(
+            title: 'Здравствуйте, $userName',
+            actions: [
+              AnimatedButton(
+                padding: const EdgeInsets.only(right: 8 + 2, bottom: 2),
+                child: Icon(
+                  Icons.notifications_rounded,
+                  color: context.colorScheme.secondary,
                 ),
-              ],
-              bottomChild: Builder(builder: (context) {
-                if (state.hasError) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    width: MediaQuery.sizeOf(context).width / 3,
-                    decoration: BoxDecoration(
-                      color: context.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Ошибка'),
-                        IconButton(
-                          icon: const Icon(Icons.refresh_rounded),
-                          onPressed: () => context
-                              .read<SalonBLoC>()
-                              .add(const SalonEvent.fetchAll()),
-                        ),
-                      ],
-                    ),
-                  );
-                } else if (state.isProcessing) {
-                  return Shimmer(
-                    size: Size(
-                      MediaQuery.sizeOf(context).width / 1.3,
-                      MediaQuery.sizeOf(context).width / 9,
-                    ),
-                  );
-                }
-                return IgnorePointer(
-                  ignoring: state.currentSalon == null,
-                  child: PopupButton(
-                    smoothAnimate: false,
-                    label: Text(state.currentSalon?.address ?? ''),
-                    child: CurrentSalonScreen(
-                      pathName: 'home',
-                      currentSalon: state.currentSalon,
-                    ),
+                onPressed: () {},
+              ),
+            ],
+            bottomChild: Builder(builder: (context) {
+              if (state.hasError) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  width: MediaQuery.sizeOf(context).width / 3,
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                );
-              }),
-            ),
-            SliverList.list(
-              children: [
-                const CustomHeader(label: 'Записаться'),
-                SizedBox(
-                  height: 100,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      RecordTypeCard(
-                        ignoring: state.currentSalon == null,
-                        image: Assets.images.serviceIcon.image(scale: 10),
-                        description: 'На услугу',
-                        onTap: () => context.goNamed(
-                          'choice_service',
-                          queryParameters: {
-                            'salon_id': state.currentSalon!.id.toString(),
-                          },
-                        ),
-                      ),
-                      RecordTypeCard(
-                        ignoring: state.currentSalon == null,
-                        image: Assets.images.employeeIcon.image(scale: 10),
-                        description: 'К мастеру',
-                        onTap: () => context.goNamed(
-                          'choice_employee',
-                          queryParameters: {
-                            'salon_id': state.currentSalon!.id.toString(),
-                          },
-                        ),
-                      ),
-                      RecordTypeCard(
-                        ignoring: state.currentSalon == null,
-                        image: Assets.images.calendarIcon.image(scale: 10),
-                        description: 'На дату',
-                        onTap: () => context.goNamed(
-                          'choice_date',
-                          queryParameters: {
-                            'salon_id': state.currentSalon!.id.toString(),
-                          },
-                        ),
-                      ),
-                      RecordTypeCard(
-                        ignoring: state.currentSalon == null,
-                        image: Assets.images.repeatIcon.image(scale: 10),
-                        description: 'Повторно',
-                        onTap: () => context.goNamed(
-                          'record',
-                          queryParameters: {
-                            'salon_id': state.currentSalon!.id.toString(),
-                          },
-                        ),
+                      const Text('Ошибка'),
+                      IconButton(
+                        icon: const Icon(Icons.refresh_rounded),
+                        onPressed: () => context
+                            .read<SalonBLoC>()
+                            .add(const SalonEvent.fetchAll()),
                       ),
                     ],
                   ),
+                );
+              } else if (state.isProcessing) {
+                return Shimmer(
+                  size: Size(
+                    MediaQuery.sizeOf(context).width / 1.3,
+                    MediaQuery.sizeOf(context).width / 9,
+                  ),
+                );
+              }
+              return IgnorePointer(
+                ignoring: state.currentSalon == null,
+                child: PopupButton(
+                  smoothAnimate: false,
+                  label: Text(state.currentSalon?.address ?? ''),
+                  child: CurrentSalonScreen(
+                    pathName: 'home',
+                    currentSalon: state.currentSalon,
+                  ),
                 ),
-                const CustomHeader(label: 'Наши мастера'),
-                BlocBuilder<EmployeeBloc, EmployeeState>(
-                  builder: (context, state) {
-                    final employees = state.employees
-                        .where((employee) => !employee.isDismiss)
-                        .toList();
-                    if (state.hasError) {
-                      return InformationWidget.error(
-                        reloadFunc: _fetchSalonEmployees,
-                      );
-                    } else if (state.isProcessing) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 10,
-                        ),
-                        child: Shimmer(
-                          size: Size.fromHeight(
-                            MediaQuery.sizeOf(context).height / 5.5,
-                          ),
-                        ),
-                      );
-                    }
-                    return SizedBox(
-                      height: 192,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: employees.length,
-                        itemBuilder: (context, index) => EmployeeCard(
-                          employee: employees[index],
+              );
+            }),
+          ),
+          SliverList.list(
+            children: [
+              const CustomHeader(label: 'Записаться'),
+              SizedBox(
+                height: 100,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    RecordTypeCard(
+                      ignoring: state.currentSalon == null,
+                      image: Assets.images.serviceIcon.image(scale: 10),
+                      description: 'На услугу',
+                      onTap: () => context.goNamed(
+                        'choice_service',
+                        queryParameters: {
+                          'salon_id': state.currentSalon!.id.toString(),
+                        },
+                      ),
+                    ),
+                    RecordTypeCard(
+                      ignoring: state.currentSalon == null,
+                      image: Assets.images.employeeIcon.image(scale: 10),
+                      description: 'К мастеру',
+                      onTap: () => context.goNamed(
+                        'choice_employee',
+                        queryParameters: {
+                          'salon_id': state.currentSalon!.id.toString(),
+                        },
+                      ),
+                    ),
+                    RecordTypeCard(
+                      ignoring: state.currentSalon == null,
+                      image: Assets.images.calendarIcon.image(scale: 10),
+                      description: 'На дату',
+                      onTap: () => context.goNamed(
+                        'choice_date',
+                        queryParameters: {
+                          'salon_id': state.currentSalon!.id.toString(),
+                        },
+                      ),
+                    ),
+                    RecordTypeCard(
+                      ignoring: state.currentSalon == null,
+                      image: Assets.images.repeatIcon.image(scale: 10),
+                      description: 'Повторно',
+                      onTap: () => context.goNamed(
+                        'record',
+                        queryParameters: {
+                          'salon_id': state.currentSalon!.id.toString(),
+                          'needReentry': true.toString(),
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const CustomHeader(label: 'Наши мастера'),
+              BlocBuilder<EmployeeBloc, EmployeeState>(
+                bloc: employeeBloc,
+                builder: (context, state) {
+                  final employees = state.employees
+                      .where((employee) => !employee.isDismiss)
+                      .toList();
+                  if (state.hasError) {
+                    return InformationWidget.error(
+                      reloadFunc: _fetchSalonEmployees,
+                    );
+                  } else if (state.isProcessing) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 10,
+                      ),
+                      child: Shimmer(
+                        size: Size.fromHeight(
+                          MediaQuery.sizeOf(context).height / 5.5,
                         ),
                       ),
                     );
-                  },
-                ),
-                const CustomHeader(label: 'Новости'),
-                BlocBuilder<NewsBLoC, NewsState>(
-                  builder: (context, state) {
-                    final news =
-                        state.news.where((news) => !news.isDeleted).toList();
-                    if (state.hasError) {
-                      return InformationWidget.error(
-                        reloadFunc: _fetchNews,
-                      );
-                    } else if (state.isProcessing) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 10,
+                  }
+                  return SizedBox(
+                    height: 192,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: employees.length,
+                      itemBuilder: (context, index) => EmployeeCard(
+                        employee: employees[index],
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const CustomHeader(label: 'Новости'),
+              BlocBuilder<NewsBLoC, NewsState>(
+                builder: (context, state) {
+                  final news =
+                      state.news.where((news) => !news.isDeleted).toList();
+                  if (state.hasError) {
+                    return InformationWidget.error(
+                      reloadFunc: _fetchNews,
+                    );
+                  } else if (state.isProcessing) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 10,
+                      ),
+                      child: Shimmer(
+                        size: Size.fromHeight(
+                          MediaQuery.sizeOf(context).height / 5.5,
                         ),
-                        child: Shimmer(
-                          size: Size.fromHeight(
-                            MediaQuery.sizeOf(context).height / 5.5,
-                          ),
+                      ),
+                    );
+                  }
+                  return SizedBox(
+                    height: 115,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: news.length,
+                      itemBuilder: (context, index) => NewsCard(
+                        onPressed: () => context.goNamed(
+                          'news',
+                          extra: news[index],
                         ),
-                      );
-                    }
-                    return SizedBox(
-                      height: 115,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: news.length,
-                        itemBuilder: (context, index) => NewsCard(
-                          onPressed: () => context.goNamed(
-                            'news',
-                            extra: news[index],
-                          ),
-                          label: news[index].title,
-                          child: news[index].photo != null
-                              ? CachedNetworkImage(
-                                  imageUrl: '$kBaseUrl/${news[index].photo!}',
-                                  fit: BoxFit.cover,
-                                  placeholder: (_, __) => ColoredBox(
-                                    color: context.colorScheme.onBackground,
-                                    child: Assets.images.logoWhite.image(
-                                      fit: BoxFit.contain,
-                                    ),
+                        label: news[index].title,
+                        child: news[index].photo != null
+                            ? CachedNetworkImage(
+                                imageUrl: '$kBaseUrl/${news[index].photo!}',
+                                fit: BoxFit.cover,
+                                placeholder: (_, __) => ColoredBox(
+                                  color: context.colorScheme.onBackground,
+                                  child: Assets.images.logoWhite.image(
+                                    fit: BoxFit.contain,
                                   ),
-                                )
-                              : Assets.images.logoWhite.image(
-                                  fit: BoxFit.contain,
                                 ),
-                        ),
+                              )
+                            : Assets.images.logoWhite.image(
+                                fit: BoxFit.contain,
+                              ),
                       ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -275,14 +283,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void _fetchSalonEmployees() {
     final salonBloc = context.read<SalonBLoC>();
     if (salonBloc.state.currentSalon != null) {
-      context.read<EmployeeBloc>().add(
-            EmployeeEvent.fetchEmployees(
-              salonId: salonBloc.state.currentSalon!.id,
-              serviceId: null,
-              timeblockId: null,
-              dateAt: null,
-            ),
-          );
+      employeeBloc.add(
+        EmployeeEvent.fetchEmployees(
+          salonId: salonBloc.state.currentSalon!.id,
+          serviceId: null,
+          timeblockId: null,
+          dateAt: null,
+        ),
+      );
     }
   }
 

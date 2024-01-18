@@ -33,11 +33,6 @@ class App extends StatelessWidget {
             )..add(const SalonEvent.fetchAll()),
           ),
           BlocProvider(
-            create: (context) => EmployeeBloc(
-              repository: result.dependencies.recordRepository,
-            ),
-          ),
-          BlocProvider(
             create: (context) => NewsBLoC(
               repository: result.dependencies.homeRepository,
             ),

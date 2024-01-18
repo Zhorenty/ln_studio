@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+
 import '/src/common/exception/auth_exception.dart';
 import '/src/common/exception/error_code.dart';
 import '/src/common/localization/app_localization.dart';
@@ -7,12 +11,25 @@ sealed class ErrorUtil {
   /// Formats an `AuthException` error message based on its type.
   static String formatError(Object error) => switch (error) {
         final AuthException e => _localizeAuthException(e),
+        final DioException e => formatDioError(e),
         final Exception e => _localizeError(
-            'Exception occured: $e',
+            'Произошла ошибка: $e',
             (l) => l.exceptionOccurred(e.toString()),
           ),
         final dynamic e => _localizeError(
-            'Unknown Exception: $e',
+            'Неизвестная ошибка: $e',
+            (l) => l.unknownError(e.toString()),
+          ),
+      };
+
+  /// Formats a Dio exceptions.
+  static String formatDioError(DioException error) => switch (error.error) {
+        final SocketException _ => _localizeError(
+            'Отсутствует подключение к интернету',
+            null,
+          ),
+        final dynamic e => _localizeError(
+            'Неизвестная ошибка: $e',
             (l) => l.unknownError(e.toString()),
           ),
       };
@@ -33,10 +50,10 @@ sealed class ErrorUtil {
   /// Localizes an error message using the provided `localize` function.
   static String _localizeError(
     String fallback,
-    String Function(Localization l) localize,
+    String Function(Localization l)? localize,
   ) {
     try {
-      return localize(Localization.current!);
+      return localize!(Localization.current!);
     } on Object {
       return fallback;
     }
