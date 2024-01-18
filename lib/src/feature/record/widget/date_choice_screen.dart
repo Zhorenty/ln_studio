@@ -118,24 +118,30 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                           enabledDayPredicate: (day) =>
                               enabledDayPredicate(day, state.timetables),
                         ),
-                        secondChild: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                formattedDate,
-                                style: context.textTheme.bodyLarge?.copyWith(
-                                  fontFamily: FontFamily.geologica,
+                        secondChild: state.isProcessing
+                            ? Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      formattedDate,
+                                      style:
+                                          context.textTheme.bodyLarge?.copyWith(
+                                        fontFamily: FontFamily.geologica,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    const Shimmer(
+                                      size: Size(double.infinity, 320),
+                                      cornerRadius: 16,
+                                    ),
+                                  ],
                                 ),
+                              )
+                            : InformationWidget.empty(
+                                description:
+                                    'Для выбранных параметров мастера отсутствуют',
                               ),
-                              const SizedBox(height: 8),
-                              const Shimmer(
-                                size: Size(double.infinity, 320),
-                                cornerRadius: 16,
-                              ),
-                            ],
-                          ),
-                        ),
                         crossFadeState: state.hasTimetable
                             ? CrossFadeState.showFirst
                             : CrossFadeState.showSecond,
