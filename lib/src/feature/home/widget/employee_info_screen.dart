@@ -35,11 +35,6 @@ class EmployeeInfoScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              CupertinoSliverRefreshControl(
-                onRefresh: () async {
-                  // TODO: Implement fetching by id.
-                },
-              ),
               SliverToBoxAdapter(
                 child: Container(
                   decoration: BoxDecoration(

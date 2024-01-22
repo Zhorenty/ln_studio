@@ -19,7 +19,6 @@ import 'package:ln_studio/src/feature/record/bloc/employee/employee_state.dart';
 import 'package:ln_studio/src/feature/salon/bloc/salon_event.dart';
 import 'package:ln_studio/src/feature/salon/widget/current_salon_screen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
-import '/src/common/widget/animated_button.dart';
 import '/src/common/widget/custom_app_bar.dart';
 import '/src/common/widget/pop_up_button.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
@@ -75,16 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
         slivers: [
           CustomSliverAppBar(
             title: 'Здравствуйте, $userName',
-            actions: [
-              AnimatedButton(
-                padding: const EdgeInsets.only(right: 8 + 2, bottom: 2),
-                child: Icon(
-                  Icons.notifications_rounded,
-                  color: context.colorScheme.secondary,
-                ),
-                onPressed: () {},
-              ),
-            ],
             bottomChild: Builder(builder: (context) {
               if (state.hasError) {
                 return Container(
