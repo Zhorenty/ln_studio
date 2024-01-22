@@ -37,14 +37,14 @@ class DateChoiceScreen extends StatefulWidget {
 }
 
 class _DateChoiceScreenState extends State<DateChoiceScreen> {
+  late final TimetableBloc _timetableBloc;
+  late final TimeblockBloc _timeblockBloc;
+
   bool visible = false;
   bool expanded = false;
 
   DateTime _selectedDay = DateTime.now().subtract(const Duration(days: 1));
   DateTime _focusedDay = DateTime.now();
-
-  late final TimetableBloc _timetableBloc;
-  late final TimeblockBloc _timeblockBloc;
 
   @override
   void initState() {
@@ -110,38 +110,38 @@ class _DateChoiceScreenState extends State<DateChoiceScreen> {
                       child: AnimatedCrossFade(
                         firstChild: CustomTableCalendar(
                           focusedDay: _focusedDay,
-                          onDaySelected: (selectedDay, focusedDay) =>
-                              onDaySelected(
-                                  selectedDay, focusedDay, state.timetables),
-                          selectedDayPredicate: (day) =>
-                              isSameDay(_selectedDay, day),
-                          enabledDayPredicate: (day) =>
-                              enabledDayPredicate(day, state.timetables),
+                          onDaySelected: (sel, foc) => onDaySelected(
+                            sel,
+                            foc,
+                            state.timetables,
+                          ),
+                          selectedDayPredicate: (day) => isSameDay(
+                            _selectedDay,
+                            day,
+                          ),
+                          enabledDayPredicate: (day) => enabledDayPredicate(
+                            day,
+                            state.timetables,
+                          ),
                         ),
-                        secondChild: state.isProcessing
-                            ? Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      formattedDate,
-                                      style:
-                                          context.textTheme.bodyLarge?.copyWith(
-                                        fontFamily: FontFamily.geologica,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Shimmer(
-                                      size: Size(double.infinity, 320),
-                                      cornerRadius: 16,
-                                    ),
-                                  ],
+                        secondChild: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                formattedDate,
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  fontFamily: FontFamily.geologica,
                                 ),
-                              )
-                            : InformationWidget.empty(
-                                description:
-                                    'Для выбранных параметров мастера отсутствуют',
                               ),
+                              const SizedBox(height: 8),
+                              const Shimmer(
+                                size: Size(double.infinity, 320),
+                                cornerRadius: 16,
+                              ),
+                            ],
+                          ),
+                        ),
                         crossFadeState: state.hasTimetable
                             ? CrossFadeState.showFirst
                             : CrossFadeState.showSecond,

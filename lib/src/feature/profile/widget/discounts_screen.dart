@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 
-///
 class DiscountsScreen extends StatelessWidget {
   const DiscountsScreen({super.key});
 
@@ -26,7 +25,7 @@ class DiscountsScreen extends StatelessWidget {
             sliver: SliverFillRemaining(
               child: Center(
                 child: Text(
-                  'У вас не персональных скидок',
+                  'У вас нет персональных скидок',
                   style: context.textTheme.titleMedium?.copyWith(
                     fontFamily: FontFamily.geologica,
                   ),

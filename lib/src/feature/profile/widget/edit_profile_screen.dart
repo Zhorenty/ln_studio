@@ -67,10 +67,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       value: profileBloc,
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
-          _firstNameController.text = state.profile!.firstName;
-          _lastNameController.text = state.profile!.lastName;
-          _birthDateController.text = state.profile!.birthDate.defaultFormat();
-          _emailController.text = state.profile!.email;
+          if (state.isSuccessful) {
+            _firstNameController.text = state.profile!.firstName;
+            _lastNameController.text = state.profile!.lastName;
+            _birthDateController.text =
+                state.profile!.birthDate.defaultFormat();
+            _emailController.text = state.profile!.email;
+          }
 
           return Scaffold(
             backgroundColor: context.colorScheme.onBackground,
