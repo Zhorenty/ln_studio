@@ -50,23 +50,25 @@ class ExpandedAppBar extends StatelessWidget {
           ),
         ),
       ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 55),
-          child: IconButton(
-            icon: Icon(
-              Icons.more_horiz_rounded,
-              color: context.colorScheme.secondary,
-            ),
-            highlightColor: context.colorScheme.scrim,
-            onPressed: () => MessagePopup.bottomSheet(
-              context,
-              'Действия с сотрудником',
-              additional: additionalTrailing,
-            ),
-          ),
-        )
-      ],
+      actions: additionalTrailing.isNotEmpty
+          ? [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 55),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.more_horiz_rounded,
+                    color: context.colorScheme.secondary,
+                  ),
+                  highlightColor: context.colorScheme.scrim,
+                  onPressed: () => MessagePopup.bottomSheet(
+                    context,
+                    'Действия с сотрудником',
+                    additional: additionalTrailing,
+                  ),
+                ),
+              )
+            ]
+          : null,
       bottom: PreferredSize(
         preferredSize: const Size(300, 48),
         child: Padding(

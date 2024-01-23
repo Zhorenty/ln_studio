@@ -84,7 +84,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
         uniqueRequestId: state.uniqueRequestId,
       ));
     } on Object catch (e) {
-      if (e is DioException && e.response!.statusCode == 400) {
+      if (e is DioException && e.response!.statusCode == 401) {
         emit(AuthState.notRegistered(
           user: state.user,
           phone: state.phone,
@@ -94,6 +94,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       } else {
         emit(AuthState.idle(
           error: ErrorUtil.formatError(e),
+          user: state.user,
+          phone: state.phone,
           uniqueRequestId: state.uniqueRequestId,
         ));
         rethrow;
@@ -122,6 +124,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     } on Object catch (e) {
       emit(AuthState.idle(
         error: ErrorUtil.formatError(e),
+        user: state.user,
+        phone: state.phone,
         uniqueRequestId: state.uniqueRequestId,
       ));
       rethrow;
@@ -149,6 +153,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     } on Object catch (e) {
       emit(AuthState.idle(
         error: ErrorUtil.formatError(e),
+        user: state.user,
+        phone: state.phone,
         uniqueRequestId: state.uniqueRequestId,
       ));
       rethrow;

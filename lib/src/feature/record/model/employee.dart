@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:ln_studio/src/feature/auth/model/user.dart';
 import 'package:ln_studio/src/feature/salon/models/salon.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
@@ -63,7 +64,7 @@ final class EmployeeModel {
   final DateTime? dismissDate;
 
   /// User associated with the employee.
-  final UserModel userModel;
+  final User userModel;
 
   /// Job place associated with the employee's special skill.
   final Specialization jobModel;
@@ -91,7 +92,7 @@ final class EmployeeModel {
       dismissDate: json['dismiss_date'] != null
           ? DateTime.parse(json['dismiss_date'] as String)
           : null,
-      userModel: UserModel.fromJson(json['user'] as Map<String, dynamic>),
+      userModel: User.fromJson(json),
       jobModel: Specialization.fromJson(
         json['job'] as Map<String, dynamic>,
       ),
@@ -119,78 +120,7 @@ final class EmployeeModel {
         'salon': salon.toJson(),
       };
 
-  String get fullName => '${userModel.firstName} ${userModel.lastName}';
-}
-
-/// Represents a user model.
-@immutable
-final class UserModel {
-  const UserModel({
-    required this.id,
-    this.photo,
-    required this.email,
-    required this.firstName,
-    required this.lastName,
-    required this.phone,
-    required this.birthDate,
-    required this.isSuperuser,
-    required this.isActive,
-  });
-
-  /// UUID of the user.
-  final int id;
-
-  /// User's photo as [String].
-  final String? photo;
-
-  /// Email address of the user.
-  final String email;
-
-  /// First name of the user.
-  final String firstName;
-
-  /// Last name of the user.
-  final String lastName;
-
-  /// Phone number of the user.
-  final String phone;
-
-  /// Birth date of the user.
-  final DateTime birthDate;
-
-  /// Indicator whether user is a superuser.
-  final bool isSuperuser;
-
-  /// Indicator whether user is active.
-  final bool isActive;
-
-  /// Returns [UserModel] from [json].
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'] as int,
-      photo: json['photo'] as String?,
-      email: json['email'] as String,
-      firstName: json['first_name'] as String,
-      lastName: json['last_name'] as String,
-      phone: json['phone'] as String,
-      birthDate: DateTime.parse(json['birth_date'] as String),
-      isSuperuser: json['is_superuser'] as bool,
-      isActive: json['is_active'] as bool,
-    );
-  }
-
-  /// Converts [UserModel] into json.
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'photo': photo,
-        'email': email,
-        'first_name': firstName,
-        'last_name': lastName,
-        'phone': phone,
-        'birth_date': birthDate.jsonFormat(),
-        'is_superuser': isSuperuser,
-        'is_active': isActive,
-      };
+  String get fullName => '${userModel.lastName} ${userModel.firstName}';
 }
 
 /// Representing a job place with its properties.

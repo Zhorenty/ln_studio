@@ -11,8 +11,8 @@ final class User {
     this.id,
     this.photo,
     this.phone,
-    this.firstName,
-    this.lastName,
+    required this.firstName,
+    required this.lastName,
     this.birthDate,
     this.email,
   });
@@ -23,9 +23,9 @@ final class User {
 
   final String? photo;
 
-  final String? firstName;
+  final String firstName;
 
-  final String? lastName;
+  final String lastName;
 
   final DateTime? birthDate;
 

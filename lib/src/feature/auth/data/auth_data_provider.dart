@@ -97,8 +97,8 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     if (user.photo != null) {
       await _sharedPreferences.setString('auth.user.photo', user.photo!);
     }
-    await _sharedPreferences.setString('auth.user.first_name', user.firstName!);
-    await _sharedPreferences.setString('auth.user.last_name', user.lastName!);
+    await _sharedPreferences.setString('auth.user.first_name', user.firstName);
+    await _sharedPreferences.setString('auth.user.last_name', user.lastName);
     await _sharedPreferences.setString(
       'auth.user.birth_date',
       user.birthDate.toString(),
@@ -304,11 +304,11 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     final email = _sharedPreferences.getString('auth.user.email');
 
     return User(
-      id: id,
+      id: id ?? 1,
       phone: phone,
       photo: photo,
-      firstName: firstName,
-      lastName: lastName,
+      firstName: firstName ?? 'Ошибка',
+      lastName: lastName ?? '',
       birthDate: DateTime.tryParse(birthDate ?? ''),
       email: email,
     );

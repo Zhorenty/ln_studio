@@ -6,15 +6,37 @@ import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/avatar_widget.dart';
 import 'package:ln_studio/src/common/widget/star_rating.dart';
+import 'package:ln_studio/src/feature/home/bloc/employee/employee_detail_bloc.dart';
+import 'package:ln_studio/src/feature/home/bloc/employee/employee_detail_event.dart';
 import 'package:ln_studio/src/feature/home/widget/components/expanded_app_bar.dart';
+import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 
+import '../../../common/widget/information_widget.dart';
+
 ///
-class EmployeeInfoScreen extends StatelessWidget {
+class EmployeeInfoScreen extends StatefulWidget {
   const EmployeeInfoScreen({super.key, required this.employee});
 
   ///
   final EmployeeModel employee;
+
+  @override
+  State<EmployeeInfoScreen> createState() => _EmployeeInfoScreenState();
+}
+
+class _EmployeeInfoScreenState extends State<EmployeeInfoScreen> {
+  late final EmployeeDetailBLoC employeeDetailBLoC;
+
+  @override
+  void initState() {
+    super.initState();
+    employeeDetailBLoC = EmployeeDetailBLoC(
+        repository: DependenciesScope.of(context).homeRepository)
+      ..add(
+        EmployeeDetailEvent.fetchReviews(widget.employee.id),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +48,10 @@ class EmployeeInfoScreen extends StatelessWidget {
             slivers: [
               ExpandedAppBar(
                 onExit: context.pop,
-                title: employee.fullName,
-                subtitle: employee.jobModel.name,
+                title: widget.employee.fullName,
+                subtitle: widget.employee.jobModel.name,
                 bottom: Text(
-                  employee.fullName,
+                  widget.employee.fullName,
                   style: context.textTheme.titleLarge!.copyWith(
                     fontFamily: FontFamily.geologica,
                   ),
@@ -54,13 +76,14 @@ class EmployeeInfoScreen extends StatelessWidget {
                               fontFamily: FontFamily.geologica,
                             ),
                           ),
-                          StarRating(initialRating: employee.stars),
+                          StarRating(initialRating: widget.employee.stars),
                         ],
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '${employee.userModel.firstName} является компетентным и опытным специалистом в области красоты и ухода за внешностью. Он обладает разносторонними знаниями и навыками, которые позволяют ему предоставить высококачественные услуги для клиентов.'
-                        '\nИмеет богатый опыт работы с различными типами кожи, волос и ногтей, и способен справиться с любыми проблемами, связанными с уходом за ними.',
+                        widget.employee.description ??
+                            '${widget.employee.userModel.firstName} является компетентным и опытным специалистом в области красоты и ухода за внешностью. Он обладает разносторонними знаниями и навыками, которые позволяют ему предоставить высококачественные услуги для клиентов.'
+                                '\nИмеет богатый опыт работы с различными типами кожи, волос и ногтей, и способен справиться с любыми проблемами, связанными с уходом за ними.',
                         style: context.textTheme.bodyMedium?.copyWith(
                           fontFamily: FontFamily.geologica,
                           color: context.colorScheme.primaryContainer,
@@ -74,14 +97,28 @@ class EmployeeInfoScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const ReviewContainer(title: 'Алевтина'),
-                      const SizedBox(height: 8),
-                      const ReviewContainer(title: 'Алексей'),
-                      const SizedBox(height: 8),
-                      const ReviewContainer(title: 'Ксения'),
-                      const SizedBox(height: 8),
-                      const ReviewContainer(title: 'Татьяна'),
-                      SizedBox(height: MediaQuery.sizeOf(context).height / 10)
+                      if (employeeDetailBLoC.state.reviews.isEmpty)
+                        InformationWidget.empty(
+                          description: 'Отзывов пока нет',
+                        ),
+                      if (employeeDetailBLoC.state.reviews.isNotEmpty)
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: employeeDetailBLoC.state.reviews.length,
+                          itemBuilder: (context, index) {
+                            final review =
+                                employeeDetailBLoC.state.reviews[index];
+                            return ReviewContainer(
+                              title: 'Алевтина',
+                              createdAt: review.createdAt,
+                              text: review.text,
+                            );
+                          },
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 8),
+                        ),
+                      const SizedBox(height: 8)
                     ],
                   ),
                 ),
@@ -97,7 +134,7 @@ class EmployeeInfoScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () => context.goNamed(
                   'record',
-                  extra: employee,
+                  extra: widget.employee,
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.colorScheme.primary,
@@ -124,10 +161,21 @@ class EmployeeInfoScreen extends StatelessWidget {
 
 ///
 class ReviewContainer extends StatelessWidget {
-  const ReviewContainer({super.key, required this.title});
+  const ReviewContainer({
+    super.key,
+    required this.title,
+    required this.createdAt,
+    required this.text,
+  });
 
   ///
   final String title;
+
+  ///
+  final String createdAt;
+
+  ///
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +203,7 @@ class ReviewContainer extends StatelessWidget {
                       ),
                     ),
                     TextSpan(
-                      text: 'Сегодня, 10:23',
+                      text: createdAt,
                       style: context.textTheme.bodySmall?.copyWith(
                         fontFamily: FontFamily.geologica,
                       ),
@@ -167,7 +215,7 @@ class ReviewContainer extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Я очень довольна результатом работы с моими бровями! Они выглядят идеально – аккуратные, форма подходит идеально к моему лицу.',
+            text,
             style: context.textTheme.bodyMedium?.copyWith(
               fontFamily: FontFamily.geologica,
             ),

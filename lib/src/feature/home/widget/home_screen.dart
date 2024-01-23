@@ -196,6 +196,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     );
+                  } else if (!state.isProcessing && employees.isEmpty) {
+                    return InformationWidget.empty();
                   }
                   return SizedBox(
                     height: 192,
@@ -229,6 +231,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           MediaQuery.sizeOf(context).height / 5.5,
                         ),
                       ),
+                    );
+                  } else if (!state.isProcessing && news.isEmpty) {
+                    return InformationWidget.empty(
+                      description: 'Новостей пока нет',
                     );
                   }
                   return SizedBox(
