@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/common/widget/maps_sheet.dart';
+import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
+import 'package:map_launcher/map_launcher.dart';
 
 class CongratulationScreen extends StatelessWidget {
   const CongratulationScreen({super.key});
@@ -53,10 +57,17 @@ class CongratulationScreen extends StatelessWidget {
               ),
             ),
           ),
-          const InformationRow(
-            title: 'Проложить маршрут',
-            leading: Icons.location_on_outlined,
-            size: 22,
+          GestureDetector(
+            onTap: () => showMapsSheet(
+              context: context,
+              coords: Coords(45.019641, 39.025248),
+              title: context.read<SalonBLoC>().state.currentSalon!.name,
+            ),
+            child: const InformationRow(
+              title: 'Проложить маршрут',
+              leading: Icons.location_on_outlined,
+              size: 22,
+            ),
           ),
           const InformationRow(
             title: 'Добавить в календарь',

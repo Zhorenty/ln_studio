@@ -44,9 +44,11 @@ dependencies:
   path_provider: ^2.0.12
   url_launcher: ^6.1.14
   cached_network_image: ^3.2.3
+  map_launcher: ^3.1.0
 
   # Widgets
   table_calendar: ^3.0.9
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   # Testing
