@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ln_studio/src/common/exception/error_code.dart';
 import 'package:ln_studio/src/common/utils/error_util.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
@@ -49,12 +49,13 @@ abstract interface class AuthDataProvider {
   /// Returns the current [User].
   User? getUser();
 
-  Future<bool> sendCode({required String phone});
+  Future<String> sendCode({required String phone});
 
   // /// Attempts to sign in with the given [phone].
   Future<User> signInWithPhone({
     required String phone,
     required int smsCode,
+    required String uniqueRequestId,
   });
 
   Future<User> signUp({required User userModel});
@@ -180,13 +181,16 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   }
 
   @override
-  Future<bool> sendCode({required String phone}) async {
+  Future<String> sendCode({required String phone}) async {
     final response = await client.post(
-      '/api/auth/sms/send',
+      '/api/auth/call/init',
       data: {
         'phone_number': phone,
+        "unique_request_id": null,
+        "is_employee": false,
       },
     );
+    // Возвращаем unique_request_id
     return response.data['data'];
   }
 
@@ -194,12 +198,14 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   Future<User> signInWithPhone({
     required String phone,
     required int smsCode,
+    required String uniqueRequestId,
   }) async {
     final response = await client.post<Map<String, Object?>>(
-      '/api/auth/sms/validate',
+      '/api/auth/call/validate',
       data: {
         'phone': phone,
-        'sms_code': smsCode,
+        'code': smsCode.toString(),
+        'unique_request_id': uniqueRequestId,
         'is_employee': false,
       },
     );
@@ -207,10 +213,11 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     final tokenPair = _decodeTokenPair(response.data);
 
     await _saveTokenPair(tokenPair);
-
-    log(
-      'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',
-    );
+    if (kDebugMode) {
+      log(
+        'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',
+      );
+    }
 
     final user = User.fromJson((response.data!['data'] as Map)['model']);
 
@@ -233,14 +240,16 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     );
 
     final tokenPair = _decodeTokenPair(response.data);
-
-    log(
-      'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',
-    );
+    if (kDebugMode) {
+      log(
+        'AccessToken ${tokenPair.accessToken} \nRefreshToken ${tokenPair.refreshToken}',
+      );
+    }
 
     await _saveTokenPair(tokenPair);
 
-    final createdUser = User.fromJson((response.data!['data'] as Map)['user']);
+    final createdUser = User.fromJson(
+        (response.data!['data'] as Map<String, dynamic>)['client']);
 
     await _saveUser(createdUser);
 

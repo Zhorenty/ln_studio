@@ -37,12 +37,13 @@ abstract interface class AuthRepository {
   /// Clear the current [TokenPair].
   Future<void> signOut();
 
-  Future<bool> sendCode({required String phone});
+  Future<String> sendCode({required String phone});
 
   /// Attempts to sign in with the given [phone].
   Future<User> signInWithPhone({
     required String phone,
     required int smsCode,
+    required String uniqueRequestId,
   });
 
   /// Attempts to sign up with the given [phone].
@@ -72,15 +73,20 @@ final class AuthRepositoryImpl implements AuthRepository {
   Future<void> signOut() => _authDataProvider.signOut();
 
   @override
-  Future<bool> sendCode({required String phone}) =>
+  Future<String> sendCode({required String phone}) =>
       _authDataProvider.sendCode(phone: phone);
 
   @override
   Future<User> signInWithPhone({
     required String phone,
     required int smsCode,
+    required String uniqueRequestId,
   }) =>
-      _authDataProvider.signInWithPhone(phone: phone, smsCode: smsCode);
+      _authDataProvider.signInWithPhone(
+        phone: phone,
+        smsCode: smsCode,
+        uniqueRequestId: uniqueRequestId,
+      );
 
   @override
   Future<User> signUp({required User userModel}) =>

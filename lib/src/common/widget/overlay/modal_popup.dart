@@ -39,7 +39,7 @@ abstract class ModalPopup {
         transitionAnimationController: transitionAnimationController,
         barrierColor: context.colorScheme.background.withOpacity(.5),
         isScrollControlled: true,
-        backgroundColor: context.colorScheme.onBackground,
+        backgroundColor: const Color.fromRGBO(14, 15, 17, 1),
         isDismissible: isDismissible,
         enableDrag: isDismissible,
         shape: const RoundedRectangleBorder(
@@ -51,39 +51,37 @@ abstract class ModalPopup {
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height - 60,
         ),
-        builder: (context) {
-          return SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 12),
-                if (isDismissible && showDivider) ...[
-                  Center(
-                    child: Container(
-                      width: 60,
-                      height: 3,
-                      decoration: BoxDecoration(
-                        color: context.colorScheme.primary,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                ],
-                Flexible(
-                  child: Padding(
-                    padding: mobilePadding,
-                    child: ConstrainedBox(
-                      constraints: mobileConstraints,
-                      child: child,
+        builder: (context) => SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 12),
+              if (isDismissible && showDivider) ...[
+                Center(
+                  child: Container(
+                    width: 60,
+                    height: 3,
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.primary,
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                 ),
                 const SizedBox(height: 12),
               ],
-            ),
-          );
-        },
+              Flexible(
+                child: Padding(
+                  padding: mobilePadding,
+                  child: ConstrainedBox(
+                    constraints: mobileConstraints,
+                    child: child,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
       );
     } else {
       return showDialog(

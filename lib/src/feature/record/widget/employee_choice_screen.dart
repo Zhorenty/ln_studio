@@ -7,8 +7,10 @@ import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/common/widget/custom_snackbar.dart';
+import 'package:ln_studio/src/common/widget/information_widget.dart';
 import 'package:ln_studio/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
+import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_event.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_state.dart';
@@ -68,7 +70,9 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
   @override
   void initState() {
     super.initState();
-    employeesBloc = context.read<EmployeeBloc>();
+    employeesBloc = EmployeeBloc(
+      repository: DependenciesScope.of(context).recordRepository,
+    );
     _fetchSalonEmployees();
     initController();
     selectedEmployee = widget.employeePreset;
@@ -76,6 +80,7 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
 
   @override
   void dispose() {
+    employeesBloc.close();
     controller.dispose();
     super.dispose();
   }
@@ -97,6 +102,7 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
           return false;
         },
         child: BlocConsumer<EmployeeBloc, EmployeeState>(
+          bloc: employeesBloc,
           listener: (context, state) {
             if (state.hasError) {
               CustomSnackBar.showError(context, message: state.error);
@@ -158,12 +164,20 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                                       : const SizedBox.shrink();
                                 },
                               )
-                            : SliverList.separated(
-                                itemCount: 5,
-                                itemBuilder: (context, index) =>
-                                    const SkeletonEmployeeCard(),
-                                separatorBuilder: (c, i) => const SizedBox(),
-                              ),
+                            : state.isProcessing
+                                ? SliverList.separated(
+                                    itemCount: 5,
+                                    itemBuilder: (context, index) =>
+                                        const SkeletonEmployeeCard(),
+                                    separatorBuilder: (c, i) =>
+                                        const SizedBox(),
+                                  )
+                                : SliverToBoxAdapter(
+                                    child: InformationWidget.empty(
+                                      description:
+                                          'Для выбранных параметров мастера отсутствуют',
+                                    ),
+                                  ),
                       ),
                     ),
                     SliverToBoxAdapter(

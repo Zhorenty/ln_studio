@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/common/widget/avatar_widget.dart';
+import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
+import 'package:ln_studio/src/common/utils/extensions/string_extension.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/color_extension.dart';
@@ -8,10 +10,18 @@ import '/src/common/utils/extensions/context_extension.dart';
 
 ///
 class HeaderListTile extends StatelessWidget {
-  const HeaderListTile({super.key, this.onPressed, this.title});
+  const HeaderListTile({
+    super.key,
+    this.onPressed,
+    required this.title,
+    this.subtitle,
+  });
 
   ///
-  final String? title;
+  final String title;
+
+  ///
+  final String? subtitle;
 
   ///
   final void Function()? onPressed;
@@ -33,14 +43,15 @@ class HeaderListTile extends StatelessWidget {
         child: ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            title ?? 'Настройте профиль',
+            title,
             style: context.textTheme.headlineSmall?.copyWith(
               fontFamily: FontFamily.geologica,
               color: context.colorScheme.secondary,
             ),
           ),
           subtitle: Text(
-            '+7 (960) 487-53-29',
+            AuthenticationScope.of(context).user?.phone?.formatPhoneNumber() ??
+                'Номер не указан',
             style: context.textTheme.titleSmall?.copyWith(
               fontFamily: FontFamily.geologica,
               color: context.colorScheme.primary,

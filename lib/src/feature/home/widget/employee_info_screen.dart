@@ -25,6 +25,7 @@ class EmployeeInfoScreen extends StatelessWidget {
           CustomScrollView(
             slivers: [
               ExpandedAppBar(
+                onExit: context.pop,
                 title: employee.fullName,
                 subtitle: employee.jobModel.name,
                 bottom: Text(
@@ -33,11 +34,6 @@ class EmployeeInfoScreen extends StatelessWidget {
                     fontFamily: FontFamily.geologica,
                   ),
                 ),
-              ),
-              CupertinoSliverRefreshControl(
-                onRefresh: () async {
-                  // TODO: Implement fetching by id.
-                },
               ),
               SliverToBoxAdapter(
                 child: Container(

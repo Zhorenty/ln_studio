@@ -45,7 +45,7 @@ class EmployeeCard extends StatelessWidget {
           children: [
             AvatarWidget(
               radius: 40,
-              title: '${user.firstName} ${user.lastName}',
+              title: '${user.lastName} ${user.firstName}',
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -54,7 +54,7 @@ class EmployeeCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '${user.firstName} ${user.lastName}',
+                    '${user.lastName} ${user.firstName}',
                     style: context.textTheme.titleMedium?.copyWith(
                       fontFamily: FontFamily.geologica,
                     ),

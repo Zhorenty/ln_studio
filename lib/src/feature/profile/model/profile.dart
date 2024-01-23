@@ -5,11 +5,14 @@ import '/src/common/utils/extensions/date_time_extension.dart';
 @immutable
 final class ProfileModel {
   const ProfileModel({
+    required this.id,
     required this.firstName,
     required this.lastName,
     required this.birthDate,
     required this.email,
   });
+
+  final int id;
 
   ///
   final String firstName;
@@ -25,6 +28,7 @@ final class ProfileModel {
 
   ///
   factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
+        id: json['id'],
         firstName: json['first_name'],
         lastName: json['last_name'],
         birthDate: DateTime.parse(json['birth_date']),
@@ -32,6 +36,7 @@ final class ProfileModel {
       );
 
   Map<String, dynamic> toJson() => {
+        'id': id,
         'first_name': firstName,
         'last_name': lastName,
         'birth_date': birthDate.jsonFormat(),

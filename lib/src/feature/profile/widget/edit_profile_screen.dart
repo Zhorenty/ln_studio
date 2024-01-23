@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
+import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/common/widget/custom_text_field.dart';
 import 'package:ln_studio/src/common/widget/date_picker_field.dart';
+import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
+import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
+import 'package:ln_studio/src/feature/profile/bloc/profile/profile_bloc.dart';
+import 'package:ln_studio/src/feature/profile/bloc/profile/profile_event.dart';
+import 'package:ln_studio/src/feature/profile/bloc/profile/profile_state.dart';
+import 'package:ln_studio/src/feature/profile/model/profile.dart';
 
 ///
 class EditProfileScreen extends StatefulWidget {
@@ -18,6 +26,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   /// [FormState] for validating.
   final _formKey = GlobalKey<FormState>();
 
+  late final ProfileBloc profileBloc;
+
   late final TextEditingController _firstNameController;
   late final TextEditingController _lastNameController;
   late final TextEditingController _birthDateController;
@@ -25,11 +35,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   DateTime birthDate = DateTime.now();
 
-  bool visible = false;
-
   @override
   void initState() {
     super.initState();
+    profileBloc = ProfileBloc(
+      profileRepository: DependenciesScope.of(context).profileRepository,
+    )..add(const ProfileEvent.fetch());
+
     _firstNameController = TextEditingController();
     _lastNameController = TextEditingController();
     _birthDateController = TextEditingController();
@@ -38,6 +50,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void dispose() {
+    profileBloc.close();
+
     _firstNameController.dispose();
     _lastNameController.dispose();
     _birthDateController.dispose();
@@ -47,117 +61,141 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colorScheme.onBackground,
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: visible
-              ? ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      /// TODO: implement bloc
-                      // bloc.add.....
-                      context.pop();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+    final auth = AuthenticationScope.of(context);
+
+    return BlocProvider.value(
+      value: profileBloc,
+      child: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
+          if (state.isSuccessful) {
+            _firstNameController.text = state.profile!.firstName;
+            _lastNameController.text = state.profile!.lastName;
+            _birthDateController.text =
+                state.profile!.birthDate.defaultFormat();
+            _emailController.text = state.profile!.email;
+          }
+
+          return Scaffold(
+            backgroundColor: context.colorScheme.onBackground,
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: ElevatedButton(
+                    onPressed: () => _formKey.currentState!.validate()
+                        ? editProfile(context, auth.user!.id!)
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      backgroundColor: context.colorScheme.primary,
+                      fixedSize: Size(
+                        MediaQuery.sizeOf(context).width / 1.2,
+                        50,
+                      ),
                     ),
-                    backgroundColor: context.colorScheme.primary,
-                    fixedSize: Size(MediaQuery.sizeOf(context).width / 1.2, 50),
-                  ),
-                  child: Text(
-                    'Сохранить',
-                    style: context.textTheme.bodyLarge?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                      color: context.colorScheme.onBackground,
+                    child: Text(
+                      'Сохранить',
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        fontFamily: FontFamily.geologica,
+                        color: context.colorScheme.onBackground,
+                      ),
                     ),
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
-      ),
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                title: Text(
-                  'О себе',
-                  style: context.textTheme.titleLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                  ),
-                ),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      const ProfileHeader(
-                        title: 'Ваше имя и фамилия',
-                        subtitle: 'Чтобы знать, как к Вам обращаться',
-                      ),
-                      CustomTextField(
-                        controller: _firstNameController,
-                        hintText: 'Имя',
-                        validator: _emptyValidator,
-                        onChanged: _onChanged,
-                      ),
-                      CustomTextField(
-                        controller: _lastNameController,
-                        hintText: 'Фамилия',
-                        validator: _emptyValidator,
-                        onChanged: _onChanged,
-                      ),
-                      const ProfileHeader(
-                        title: 'Дата рождения',
-                        subtitle: 'Чтобы предлагать Вам специальные скидки',
-                      ),
-                      DatePickerField(
-                        controller: _birthDateController,
-                        initialDate: birthDate,
-                        label: 'Дата рождения',
-                        suffix: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: context.colorScheme.primary,
+                  )),
+            ),
+            body: SafeArea(
+              child: Form(
+                key: _formKey,
+                child: CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      title: Text(
+                        'О себе',
+                        style: context.textTheme.titleLarge?.copyWith(
+                          fontFamily: FontFamily.geologica,
                         ),
-                        onDateSelected: (day) {
-                          setState(() => visible = true);
-                          birthDate = day;
-                        },
                       ),
-                      const ProfileHeader(
-                        title: 'Почта',
-                        subtitle:
-                            'Чтобы присылать Вам информацию об акциях и скидках',
+                    ),
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
                       ),
-                      CustomTextField(
-                        controller: _emailController,
-                        hintText: 'Электронная почта',
-                        validator: _emailValidator,
-                        onChanged: _onChanged,
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate(
+                          [
+                            const ProfileHeader(
+                              title: 'Ваше имя и фамилия',
+                              subtitle: 'Чтобы знать, как к Вам обращаться',
+                            ),
+                            CustomTextField(
+                              controller: _firstNameController,
+                              hintText: 'Имя',
+                              validator: _emptyValidator,
+                            ),
+                            CustomTextField(
+                              controller: _lastNameController,
+                              hintText: 'Фамилия',
+                              validator: _emptyValidator,
+                            ),
+                            const ProfileHeader(
+                              title: 'Дата рождения',
+                              subtitle:
+                                  'Чтобы предлагать Вам специальные скидки',
+                            ),
+                            DatePickerField(
+                              controller: _birthDateController,
+                              initialDate: birthDate,
+                              label: 'Дата рождения',
+                              suffix: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: context.colorScheme.primary,
+                              ),
+                              onDateSelected: (day) {
+                                birthDate = day;
+                              },
+                            ),
+                            const ProfileHeader(
+                              title: 'Почта',
+                              subtitle:
+                                  'Чтобы присылать Вам информацию об акциях и скидках',
+                            ),
+                            CustomTextField(
+                              controller: _emailController,
+                              hintText: 'Электронная почта',
+                              validator: _emailValidator,
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  ///
-  void _onChanged(String value) => setState(() => visible = true);
+  void editProfile(BuildContext context, int id) {
+    context.read<ProfileBloc>().add(
+          ProfileEvent.edit(
+            profile: ProfileModel(
+              id: id,
+              firstName: _firstNameController.text,
+              lastName: _lastNameController.text,
+              birthDate: birthDate,
+              email: _emailController.text,
+            ),
+          ),
+        );
+    if (context.read<ProfileBloc>().state.isSuccessful) {
+      context.pop();
+    }
+  }
 
   /// Validate email address.
   String? _emailValidator(String? value) {

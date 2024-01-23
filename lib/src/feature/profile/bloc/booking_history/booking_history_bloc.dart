@@ -12,7 +12,7 @@ class BookingHistoryBloc
       : super(const BookingHistoryState.idle()) {
     on<BookingHistoryEvent>(
       (event, emit) => event.map(
-        fetch: (event) => _fetchAllEmployees(event, emit),
+        fetch: (event) => _fetchAllBookings(event, emit),
       ),
     );
   }
@@ -21,7 +21,7 @@ class BookingHistoryBloc
   final ProfileRepository repository;
 
   /// Fetch BookingHistory from repository.
-  Future<void> _fetchAllEmployees(
+  Future<void> _fetchAllBookings(
     BookingHistoryEvent$Fetch event,
     Emitter<BookingHistoryState> emit,
   ) async {
@@ -29,12 +29,10 @@ class BookingHistoryBloc
       final bookingHistory = await repository.getAllBookings();
       emit(BookingHistoryState.loaded(bookingHistory: bookingHistory));
     } on Object catch (e) {
-      emit(
-        BookingHistoryState.idle(
-          bookingHistory: state.bookingHistory,
-          error: ErrorUtil.formatError(e),
-        ),
-      );
+      emit(BookingHistoryState.idle(
+        bookingHistory: state.bookingHistory,
+        error: ErrorUtil.formatError(e),
+      ));
       rethrow;
     }
   }
