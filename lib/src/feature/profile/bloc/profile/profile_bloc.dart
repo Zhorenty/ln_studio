@@ -5,7 +5,7 @@ import '/src/feature/profile/data/profile_repository.dart';
 import 'profile_event.dart';
 import 'profile_state.dart';
 
-final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc({required this.profileRepository})
       : super(const ProfileState.idle()) {
     on<ProfileEvent>(
@@ -22,12 +22,15 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileEvent$Fetch event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(const ProfileState.processing());
+    emit(ProfileState.processing(profile: state.profile));
     try {
-      // final profile = profileRepository.getProfile();
-      // emit(ProfileState.successful(profile: profile));
+      final profile = await profileRepository.getProfile();
+      emit(ProfileState.successful(profile: profile));
     } on Object catch (e) {
-      emit(ProfileState.idle(error: ErrorUtil.formatError(e)));
+      emit(ProfileState.idle(
+        error: ErrorUtil.formatError(e),
+        profile: state.profile,
+      ));
       rethrow;
     }
   }
@@ -36,12 +39,13 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileEvent$Edit event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(const ProfileState.processing());
+    emit(ProfileState.processing(profile: state.profile));
     try {
       final profile = await profileRepository.editProfile(event.profile);
       emit(ProfileState.successful(profile: profile));
     } on Object catch (e) {
-      emit(ProfileState.idle(error: ErrorUtil.formatError(e)));
+      emit(ProfileState.idle(
+          error: ErrorUtil.formatError(e), profile: state.profile));
       rethrow;
     }
   }

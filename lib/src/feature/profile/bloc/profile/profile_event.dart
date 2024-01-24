@@ -3,7 +3,7 @@ import 'package:ln_studio/src/common/utils/pattern_match.dart';
 import 'package:ln_studio/src/feature/profile/model/profile.dart';
 
 sealed class ProfileEvent extends _$ProfileEventBase {
-  const ProfileEvent._();
+  const ProfileEvent();
 
   const factory ProfileEvent.fetch() = ProfileEvent$Fetch;
 
@@ -13,11 +13,11 @@ sealed class ProfileEvent extends _$ProfileEventBase {
 }
 
 final class ProfileEvent$Fetch extends ProfileEvent {
-  const ProfileEvent$Fetch() : super._();
+  const ProfileEvent$Fetch();
 }
 
 final class ProfileEvent$Edit extends ProfileEvent {
-  const ProfileEvent$Edit({required this.profile}) : super._();
+  const ProfileEvent$Edit({required this.profile});
 
   final ProfileModel profile;
 }

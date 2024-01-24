@@ -26,6 +26,8 @@ final class ProfileModel {
   ///
   final String email;
 
+  String get fullName => '$lastName $firstName';
+
   ///
   factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
         id: json['id'],

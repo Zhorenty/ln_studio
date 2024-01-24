@@ -6,12 +6,13 @@ import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 import 'package:ln_studio/src/common/widget/information_widget.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
-import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_bloc.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_event.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_state.dart';
 import 'package:ln_studio/src/feature/initialization/logic/initialization_steps.dart';
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
+import 'package:ln_studio/src/feature/profile/bloc/profile/profile_bloc.dart';
+import 'package:ln_studio/src/feature/profile/bloc/profile/profile_event.dart';
 
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_bloc.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_event.dart';
@@ -49,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
       repository: DependenciesScope.of(context).recordRepository,
     );
     _fetchNews();
+    context.read<ProfileBloc>().add(const ProfileEvent.fetch());
   }
 
   @override
@@ -59,8 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userName =
-        AuthenticationScope.of(context).user?.firstName ?? 'Пользователь';
+    final profile = context.watch<ProfileBloc>().state.profile;
     return BlocConsumer<SalonBLoC, SalonState>(
       listener: (context, state) {},
       listenWhen: (previous, current) {
@@ -73,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) => CustomScrollView(
         slivers: [
           CustomSliverAppBar(
-            title: 'Здравствуйте, $userName',
+            title: 'Здравствуйте, ${profile?.firstName ?? 'Пользователь'}',
             bottomChild: Builder(builder: (context) {
               if (state.hasError) {
                 return Container(

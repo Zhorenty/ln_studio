@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
+import 'package:ln_studio/src/feature/profile/bloc/profile/profile_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '/src/common/assets/generated/assets.gen.dart';
@@ -11,7 +13,6 @@ import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/custom_divider.dart';
 import 'components/category_list_tile.dart';
 import 'components/header_list_tile.dart';
-import '/src/common/utils/extensions/string_extension.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -24,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = AuthenticationScope.of(context);
-    final user = auth.user;
+    final profile = context.watch<ProfileBloc>().state.profile;
 
     return Scaffold(
       body: CustomScrollView(
@@ -43,8 +44,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SliverList.list(
             children: [
               HeaderListTile(
-                title: user?.fullName ?? 'Настройте профиль',
-                subtitle: user?.phone?.formatPhoneNumber(),
+                title: profile?.fullName ?? 'Настройте профиль',
+                subtitle: profile?.email ?? '',
                 onPressed: () => context.goNamed('profile_edit'),
               ),
               const CustomDivider(),

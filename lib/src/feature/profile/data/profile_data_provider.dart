@@ -28,7 +28,7 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
     final response = await restClient.get('/api/auth/client');
 
     return ProfileModel.fromJson(
-      (response.data['data'] as Map<String, dynamic>)['user'],
+      (response.data['data']['user'] as Map<String, dynamic>),
     );
   }
 

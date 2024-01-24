@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_bloc.dart';
+import 'package:ln_studio/src/feature/profile/bloc/profile/profile_bloc.dart';
 
 import '/src/common/router/app_router_scope.dart';
 import '/src/common/widget/scope_widgets.dart';
@@ -34,6 +35,11 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) => NewsBLoC(
               repository: result.dependencies.homeRepository,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => ProfileBloc(
+              profileRepository: result.dependencies.profileRepository,
             ),
           ),
         ],
