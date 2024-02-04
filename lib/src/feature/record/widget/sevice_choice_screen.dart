@@ -14,20 +14,21 @@ import 'package:ln_studio/src/feature/record/bloc/category/category_event.dart';
 import 'package:ln_studio/src/feature/record/bloc/category/category_state.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/widget/components/continue_button.dart';
+import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
 
 ///
 class ServiceChoiceScreen extends StatefulWidget {
   const ServiceChoiceScreen({
     super.key,
     this.servicePreset,
-    required this.salonId,
+    this.salonId,
     this.employeeId,
     this.timetableItemId,
     this.dateAt,
   });
 
   final ServiceModel? servicePreset;
-  final int salonId;
+  final int? salonId;
   final int? employeeId;
   final int? timetableItemId;
   final String? dateAt;
@@ -63,7 +64,9 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
 
   void _fetchServices() => categoryBloc.add(
         CategoryEvent.fetchServiceCategories(
-          salonId: widget.salonId,
+          salonId: widget.salonId ??
+              context.read<SalonBLoC>().state.currentSalon?.id ??
+              1,
           employeeId: widget.employeeId,
           timetableItemId: widget.timetableItemId,
           dateAt: widget.dateAt,
@@ -180,7 +183,7 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                     visible: visible,
                     onPressed: () => context.goNamed(
                       'record',
-                      extra: selectedService,
+                      extra: {'selectedService': selectedService},
                     ),
                   ),
                 ),

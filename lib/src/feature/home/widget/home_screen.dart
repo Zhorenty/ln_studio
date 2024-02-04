@@ -130,34 +130,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       ignoring: state.currentSalon == null,
                       image: Assets.images.serviceIcon.image(scale: 10),
                       description: 'На услугу',
-                      onTap: () => context.goNamed(
-                        'choice_service',
-                        queryParameters: {
-                          'salon_id': state.currentSalon!.id.toString(),
-                        },
-                      ),
+                      onTap: () => context.goNamed('choice_service'),
                     ),
                     RecordTypeCard(
                       ignoring: state.currentSalon == null,
                       image: Assets.images.employeeIcon.image(scale: 10),
                       description: 'К мастеру',
-                      onTap: () => context.goNamed(
-                        'choice_employee',
-                        queryParameters: {
-                          'salon_id': state.currentSalon!.id.toString(),
-                        },
-                      ),
+                      onTap: () => context.goNamed('choice_employee'),
                     ),
                     RecordTypeCard(
                       ignoring: state.currentSalon == null,
                       image: Assets.images.calendarIcon.image(scale: 10),
                       description: 'На дату',
-                      onTap: () => context.goNamed(
-                        'choice_date',
-                        queryParameters: {
-                          'salon_id': state.currentSalon!.id.toString(),
-                        },
-                      ),
+                      onTap: () => context.goNamed('choice_date'),
                     ),
                     RecordTypeCard(
                       ignoring: state.currentSalon == null,
@@ -166,7 +151,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () => context.goNamed(
                         'record',
                         queryParameters: {
-                          'salon_id': state.currentSalon!.id.toString(),
                           'needReentry': true.toString(),
                         },
                       ),

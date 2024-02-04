@@ -123,21 +123,18 @@ final router = GoRouter(
                   name: 'record',
                   path: 'record',
                   parentNavigatorKey: _parentKey,
-                  builder: (context, state) => RecordScreen(
-                    servicePreset: state.extra is ServiceModel
-                        ? state.extra as ServiceModel
-                        : null,
-                    employeePreset: state.extra is EmployeeModel
-                        ? state.extra as EmployeeModel
-                        : null,
-                    datePreset: state.extra is TimeblockWithDate
-                        ? state.extra as TimeblockWithDate
-                        : null,
-                    needReentry: bool.tryParse(state
-                            .uri.queryParameters['needReentry']
-                            .toString()) ??
-                        false,
-                  ),
+                  builder: (context, state) {
+                    final map = state.extra as Map<String, dynamic>;
+                    return RecordScreen(
+                      servicePreset: map['servicePreset'],
+                      employeePreset: map['employeePreset'],
+                      datePreset: map['datePreset'],
+                      needReentry: bool.tryParse(state
+                              .uri.queryParameters['needReentry']
+                              .toString()) ??
+                          false,
+                    );
+                  },
                   routes: [
                     GoRoute(
                       name: 'choice_service_from_record',

@@ -187,7 +187,7 @@ class _RecordScreenState extends State<RecordScreen> {
                             ),
                             onTap: () => context.goNamed(
                               'choice_service_from_record',
-                              extra: currentService,
+                              extra: {'servicePreset': currentService},
                               queryParameters: {
                                 'salon_id': currentSalon!.id.toString(),
                                 if (currentEmployee != null)
@@ -210,7 +210,7 @@ class _RecordScreenState extends State<RecordScreen> {
                             ),
                             onTap: () => context.goNamed(
                               'choice_employee_from_record',
-                              extra: currentEmployee,
+                              extra: {'employeePreset': currentEmployee},
                               queryParameters: {
                                 'salon_id': currentSalon!.id.toString(),
                                 if (currentService != null)
@@ -233,7 +233,7 @@ class _RecordScreenState extends State<RecordScreen> {
                             ),
                             onTap: () => context.goNamed(
                               'choice_date_from_record',
-                              extra: currentDate,
+                              extra: {'datePreset': currentDate},
                               queryParameters: {
                                 'salon_id': currentSalon!.id.toString(),
                                 if (currentService != null)
