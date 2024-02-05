@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_studio/src/feature/auth/widget/auth_screen.dart';
 import 'package:ln_studio/src/feature/auth/widget/registration_screen.dart';
@@ -18,6 +19,7 @@ import 'package:ln_studio/src/feature/record/widget/date_choice_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/employee_choice_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/record_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/sevice_choice_screen.dart';
+import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
 import 'package:ln_studio/src/feature/salon/models/salon.dart';
 import 'package:ln_studio/src/feature/salon/widget/salon_choice_screen.dart';
 
@@ -93,9 +95,8 @@ final router = GoRouter(
                   path: 'choice_service',
                   parentNavigatorKey: _parentKey,
                   builder: (context, state) => ServiceChoiceScreen(
-                    salonId: int.parse(
-                      state.uri.queryParameters['salon_id']!,
-                    ),
+                    salonId:
+                        context.read<SalonBLoC>().state.currentSalon?.id ?? 1,
                   ),
                 ),
                 GoRoute(
@@ -103,9 +104,8 @@ final router = GoRouter(
                   path: 'choice_employee',
                   parentNavigatorKey: _parentKey,
                   builder: (context, state) => EmployeeChoiceScreen(
-                    salonId: int.parse(
-                      state.uri.queryParameters['salon_id']!,
-                    ),
+                    salonId:
+                        context.read<SalonBLoC>().state.currentSalon?.id ?? 1,
                   ),
                 ),
                 GoRoute(
@@ -114,91 +114,11 @@ final router = GoRouter(
                   parentNavigatorKey: _parentKey,
                   builder: (context, state) => DateChoiceScreen(
                     // TODO: Брать дату пресет из extra
-                    salonId: int.parse(
-                      state.uri.queryParameters['salon_id']!,
-                    ),
+                    salonId:
+                        context.read<SalonBLoC>().state.currentSalon?.id ?? 1,
                   ),
                 ),
-                GoRoute(
-                  name: 'record',
-                  path: 'record',
-                  parentNavigatorKey: _parentKey,
-                  builder: (context, state) {
-                    final map = state.extra as Map<String, dynamic>;
-                    return RecordScreen(
-                      servicePreset: map['servicePreset'],
-                      employeePreset: map['employeePreset'],
-                      datePreset: map['datePreset'],
-                      needReentry: bool.tryParse(state
-                              .uri.queryParameters['needReentry']
-                              .toString()) ??
-                          false,
-                    );
-                  },
-                  routes: [
-                    GoRoute(
-                      name: 'choice_service_from_record',
-                      path: 'choice_service',
-                      parentNavigatorKey: _parentKey,
-                      builder: (context, state) {
-                        return ServiceChoiceScreen(
-                          servicePreset: state.extra as ServiceModel?,
-                          salonId: int.parse(
-                            state.uri.queryParameters['salon_id']!,
-                          ),
-                          employeeId: int.tryParse(
-                            state.uri.queryParameters['employee_id'] ?? '',
-                          ),
-                          timetableItemId: int.tryParse(
-                            state.uri.queryParameters['timeblock_id'] ?? '',
-                          ),
-                          dateAt: state.uri.queryParameters['date_at'],
-                        );
-                      },
-                    ),
-                    GoRoute(
-                      name: 'choice_employee_from_record',
-                      path: 'choice_employee',
-                      parentNavigatorKey: _parentKey,
-                      builder: (context, state) => EmployeeChoiceScreen(
-                        employeePreset: state.extra as EmployeeModel?,
-                        salonId: int.parse(
-                          state.uri.queryParameters['salon_id']!,
-                        ),
-                        serviceId: int.tryParse(
-                          state.uri.queryParameters['service_id'] ?? '',
-                        ),
-                        timeblockId: int.tryParse(
-                          state.uri.queryParameters['timeblock_id'] ?? '',
-                        ),
-                        dateAt: state.uri.queryParameters['date_at'],
-                      ),
-                    ),
-                    GoRoute(
-                      name: 'choice_date_from_record',
-                      path: 'choice_date',
-                      parentNavigatorKey: _parentKey,
-                      builder: (context, state) => DateChoiceScreen(
-                        // TODO: Брать дату пресет из extra
-                        salonId: int.parse(
-                          state.uri.queryParameters['salon_id']!,
-                        ),
-                        serviceId: int.tryParse(
-                          state.uri.queryParameters['service_id'] ?? '',
-                        ),
-                        employeeId: int.tryParse(
-                          state.uri.queryParameters['employee_id'] ?? '',
-                        ),
-                      ),
-                    ),
-                    GoRoute(
-                      name: 'congratulation',
-                      path: 'congratulation',
-                      parentNavigatorKey: _parentKey,
-                      builder: (context, state) => const CongratulationScreen(),
-                    ),
-                  ],
-                ),
+                _recordRoute,
               ],
             ),
           ],
@@ -238,6 +158,7 @@ final router = GoRouter(
                   name: 'booking_history',
                   parentNavigatorKey: _parentKey,
                   builder: (context, state) => const BookingHistoryScreen(),
+                  // routes: [_recordRoute],
                 ),
                 GoRoute(
                   path: 'notifications',
@@ -262,6 +183,85 @@ final router = GoRouter(
           ],
         ),
       ],
+    ),
+  ],
+);
+
+final _recordRoute = GoRoute(
+  name: 'record',
+  path: 'record',
+  parentNavigatorKey: _parentKey,
+  builder: (context, state) {
+    Map<String, dynamic>? map;
+    if (state.extra is Map<String, dynamic>) {
+      map = state.extra as Map<String, dynamic>;
+    }
+    return RecordScreen(
+      servicePreset: map?['servicePreset'],
+      employeePreset: map?['employeePreset'],
+      datePreset: map?['datePreset'],
+      needReentry:
+          bool.tryParse(state.uri.queryParameters['needReentry'].toString()) ??
+              false,
+      recordId: map?['recordId'],
+    );
+  },
+  routes: [
+    GoRoute(
+      name: 'choice_service_from_record',
+      path: 'choice_service',
+      parentNavigatorKey: _parentKey,
+      builder: (context, state) {
+        final salonId = context.read<SalonBLoC>().state.currentSalon?.id;
+        return ServiceChoiceScreen(
+          servicePreset: state.extra as ServiceModel?,
+          salonId: salonId,
+          employeeId: int.tryParse(
+            state.uri.queryParameters['employee_id'] ?? '',
+          ),
+          timetableItemId: int.tryParse(
+            state.uri.queryParameters['timeblock_id'] ?? '',
+          ),
+          dateAt: state.uri.queryParameters['date_at'],
+        );
+      },
+    ),
+    GoRoute(
+      name: 'choice_employee_from_record',
+      path: 'choice_employee',
+      parentNavigatorKey: _parentKey,
+      builder: (context, state) => EmployeeChoiceScreen(
+        employeePreset: state.extra as EmployeeModel?,
+        salonId: context.read<SalonBLoC>().state.currentSalon?.id ?? 1,
+        serviceId: int.tryParse(
+          state.uri.queryParameters['service_id'] ?? '',
+        ),
+        timeblockId: int.tryParse(
+          state.uri.queryParameters['timeblock_id'] ?? '',
+        ),
+        dateAt: state.uri.queryParameters['date_at'],
+      ),
+    ),
+    GoRoute(
+      name: 'choice_date_from_record',
+      path: 'choice_date',
+      parentNavigatorKey: _parentKey,
+      builder: (context, state) => DateChoiceScreen(
+        // TODO: Брать дату пресет из extra
+        salonId: context.read<SalonBLoC>().state.currentSalon?.id ?? 1,
+        serviceId: int.tryParse(
+          state.uri.queryParameters['service_id'] ?? '',
+        ),
+        employeeId: int.tryParse(
+          state.uri.queryParameters['employee_id'] ?? '',
+        ),
+      ),
+    ),
+    GoRoute(
+      name: 'congratulation',
+      path: 'congratulation',
+      parentNavigatorKey: _parentKey,
+      builder: (context, state) => const CongratulationScreen(),
     ),
   ],
 );

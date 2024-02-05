@@ -6,6 +6,7 @@ sealed class RecordEvent {
   const RecordEvent();
 
   factory RecordEvent.create({
+    int? recordId,
     required String dateAt,
     required int salonId,
     required int clientId,
@@ -21,6 +22,7 @@ sealed class RecordEvent {
 
 final class RecordEvent$Create extends RecordEvent {
   const RecordEvent$Create({
+    this.recordId,
     required this.dateAt,
     required this.clientId,
     required this.salonId,
@@ -31,6 +33,7 @@ final class RecordEvent$Create extends RecordEvent {
     this.comment,
   });
 
+  final int? recordId;
   final String dateAt;
   final int salonId;
   final int clientId;

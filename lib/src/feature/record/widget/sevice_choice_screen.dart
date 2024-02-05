@@ -183,7 +183,7 @@ class _ServiceChoiceScreenState extends State<ServiceChoiceScreen> {
                     visible: visible,
                     onPressed: () => context.goNamed(
                       'record',
-                      extra: {'selectedService': selectedService},
+                      extra: {'servicePreset': selectedService},
                     ),
                   ),
                 ),

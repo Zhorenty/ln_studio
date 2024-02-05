@@ -25,11 +25,15 @@ typedef TimeblockWithDate = (EmployeeTimeblock$Response, String);
 class RecordScreen extends StatefulWidget {
   const RecordScreen({
     super.key,
+    this.recordId,
     this.servicePreset,
     this.employeePreset,
     this.datePreset,
     this.needReentry = false,
   });
+
+  ///
+  final int? recordId;
 
   ///
   final ServiceModel? servicePreset;
@@ -63,6 +67,7 @@ class _RecordScreenState extends State<RecordScreen> {
   ///
   late final FocusNode commentFocusNode;
 
+  int? recordId;
   ServiceModel? currentService;
   EmployeeModel? currentEmployee;
   TimeblockWithDate? currentDate;
@@ -78,7 +83,7 @@ class _RecordScreenState extends State<RecordScreen> {
     if (widget.needReentry) {
       recordBLoC.add(RecordEvent.fetchLastBooking());
     }
-
+    recordId = widget.recordId;
     currentService = widget.servicePreset;
     currentEmployee = widget.employeePreset;
     currentDate = widget.datePreset;
@@ -187,7 +192,7 @@ class _RecordScreenState extends State<RecordScreen> {
                             ),
                             onTap: () => context.goNamed(
                               'choice_service_from_record',
-                              extra: {'servicePreset': currentService},
+                              extra: currentService,
                               queryParameters: {
                                 'salon_id': currentSalon!.id.toString(),
                                 if (currentEmployee != null)
@@ -210,7 +215,7 @@ class _RecordScreenState extends State<RecordScreen> {
                             ),
                             onTap: () => context.goNamed(
                               'choice_employee_from_record',
-                              extra: {'employeePreset': currentEmployee},
+                              extra: currentEmployee,
                               queryParameters: {
                                 'salon_id': currentSalon!.id.toString(),
                                 if (currentService != null)
@@ -233,7 +238,7 @@ class _RecordScreenState extends State<RecordScreen> {
                             ),
                             onTap: () => context.goNamed(
                               'choice_date_from_record',
-                              extra: {'datePreset': currentDate},
+                              extra: currentDate,
                               queryParameters: {
                                 'salon_id': currentSalon!.id.toString(),
                                 if (currentService != null)
@@ -265,18 +270,22 @@ class _RecordScreenState extends State<RecordScreen> {
                               // TODO: Wait until asset in
                               //  CongratilationScreen was loaded.
                               if (_formKey.currentState!.validate()) {
-                                recordBLoC.add(
-                                  RecordEvent.create(
-                                    dateAt: currentDate!.$2,
-                                    salonId: currentSalon?.id ?? 1,
-                                    clientId: auth.user?.id ?? 1,
-                                    serviceId: currentService!.id,
-                                    employeeId: currentEmployee!.id,
-                                    timeblockId: currentDate!.$1.id,
-                                    price: currentService!.price,
-                                    comment: commentController.text,
-                                  ),
-                                );
+                                // TODO: Временно, убрать после теста
+                                if (recordId != null) {
+                                  recordBLoC.add(
+                                    RecordEvent.create(
+                                      recordId: recordId,
+                                      dateAt: currentDate!.$2,
+                                      salonId: currentSalon?.id ?? 1,
+                                      clientId: auth.user?.id ?? 1,
+                                      serviceId: currentService!.id,
+                                      employeeId: currentEmployee!.id,
+                                      timeblockId: currentDate!.$1.id,
+                                      price: currentService!.price,
+                                      comment: commentController.text,
+                                    ),
+                                  );
+                                }
                               }
                             },
                             child: Container(

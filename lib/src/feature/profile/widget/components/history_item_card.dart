@@ -105,9 +105,10 @@ class HistoryItemCard extends StatelessWidget {
           const SizedBox(height: 8),
           FilledButton(
             onPressed: () {
-              context.go(
-                '/home/record',
+              context.goNamed(
+                'record',
                 extra: {
+                  'recordId': booking.id,
                   'servicePreset': booking.service,
                   'employeePreset': booking.employee,
                 },

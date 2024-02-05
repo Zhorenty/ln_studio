@@ -50,8 +50,7 @@ class TimeblocksWrap extends StatelessWidget {
                       child: AnimatedButton(
                         onPressed: () => context.goNamed(
                           'record',
-                          // TODO: Проверить что тут происходит, это же не правильная передача
-                          extra: (timeblock, dateAt),
+                          extra: {'datePreset': (timeblock, dateAt)},
                         ),
                         child: Chip(
                           backgroundColor: context.colorScheme.primary,
