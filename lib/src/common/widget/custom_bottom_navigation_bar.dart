@@ -50,7 +50,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 BottomNavigationBarItem(
                   icon: const AnimatedButton(
                     child: Icon(
-                      Icons.qr_code_outlined,
+                      Icons.store_rounded,
                       color: Color(0xFF828282),
                       size: 28,
                     ),
