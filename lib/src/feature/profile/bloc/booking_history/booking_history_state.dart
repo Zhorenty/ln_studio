@@ -47,12 +47,11 @@ abstract base class _$BookingHistoryStateBase {
   @nonVirtual
   final String? error;
 
-  List<BookingModel> get upcomingEvents => bookingHistory
-    ..reversed
-        .where(
-          (e) => !e.isDone && !e.isCanceled,
-        )
-        .toList();
+  List<BookingModel> get upcomingEvents => bookingHistory.reversed
+      .where(
+        (e) => !e.isDone && !e.isCanceled,
+      )
+      .toList();
 
   List<BookingModel> get pastEvents => bookingHistory.reversed
       .where(

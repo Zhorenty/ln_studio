@@ -271,21 +271,19 @@ class _RecordScreenState extends State<RecordScreen> {
                               //  CongratilationScreen was loaded.
                               if (_formKey.currentState!.validate()) {
                                 // TODO: Временно, убрать после теста
-                                if (recordId != null) {
-                                  recordBLoC.add(
-                                    RecordEvent.create(
-                                      recordId: recordId,
-                                      dateAt: currentDate!.$2,
-                                      salonId: currentSalon?.id ?? 1,
-                                      clientId: auth.user?.id ?? 1,
-                                      serviceId: currentService!.id,
-                                      employeeId: currentEmployee!.id,
-                                      timeblockId: currentDate!.$1.id,
-                                      price: currentService!.price,
-                                      comment: commentController.text,
-                                    ),
-                                  );
-                                }
+                                recordBLoC.add(
+                                  RecordEvent.create(
+                                    recordId: recordId,
+                                    dateAt: currentDate!.$2,
+                                    salonId: currentSalon?.id ?? 1,
+                                    clientId: auth.user?.id ?? 1,
+                                    serviceId: currentService!.id,
+                                    employeeId: currentEmployee!.id,
+                                    timeblockId: currentDate!.$1.id,
+                                    price: currentService!.price,
+                                    comment: commentController.text,
+                                  ),
+                                );
                               }
                             },
                             child: Container(

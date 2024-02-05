@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -116,6 +117,19 @@ class HistoryItemCard extends StatelessWidget {
             },
             child: const Text('Перенести'),
           ),
+          if (kDebugMode) ...[
+            const SizedBox(height: 8),
+            const Text(
+              'Debug:',
+              style: TextStyle(color: Colors.red),
+            ),
+            const SizedBox(height: 2),
+            Text('ID: ${booking.id}'),
+            const SizedBox(height: 2),
+            Text('isDone: ${booking.isDone}'),
+            const SizedBox(height: 2),
+            Text('isCanceled: ${booking.isCanceled}'),
+          ]
         ],
       ),
     );
