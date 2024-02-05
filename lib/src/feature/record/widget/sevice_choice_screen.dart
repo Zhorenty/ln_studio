@@ -314,7 +314,7 @@ class _ServiceCardState extends State<ServiceCard> {
                               text: widget.service.description,
                               style: context.textTheme.bodyMedium!.copyWith(
                                 fontFamily: FontFamily.geologica,
-                                color: context.colorScheme.primaryContainer,
+                                // color: context.colorScheme.primaryContainer,
                               ),
                             ),
                             TextSpan(
@@ -322,7 +322,7 @@ class _ServiceCardState extends State<ServiceCard> {
                                   '${widget.service.duration} минут',
                               style: context.textTheme.bodyMedium!.copyWith(
                                 fontFamily: FontFamily.geologica,
-                                color: context.colorScheme.primaryContainer,
+                                // color: context.colorScheme.primaryContainer,
                               ),
                             ),
                           ],
