@@ -20,9 +20,9 @@ import 'package:ln_studio/src/feature/record/widget/record_screen.dart';
 import 'package:ln_studio/src/feature/record/widget/sevice_choice_screen.dart';
 import 'package:ln_studio/src/feature/salon/models/salon.dart';
 import 'package:ln_studio/src/feature/salon/widget/salon_choice_screen.dart';
+import 'package:ln_studio/src/feature/store/widget/store_screen.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
-import '/src/feature/qr_code/widget/qr_code_screen.dart';
 import '/src/feature/home/widget/home_screen.dart';
 import '/src/feature/profile/widget/profile_screen.dart';
 
@@ -209,11 +209,11 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/qr_code',
-              builder: (context, state) => const QRCodeScreen(),
+              path: '/store',
+              builder: (context, state) => const StoreScreen(),
               routes: [
                 GoRoute(
-                  name: 'salon_choice_from_qr',
+                  name: 'salon_choice_from_store',
                   path: 'salon_choice',
                   parentNavigatorKey: _parentKey,
                   builder: (context, state) => SalonChoiceScreen(

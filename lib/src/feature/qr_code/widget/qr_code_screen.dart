@@ -15,6 +15,7 @@ import 'components/qr_code_widget.dart';
 /// {@template qr_code_screen}
 /// QRCodeScreen widget.
 /// {@endtemplate}
+@Deprecated('Пока этот экран не используется')
 class QRCodeScreen extends StatelessWidget {
   /// {@macro qr_code_screen}
   const QRCodeScreen({super.key});
