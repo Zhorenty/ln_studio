@@ -157,7 +157,10 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                                             selectedEmployee = cardEmployee;
                                             context.goNamed(
                                               'record',
-                                              extra: selectedEmployee,
+                                              extra: {
+                                                'employeePreset':
+                                                    selectedEmployee,
+                                              },
                                             );
                                           }),
                                         )
@@ -197,7 +200,7 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
                     visible: visible,
                     onPressed: () => context.goNamed(
                       'record',
-                      extra: selectedEmployee,
+                      extra: {'employeePreset': selectedEmployee},
                     ),
                   ),
                 ),

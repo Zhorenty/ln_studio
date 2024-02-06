@@ -6,7 +6,6 @@ import 'package:ln_studio/src/feature/profile/model/booking.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
-import '/src/common/utils/extensions/date_time_extension.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/profile/bloc/booking_history/booking_history_bloc.dart';
 import '/src/feature/profile/bloc/booking_history/booking_history_event.dart';
@@ -79,8 +78,14 @@ class BookingHistoryScreen extends StatelessWidget {
               builder: (context, state) {
                 return TabBarView(
                   children: [
-                    _BookingList(state.upcomingEvents),
-                    _BookingList(state.pastEvents),
+                    _BookingList(
+                      bookingHistory: state.upcomingEvents,
+                      isUpcoming: true,
+                    ),
+                    _BookingList(
+                      bookingHistory: state.pastEvents,
+                      isUpcoming: false,
+                    ),
                   ],
                 );
               }),
@@ -91,22 +96,13 @@ class BookingHistoryScreen extends StatelessWidget {
 }
 
 class _BookingList extends StatelessWidget {
-  const _BookingList(this.bookingHistory);
+  const _BookingList({
+    required this.bookingHistory,
+    required bool isUpcoming,
+  }) : title = isUpcoming ? 'Предстоящих записей нет' : 'Прошедших записей нет';
 
   final List<BookingModel> bookingHistory;
-
-  ///
-  String createTimeWithDuration(String serverTime, int duration) {
-    DateTime parsedTime = DateTime.parse('2022-01-01 $serverTime');
-    DateTime endTime = parsedTime.add(Duration(minutes: duration));
-
-    String formattedStartTime =
-        '${parsedTime.hour}:${parsedTime.minute.toString().padLeft(2, '0')}:${parsedTime.second.toString().padLeft(2, '0')}';
-    String formattedEndTime =
-        '${endTime.hour}:${endTime.minute.toString().padLeft(2, '0')}:${endTime.second.toString().padLeft(2, '0')}';
-
-    return '${formattedStartTime.substring(0, formattedStartTime.length - 3)} - ${formattedEndTime.substring(0, formattedEndTime.length - 3)}';
-  }
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -118,21 +114,11 @@ class _BookingList extends StatelessWidget {
       child: bookingHistory.isNotEmpty
           ? ListView.builder(
               itemCount: bookingHistory.length,
-              itemBuilder: (context, index) {
-                final item = bookingHistory[index];
-                return HistoryItemCard(
-                  title: item.employee.fullName,
-                  subtitle: item.service.name,
-                  dateAt: item.dateAt.defaultFormat(),
-                  timeblock: createTimeWithDuration(
-                    item.timeblock.time,
-                    item.service.duration!,
-                  ),
-                );
-              },
+              itemBuilder: (context, index) =>
+                  HistoryItemCard(bookingHistory[index]),
             )
           : InformationWidget.empty(
-              title: 'Предстоящих записей нет',
+              title: title,
               description: null,
               reloadFunc: () => context.read<BookingHistoryBloc>().add(
                     const BookingHistoryEvent.fetchAll(),

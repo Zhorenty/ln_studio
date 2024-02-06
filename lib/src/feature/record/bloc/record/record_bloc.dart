@@ -38,6 +38,10 @@ class RecordBLoC extends Bloc<RecordEvent, RecordState>
   ) async {
     try {
       emit(RecordState.processing(lastBooking: state.lastBooking));
+      // Если есть recordId, значит мы делаем перезапись и надо удалить текущую
+      if (event.recordId != null) {
+        await repository.deleteRecord(event.recordId!);
+      }
       await repository.createRecord(
         RecordModel$Create(
           date: event.dateAt,

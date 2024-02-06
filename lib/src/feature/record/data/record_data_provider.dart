@@ -41,6 +41,8 @@ abstract interface class RecordDataProvider {
 
   Future<void> createRecord(RecordModel$Create recordData);
 
+  Future<void> deleteRecord(int recordId);
+
   Future<BookingModel> fetchLastBooking();
 }
 
@@ -154,6 +156,10 @@ class RecordDataProviderImpl implements RecordDataProvider {
       data: body,
     );
   }
+
+  @override
+  Future<void> deleteRecord(int recordId) =>
+      restClient.get('/api/v1/book/cancel/$recordId');
 
   @override
   Future<BookingModel> fetchLastBooking() async {

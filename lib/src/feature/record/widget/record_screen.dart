@@ -25,11 +25,15 @@ typedef TimeblockWithDate = (EmployeeTimeblock$Response, String);
 class RecordScreen extends StatefulWidget {
   const RecordScreen({
     super.key,
+    this.recordId,
     this.servicePreset,
     this.employeePreset,
     this.datePreset,
     this.needReentry = false,
   });
+
+  ///
+  final int? recordId;
 
   ///
   final ServiceModel? servicePreset;
@@ -63,6 +67,7 @@ class _RecordScreenState extends State<RecordScreen> {
   ///
   late final FocusNode commentFocusNode;
 
+  int? recordId;
   ServiceModel? currentService;
   EmployeeModel? currentEmployee;
   TimeblockWithDate? currentDate;
@@ -78,7 +83,7 @@ class _RecordScreenState extends State<RecordScreen> {
     if (widget.needReentry) {
       recordBLoC.add(RecordEvent.fetchLastBooking());
     }
-
+    recordId = widget.recordId;
     currentService = widget.servicePreset;
     currentEmployee = widget.employeePreset;
     currentDate = widget.datePreset;
@@ -265,8 +270,10 @@ class _RecordScreenState extends State<RecordScreen> {
                               // TODO: Wait until asset in
                               //  CongratilationScreen was loaded.
                               if (_formKey.currentState!.validate()) {
+                                // TODO: Временно, убрать после теста
                                 recordBLoC.add(
                                   RecordEvent.create(
+                                    recordId: recordId,
                                     dateAt: currentDate!.$2,
                                     salonId: currentSalon?.id ?? 1,
                                     clientId: auth.user?.id ?? 1,
