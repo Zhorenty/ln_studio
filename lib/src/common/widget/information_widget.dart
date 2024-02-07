@@ -5,7 +5,7 @@ import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 class InformationWidget extends StatelessWidget {
   const InformationWidget({
     Key? key,
-    this.imagePath,
+    required this.customImagePath,
     this.isNeedToShowImage = false,
     required this.title,
     required this.description,
@@ -14,30 +14,30 @@ class InformationWidget extends StatelessWidget {
 
   InformationWidget.empty({
     Key? key,
-    String? imagePath,
+    String? customImagePath,
     this.isNeedToShowImage = false,
     this.title = 'Упс',
-    String? description = 'Данные отсутствуют',
+    this.description = 'Данные отсутствуют',
     this.reloadFunc,
-  })  : imagePath = imagePath ?? Assets.images.placeholder.path, // emptyImage
-        description = description ?? 'Данные отсутствуют',
+  })  : customImagePath =
+            customImagePath ?? Assets.images.placeholder.path, // emptyImage
         super(key: key);
 
   InformationWidget.error({
     Key? key,
-    String? imagePath,
+    String? customImagePath,
     this.isNeedToShowImage = false,
     this.title = 'Ошибка',
-    String? description = 'Что-то пошло не так',
+    this.description = 'Что-то пошло не так',
     required this.reloadFunc,
-  })  : imagePath = imagePath ?? Assets.images.placeholder.path, // errorImage
-        description = description ?? 'Что-то пошло не так',
+  })  : customImagePath =
+            customImagePath ?? Assets.images.placeholder.path, // errorImage
         super(key: key);
 
-  final String? imagePath;
+  final String customImagePath;
   final bool isNeedToShowImage;
   final String title;
-  final String description;
+  final String? description;
   final VoidCallback? reloadFunc;
 
   @override
@@ -53,12 +53,12 @@ class InformationWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (isNeedToShowImage && imagePath != null)
+          if (isNeedToShowImage)
             Padding(
               padding: const EdgeInsets.all(20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(25),
-                child: Image.asset(imagePath!),
+                child: Image.asset(customImagePath),
               ),
             ),
           Text(
@@ -68,23 +68,25 @@ class InformationWidget extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              description,
-              style: const TextStyle(
-                fontSize: 15,
-                color: Colors.white,
+          if (description != null) ...[
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                description!,
+                style: const TextStyle(
+                  fontSize: 15,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
-          ),
+          ],
           if (reloadFunc != null) ...[
             const SizedBox(height: 8),
             FilledButton(
               onPressed: reloadFunc,
-              child: const Text('Попробовать снова'),
+              child: const Text('Обновить'),
             ),
           ]
         ],

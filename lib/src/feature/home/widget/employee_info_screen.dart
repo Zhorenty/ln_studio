@@ -134,7 +134,7 @@ class _EmployeeInfoScreenState extends State<EmployeeInfoScreen> {
               child: ElevatedButton(
                 onPressed: () => context.goNamed(
                   'record',
-                  extra: widget.employee,
+                  extra: {'employeePreset': widget.employee},
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.colorScheme.primary,

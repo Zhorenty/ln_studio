@@ -1,18 +1,36 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
+import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/common/widget/avatar_widget.dart';
+import 'package:ln_studio/src/feature/profile/model/booking.dart';
+
+///
+String _createTimeWithDuration(String serverTime, int duration) {
+  DateTime parsedTime = DateTime.parse('2022-01-01 $serverTime');
+  DateTime endTime = parsedTime.add(Duration(minutes: duration));
+
+  String formattedStartTime =
+      '${parsedTime.hour}:${parsedTime.minute.toString().padLeft(2, '0')}:${parsedTime.second.toString().padLeft(2, '0')}';
+  String formattedEndTime =
+      '${endTime.hour}:${endTime.minute.toString().padLeft(2, '0')}:${endTime.second.toString().padLeft(2, '0')}';
+
+  return '${formattedStartTime.substring(0, formattedStartTime.length - 3)} - ${formattedEndTime.substring(0, formattedEndTime.length - 3)}';
+}
 
 ///
 class HistoryItemCard extends StatelessWidget {
-  const HistoryItemCard({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.dateAt,
-    required this.timeblock,
-  });
+  HistoryItemCard(this.booking, {super.key})
+      : title = booking.employee.fullName,
+        subtitle = booking.service.name,
+        dateAt = booking.dateAt.defaultFormat(),
+        timeblock = _createTimeWithDuration(
+          booking.timeblock.time,
+          booking.service.duration!,
+        );
 
   ///
   final String title;
@@ -25,6 +43,8 @@ class HistoryItemCard extends StatelessWidget {
 
   ///
   final String timeblock;
+
+  final BookingModel booking;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +102,34 @@ class HistoryItemCard extends StatelessWidget {
               color: context.colorScheme.secondary,
               fontFamily: FontFamily.geologica,
             ),
-          )
+          ),
+          const SizedBox(height: 8),
+          FilledButton(
+            onPressed: () {
+              context.goNamed(
+                'record',
+                extra: {
+                  'recordId': booking.id,
+                  'servicePreset': booking.service,
+                  'employeePreset': booking.employee,
+                },
+              );
+            },
+            child: const Text('Перенести'),
+          ),
+          if (kDebugMode) ...[
+            const SizedBox(height: 8),
+            const Text(
+              'Debug:',
+              style: TextStyle(color: Colors.red),
+            ),
+            const SizedBox(height: 2),
+            Text('ID: ${booking.id}'),
+            const SizedBox(height: 2),
+            Text('isDone: ${booking.isDone}'),
+            const SizedBox(height: 2),
+            Text('isCanceled: ${booking.isCanceled}'),
+          ]
         ],
       ),
     );
