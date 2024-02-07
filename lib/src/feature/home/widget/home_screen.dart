@@ -182,7 +182,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   } else if (!state.isProcessing && employees.isEmpty) {
-                    return InformationWidget.empty();
+                    return InformationWidget.empty(
+                      description:
+                          'Сотрудники куда-то делись, уже востанавливаем данные',
+                    );
                   }
                   return SizedBox(
                     height: 192,
