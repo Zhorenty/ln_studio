@@ -1,11 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/common/widget/avatar_widget.dart';
+import 'package:ln_studio/src/feature/profile/bloc/booking_history/booking_history_bloc.dart';
+import 'package:ln_studio/src/feature/profile/bloc/booking_history/booking_history_event.dart';
 import 'package:ln_studio/src/feature/profile/model/booking.dart';
 
 ///
@@ -104,18 +107,32 @@ class HistoryItemCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          FilledButton(
-            onPressed: () {
-              context.goNamed(
-                'record',
-                extra: {
-                  'recordId': booking.id,
-                  'servicePreset': booking.service,
-                  'employeePreset': booking.employee,
+          Row(
+            children: [
+              FilledButton(
+                onPressed: () {
+                  context.goNamed(
+                    'record',
+                    extra: {
+                      'recordId': booking.id,
+                      'servicePreset': booking.service,
+                      'employeePreset': booking.employee,
+                    },
+                  );
                 },
-              );
-            },
-            child: const Text('Перенести'),
+                child: const Text('Перенести'),
+              ),
+              const SizedBox(width: 8),
+              TextButton(
+                onPressed: () => context.read<BookingHistoryBloc>().add(
+                      BookingHistoryEvent.cancelBooking(booking.id),
+                    ),
+                child: Text(
+                  'Отменить',
+                  style: TextStyle(color: context.colorScheme.error),
+                ),
+              ),
+            ],
           ),
           if (kDebugMode) ...[
             const SizedBox(height: 8),

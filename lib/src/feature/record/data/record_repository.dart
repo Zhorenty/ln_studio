@@ -41,7 +41,7 @@ abstract interface class RecordRepository {
 
   Future<void> createRecord(RecordModel$Create recordData);
 
-  Future<void> deleteRecord(int recordId);
+  Future<void> cancelRecord(int recordId);
 
   Future<BookingModel> fetchLastBooking();
 }
@@ -112,8 +112,8 @@ final class RecordRepositoryImpl implements RecordRepository {
       _dataProvider.createRecord(recordData);
 
   @override
-  Future<void> deleteRecord(int recordId) =>
-      _dataProvider.deleteRecord(recordId);
+  Future<void> cancelRecord(int recordId) =>
+      _dataProvider.cancelRecord(recordId);
 
   @override
   Future<BookingModel> fetchLastBooking() => _dataProvider.fetchLastBooking();

@@ -21,6 +21,7 @@ class BookingHistoryScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => BookingHistoryBloc(
         repository: DependenciesScope.of(context).profileRepository,
+        recordRepository: DependenciesScope.of(context).recordRepository,
       )..add(const BookingHistoryEvent.fetchAll()),
       child: DefaultTabController(
         length: 2,
