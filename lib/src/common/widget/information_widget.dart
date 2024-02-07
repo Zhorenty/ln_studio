@@ -9,7 +9,7 @@ class InformationWidget extends StatelessWidget {
     this.isNeedToShowImage = false,
     required this.title,
     required this.description,
-    required this.reloadFunc,
+    this.reloadFunc,
   }) : super(key: key);
 
   InformationWidget.empty({
