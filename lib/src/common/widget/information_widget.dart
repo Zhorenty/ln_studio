@@ -5,7 +5,7 @@ import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 class InformationWidget extends StatelessWidget {
   const InformationWidget({
     Key? key,
-    required this.customImagePath,
+    this.customImagePath,
     this.isNeedToShowImage = false,
     required this.title,
     required this.description,
@@ -34,7 +34,7 @@ class InformationWidget extends StatelessWidget {
             customImagePath ?? Assets.images.placeholder.path, // errorImage
         super(key: key);
 
-  final String customImagePath;
+  final String? customImagePath;
   final bool isNeedToShowImage;
   final String title;
   final String? description;
@@ -53,12 +53,12 @@ class InformationWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (isNeedToShowImage)
+          if (isNeedToShowImage && customImagePath != null)
             Padding(
               padding: const EdgeInsets.all(20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(25),
-                child: Image.asset(customImagePath),
+                child: Image.asset(customImagePath!),
               ),
             ),
           Text(

@@ -51,9 +51,13 @@ class BookingHistoryBloc
   ) async {
     try {
       await recordRepository.cancelRecord(event.bookingId);
-      state.bookingHistory.removeWhere(
+      state.bookingHistory[state.bookingHistory.indexWhere(
         (e) => e.id == event.bookingId,
-      );
+      )] = state.bookingHistory[state.bookingHistory.indexWhere(
+        (e) => e.id == event.bookingId,
+      )]
+          .copyWith(isCanceled: true);
+
       emit(BookingHistoryState.loaded(bookingHistory: state.bookingHistory));
     } on Object catch (e) {
       emit(BookingHistoryState.idle(

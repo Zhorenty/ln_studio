@@ -106,34 +106,43 @@ class HistoryItemCard extends StatelessWidget {
               fontFamily: FontFamily.geologica,
             ),
           ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              FilledButton(
-                onPressed: () {
-                  context.goNamed(
-                    'record',
-                    extra: {
-                      'recordId': booking.id,
-                      'servicePreset': booking.service,
-                      'employeePreset': booking.employee,
-                    },
-                  );
-                },
-                child: const Text('Перенести'),
-              ),
-              const SizedBox(width: 8),
-              TextButton(
-                onPressed: () => context.read<BookingHistoryBloc>().add(
-                      BookingHistoryEvent.cancelBooking(booking.id),
-                    ),
-                child: Text(
-                  'Отменить',
-                  style: TextStyle(color: context.colorScheme.error),
+          if (!booking.isDone && !booking.isCanceled) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                FilledButton(
+                  onPressed: () {
+                    context.goNamed(
+                      'record',
+                      extra: {
+                        'recordId': booking.id,
+                        'servicePreset': booking.service,
+                        'employeePreset': booking.employee,
+                      },
+                    );
+                  },
+                  child: const Text('Перенести'),
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(width: 8),
+                TextButton(
+                  onPressed: () => context.read<BookingHistoryBloc>().add(
+                        BookingHistoryEvent.cancelBooking(booking.id),
+                      ),
+                  child: Text(
+                    'Отменить',
+                    style: TextStyle(color: context.colorScheme.error),
+                  ),
+                ),
+              ],
+            ),
+          ],
+          if (booking.isCanceled) ...[
+            const SizedBox(height: 4),
+            Text(
+              'Отменено',
+              style: TextStyle(color: context.colorScheme.error, fontSize: 18),
+            ),
+          ],
           if (kDebugMode) ...[
             const SizedBox(height: 8),
             const Text(
@@ -146,7 +155,7 @@ class HistoryItemCard extends StatelessWidget {
             Text('isDone: ${booking.isDone}'),
             const SizedBox(height: 2),
             Text('isCanceled: ${booking.isCanceled}'),
-          ]
+          ],
         ],
       ),
     );

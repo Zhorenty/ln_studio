@@ -10,7 +10,7 @@ sealed class BookingHistoryEvent extends _$BookingHistoryEventBase {
   /// Factory for fetching BookingHistory.
   const factory BookingHistoryEvent.fetchAll() = BookingHistoryEvent$Fetch;
 
-  /// Factory for cancen booking.
+  /// Factory for cancel booking.
   const factory BookingHistoryEvent.cancelBooking(int bookingId) =
       BookingHistoryEvent$Cancel;
 }
