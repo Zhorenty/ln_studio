@@ -73,4 +73,29 @@ final class BookingModel {
         'timeblock': timeblock.toJson(),
         'is_done': isDone,
       };
+
+  BookingModel copyWith({
+    int? id,
+    DateTime? dateAt,
+    int? price,
+    String? comment,
+    Salon? salon,
+    EmployeeModel? employee,
+    ServiceModel? service,
+    EmployeeTimeblock$Response? timeblock,
+    bool? isDone,
+    bool? isCanceled,
+  }) =>
+      BookingModel(
+        id: id ?? this.id,
+        dateAt: dateAt ?? this.dateAt,
+        price: price ?? this.price,
+        comment: comment ?? this.comment,
+        salon: salon ?? this.salon,
+        employee: employee ?? this.employee,
+        service: service ?? this.service,
+        timeblock: timeblock ?? this.timeblock,
+        isDone: isDone ?? this.isDone,
+        isCanceled: isCanceled ?? this.isCanceled,
+      );
 }
