@@ -7,6 +7,9 @@ sealed class SalonEvent {
   /// Fetch
   const factory SalonEvent.fetchAll() = SalonEvent$FetchAll;
 
+  /// Get current
+  const factory SalonEvent.getCurrent() = SalonEvent$GetCurrent;
+
   /// Save current
   const factory SalonEvent.saveCurrent(Salon salon) = SalonEvent$SaveCurrent;
 }
@@ -14,6 +17,10 @@ sealed class SalonEvent {
 /// Fetch all salons.
 class SalonEvent$FetchAll extends SalonEvent {
   const SalonEvent$FetchAll();
+}
+
+class SalonEvent$GetCurrent extends SalonEvent {
+  const SalonEvent$GetCurrent();
 }
 
 class SalonEvent$SaveCurrent extends SalonEvent {

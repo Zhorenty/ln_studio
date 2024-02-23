@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -20,7 +23,7 @@ class SalonChoiceScreen extends StatefulWidget {
   /// {@macro salon_choice_screen}
   const SalonChoiceScreen({
     super.key,
-    required this.currentSalon,
+    this.currentSalon,
     this.onChanged,
   });
 
@@ -48,7 +51,18 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: context.colorScheme.onBackground,
-        body: BlocBuilder<SalonBLoC, SalonState>(
+        body: BlocConsumer<SalonBLoC, SalonState>(
+          listener: (context, state) {
+            if (state.currentSalon != null) {
+              context.pop();
+            }
+          },
+          listenWhen: (previous, current) {
+            if (previous.currentSalon?.id != current.currentSalon?.id) {
+              return true;
+            }
+            return false;
+          },
           builder: (context, state) {
             return salonBloc.state.hasData
                 ? CustomScrollView(
@@ -64,7 +78,30 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
                         leading: AnimatedButton(
                           padding: const EdgeInsets.only(right: 12),
                           child: const Icon(Icons.arrow_back_ios_new_rounded),
-                          onPressed: () => context.pop(),
+                          onPressed: () => state.currentSalon != null
+                              ? context.pop()
+                              : showAdaptiveDialog(
+                                  context: context,
+                                  // TODO: Вынести в CustomAlert
+                                  builder: (context) => AlertDialog.adaptive(
+                                    title: const Text('Выберите салон'),
+                                    content: const Text(
+                                      'Для использования приложения необходимо выбрать желаемый салон',
+                                    ),
+                                    actions: [
+                                      Platform.isIOS
+                                          ? CupertinoDialogAction(
+                                              onPressed: context.pop,
+                                              isDefaultAction: true,
+                                              child: const Text('Окей'),
+                                            )
+                                          : TextButton(
+                                              onPressed: context.pop,
+                                              child: const Text('Окей'),
+                                            ),
+                                    ],
+                                  ),
+                                ),
                         ),
                       ),
                       SliverPadding(
@@ -83,7 +120,6 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
                                 } else {
                                   setState(() => widget.onChanged!(salon));
                                 }
-                                context.pop();
                               },
                             );
                           },

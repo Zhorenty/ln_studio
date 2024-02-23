@@ -8,7 +8,6 @@ import '/src/common/widget/scope_widgets.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/initialization/model/dependencies.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
-import '/src/feature/salon/bloc/salon_event.dart';
 
 import 'app_context.dart';
 
@@ -30,7 +29,7 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) => SalonBLoC(
               repository: result.dependencies.salonRepository,
-            )..add(const SalonEvent.fetchAll()),
+            ),
           ),
           BlocProvider(
             create: (context) => NewsBLoC(

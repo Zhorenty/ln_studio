@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:collection/collection.dart';
 
 import '/src/feature/salon/data/salon_repository.dart';
 import 'salon_event.dart';
@@ -23,6 +24,7 @@ class SalonBLoC extends Bloc<SalonEvent, SalonState> {
     on<SalonEvent>(
       (event, emit) => switch (event) {
         SalonEvent$FetchAll() => _fetchAll(emit),
+        SalonEvent$GetCurrent() => _getCurrent(emit),
         SalonEvent$SaveCurrent() => _saveCurrent(event, emit),
       },
     );
@@ -41,17 +43,11 @@ class SalonBLoC extends Bloc<SalonEvent, SalonState> {
         ),
       );
       final salons = await _repository.fetchSalons();
-      final currentSalonIdFromDB = await _repository.getCurrentSalonId();
-      // TODO(evklidus): Попробовать инкапсулировать логику в репозитории
-      if (currentSalonIdFromDB == null) {
-        await _repository.saveCurrentSalonId(salons.first.id);
-      }
 
-      final currentSalon = currentSalonIdFromDB != null
-          ? salons.firstWhere((salon) => salon.id == currentSalonIdFromDB)
-          : salons.first;
-
-      emit(SalonState.successful(data: salons, currentSalon: currentSalon));
+      emit(SalonState.successful(
+        data: salons,
+        currentSalon: state.currentSalon,
+      ));
     } on Object catch (err, _) {
       emit(
         SalonState.error(data: state.data, currentSalon: state.currentSalon),
@@ -65,7 +61,7 @@ class SalonBLoC extends Bloc<SalonEvent, SalonState> {
   }
 
   /// Returns current salon from repository.
-  Future<void> getCurrentSalon(Emitter<SalonState> emit) async {
+  Future<void> _getCurrent(Emitter<SalonState> emit) async {
     try {
       emit(
         SalonState.processing(
@@ -75,14 +71,10 @@ class SalonBLoC extends Bloc<SalonEvent, SalonState> {
       );
       final salons = await _repository.fetchSalons();
       final currentSalonIdFromDB = await _repository.getCurrentSalonId();
-      // TODO(evklidus): Попробовать инкапсулировать логику в репозитории
-      if (currentSalonIdFromDB == null) {
-        await _repository.saveCurrentSalonId(salons.first.id);
-      }
 
-      final currentSalon = currentSalonIdFromDB != null
-          ? salons.firstWhere((salon) => salon.id == currentSalonIdFromDB)
-          : salons.first;
+      final currentSalon = salons.firstWhereOrNull(
+        (salon) => salon.id == currentSalonIdFromDB,
+      );
 
       emit(SalonState.successful(data: salons, currentSalon: currentSalon));
     } on Object catch (err, _) {
