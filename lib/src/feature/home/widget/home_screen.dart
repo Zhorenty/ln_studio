@@ -139,31 +139,31 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               const CustomHeader(label: 'Записаться'),
               SizedBox(
-                height: 100,
+                height: MediaQuery.sizeOf(context).width * 0.35,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
                     RecordTypeCard(
                       ignoring: state.currentSalon == null,
-                      image: Assets.images.serviceIcon.image(scale: 10),
+                      imageName: Assets.images.serviceIcon.keyName,
                       description: 'На услугу',
                       onTap: () => context.goNamed('choice_service'),
                     ),
                     RecordTypeCard(
                       ignoring: state.currentSalon == null,
-                      image: Assets.images.employeeIcon.image(scale: 10),
+                      imageName: Assets.images.employeeIcon.keyName,
                       description: 'К мастеру',
                       onTap: () => context.goNamed('choice_employee'),
                     ),
                     RecordTypeCard(
                       ignoring: state.currentSalon == null,
-                      image: Assets.images.calendarIcon.image(scale: 10),
+                      imageName: Assets.images.calendarIcon.keyName,
                       description: 'На дату',
                       onTap: () => context.goNamed('choice_date'),
                     ),
                     RecordTypeCard(
                       ignoring: state.currentSalon == null,
-                      image: Assets.images.repeatIcon.image(scale: 10),
+                      imageName: Assets.images.repeatIcon.keyName,
                       description: 'Повторно',
                       onTap: () => context.goNamed(
                         'record',
