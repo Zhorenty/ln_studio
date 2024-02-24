@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -270,7 +271,6 @@ class _RecordScreenState extends State<RecordScreen> {
                               // TODO: Wait until asset in
                               //  CongratilationScreen was loaded.
                               if (_formKey.currentState!.validate()) {
-                                // TODO: Временно, убрать после теста
                                 recordBLoC.add(
                                   RecordEvent.create(
                                     recordId: recordId,
@@ -284,6 +284,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                     comment: commentController.text,
                                   ),
                                 );
+                                HapticFeedback.heavyImpact().ignore();
                               }
                             },
                             child: Container(

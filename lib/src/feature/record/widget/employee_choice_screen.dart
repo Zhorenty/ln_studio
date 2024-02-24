@@ -112,85 +112,89 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
             backgroundColor: context.colorScheme.onBackground,
             body: Stack(
               children: [
-                CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      title: Text(
-                        'Выберите мастера',
-                        style: context.textTheme.titleLarge!.copyWith(
-                          color: context.colorScheme.secondary,
-                          fontFamily: FontFamily.geologica,
-                        ),
-                      ),
-                      centerTitle: true,
-                      pinned: true,
-                      actions: [
-                        AnimatedButton(
-                          padding: const EdgeInsets.only(right: 8 + 2, top: 2),
-                          child: Icon(
-                            Icons.person_search_rounded,
+                RefreshIndicator.adaptive(
+                  onRefresh: _onRefresh,
+                  edgeOffset: 100,
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        title: Text(
+                          'Выберите мастера',
+                          style: context.textTheme.titleLarge!.copyWith(
                             color: context.colorScheme.secondary,
+                            fontFamily: FontFamily.geologica,
                           ),
-                          onPressed: () {},
                         ),
-                      ],
-                    ),
-                    CupertinoSliverRefreshControl(onRefresh: _refresh),
-                    SliverAnimatedOpacity(
-                      opacity: state.isProcessing ? .5 : 1,
-                      duration: const Duration(milliseconds: 1000),
-                      sliver: SliverPadding(
-                        padding: const EdgeInsets.all(8),
-                        sliver: state.hasEmployee
-                            ? SliverList.builder(
-                                itemCount: state.employees.length,
-                                itemBuilder: (context, index) {
-                                  final employee = state.employees[index];
-
-                                  return !employee.isDismiss
-                                      ? EmployeeCard(
-                                          employee: employee,
-                                          selectedEmployee: selectedEmployee,
-                                          onChanged: (cardEmployee) =>
-                                              setState(() {
-                                            visible = true;
-                                            selectedEmployee = cardEmployee;
-                                            context.goNamed(
-                                              'record',
-                                              extra: {
-                                                'employeePreset':
-                                                    selectedEmployee,
-                                              },
-                                            );
-                                          }),
-                                        )
-                                      : const SizedBox.shrink();
-                                },
-                              )
-                            : state.isProcessing
-                                ? SliverList.separated(
-                                    itemCount: 5,
-                                    itemBuilder: (context, index) =>
-                                        const SkeletonEmployeeCard(),
-                                    separatorBuilder: (c, i) =>
-                                        const SizedBox(),
-                                  )
-                                : SliverToBoxAdapter(
-                                    child: InformationWidget.empty(
-                                      description:
-                                          'Для выбранных параметров мастера отсутствуют',
-                                    ),
-                                  ),
+                        centerTitle: true,
+                        pinned: true,
+                        actions: [
+                          AnimatedButton(
+                            padding:
+                                const EdgeInsets.only(right: 8 + 2, top: 2),
+                            child: Icon(
+                              Icons.person_search_rounded,
+                              color: context.colorScheme.secondary,
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
                       ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: visible
-                          ? SizedBox(
-                              height: MediaQuery.sizeOf(context).height / 9,
-                            )
-                          : const SizedBox.shrink(),
-                    ),
-                  ],
+                      SliverAnimatedOpacity(
+                        opacity: state.isProcessing ? .5 : 1,
+                        duration: const Duration(milliseconds: 1000),
+                        sliver: SliverPadding(
+                          padding: const EdgeInsets.all(8),
+                          sliver: state.hasEmployee
+                              ? SliverList.builder(
+                                  itemCount: state.employees.length,
+                                  itemBuilder: (context, index) {
+                                    final employee = state.employees[index];
+
+                                    return !employee.isDismiss
+                                        ? EmployeeCard(
+                                            employee: employee,
+                                            selectedEmployee: selectedEmployee,
+                                            onChanged: (cardEmployee) =>
+                                                setState(() {
+                                              visible = true;
+                                              selectedEmployee = cardEmployee;
+                                              context.goNamed(
+                                                'record',
+                                                extra: {
+                                                  'employeePreset':
+                                                      selectedEmployee,
+                                                },
+                                              );
+                                            }),
+                                          )
+                                        : const SizedBox.shrink();
+                                  },
+                                )
+                              : state.isProcessing
+                                  ? SliverList.separated(
+                                      itemCount: 5,
+                                      itemBuilder: (context, index) =>
+                                          const SkeletonEmployeeCard(),
+                                      separatorBuilder: (c, i) =>
+                                          const SizedBox(),
+                                    )
+                                  : SliverToBoxAdapter(
+                                      child: InformationWidget.empty(
+                                        description:
+                                            'Для выбранных параметров мастера отсутствуют',
+                                      ),
+                                    ),
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: visible
+                            ? SizedBox(
+                                height: MediaQuery.sizeOf(context).height / 9,
+                              )
+                            : const SizedBox.shrink(),
+                      ),
+                    ],
+                  ),
                 ),
                 Positioned(
                   bottom: MediaQuery.of(context).size.height / 20,
@@ -233,8 +237,8 @@ class _EmployeeChoiceScreenState extends State<EmployeeChoiceScreen>
   }
 
   ///
-  Future<void> _refresh() async {
-    final bloc = context.read<EmployeeBloc>().stream.first;
+  Future<void> _onRefresh() async {
+    final bloc = employeesBloc.stream.first;
     _fetchSalonEmployees();
     await bloc;
   }
