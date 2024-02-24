@@ -109,33 +109,3 @@ abstract base class _$BookingHistoryStateBase {
   @override
   int get hashCode => Object.hash(bookingHistory, error);
 }
-
-///
-bool _isAfter(String dateAt, String timeblock, bool isNegative) {
-  // Разделяем значение timeblock на отдельные части
-  List<String> timeblockParts = timeblock.split(':');
-  int hours = int.parse(timeblockParts[0]);
-  int minutes = int.parse(timeblockParts[1]);
-  int seconds = int.parse(timeblockParts[2]);
-
-  // Создаем объект DateTime для dateAt и timeblock
-  DateTime dateAtDateTime = DateTime.parse(dateAt);
-  DateTime timeblockDateTime = DateTime(
-    dateAtDateTime.year,
-    dateAtDateTime.month,
-    dateAtDateTime.day,
-    hours,
-    minutes,
-    seconds,
-  );
-
-  // Сравниваем даты
-  DateTime now = DateTime.now();
-  if (isNegative
-      ? !now.isAfter(timeblockDateTime)
-      : now.isAfter(timeblockDateTime)) {
-    return true;
-  } else {
-    return false;
-  }
-}

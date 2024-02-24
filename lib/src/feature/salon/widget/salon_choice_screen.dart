@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +5,7 @@ import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/string_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
+import 'package:ln_studio/src/common/widget/custom_alert.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/shimmer.dart';
@@ -80,27 +78,11 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
                           child: const Icon(Icons.arrow_back_ios_new_rounded),
                           onPressed: () => state.currentSalon != null
                               ? context.pop()
-                              : showAdaptiveDialog(
-                                  context: context,
-                                  // TODO: Вынести в CustomAlert
-                                  builder: (context) => AlertDialog.adaptive(
-                                    title: const Text('Выберите салон'),
-                                    content: const Text(
+                              : showCustomAlert(
+                                  context,
+                                  title: 'Выберите салон',
+                                  description:
                                       'Для использования приложения необходимо выбрать желаемый салон',
-                                    ),
-                                    actions: [
-                                      Platform.isIOS
-                                          ? CupertinoDialogAction(
-                                              onPressed: context.pop,
-                                              isDefaultAction: true,
-                                              child: const Text('Окей'),
-                                            )
-                                          : TextButton(
-                                              onPressed: context.pop,
-                                              child: const Text('Окей'),
-                                            ),
-                                    ],
-                                  ),
                                 ),
                         ),
                       ),
