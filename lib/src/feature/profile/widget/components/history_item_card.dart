@@ -7,6 +7,7 @@ import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/common/widget/avatar_widget.dart';
+import 'package:ln_studio/src/common/widget/custom_alert.dart';
 import 'package:ln_studio/src/feature/profile/bloc/booking_history/booking_history_bloc.dart';
 import 'package:ln_studio/src/feature/profile/bloc/booking_history/booking_history_event.dart';
 import 'package:ln_studio/src/feature/profile/model/booking.dart';
@@ -125,9 +126,21 @@ class HistoryItemCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 TextButton(
-                  onPressed: () => context.read<BookingHistoryBloc>().add(
-                        BookingHistoryEvent.cancelBooking(booking.id),
-                      ),
+                  onPressed: () {
+                    final isLessThanAnHourLeft =
+                        booking.dateAt.difference(DateTime.now()).inMinutes <
+                            60;
+                    isLessThanAnHourLeft
+                        ? showCustomAlert(
+                            context,
+                            title: 'Ошибка',
+                            description:
+                                'Извините, нельзя отменить запись, если осталось меньше часа до начала',
+                          )
+                        : context.read<BookingHistoryBloc>().add(
+                              BookingHistoryEvent.cancelBooking(booking.id),
+                            );
+                  },
                   child: Text(
                     'Отменить',
                     style: TextStyle(color: context.colorScheme.error),
