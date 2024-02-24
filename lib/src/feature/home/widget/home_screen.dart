@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 import 'package:ln_studio/src/common/widget/information_widget.dart';
+import 'package:ln_studio/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_studio/src/common/widget/shimmer.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_bloc.dart';
 import 'package:ln_studio/src/feature/home/bloc/news/news_event.dart';
@@ -19,6 +20,7 @@ import 'package:ln_studio/src/feature/record/bloc/employee/employee_event.dart';
 import 'package:ln_studio/src/feature/record/bloc/employee/employee_state.dart';
 import 'package:ln_studio/src/feature/salon/bloc/salon_event.dart';
 import 'package:ln_studio/src/feature/salon/widget/current_salon_screen.dart';
+import 'package:ln_studio/src/feature/salon/widget/salon_choice_screen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/custom_app_bar.dart';
 import '/src/common/widget/pop_up_button.dart';
@@ -42,6 +44,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final EmployeeBloc employeeBloc;
+  late final SalonBLoC salonBloc;
+  bool isSalonChoiceShowed = false;
 
   @override
   void initState() {
@@ -49,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
     employeeBloc = EmployeeBloc(
       repository: DependenciesScope.of(context).recordRepository,
     );
+    salonBloc = context.read<SalonBLoC>()..add(const SalonEvent.getCurrent());
     _fetchNews();
     context.read<ProfileBloc>().add(const ProfileEvent.fetch());
   }
@@ -63,13 +68,26 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final profile = context.watch<ProfileBloc>().state.profile;
     return BlocConsumer<SalonBLoC, SalonState>(
-      listener: (context, state) {},
+      bloc: salonBloc,
+      listener: (context, state) {
+        //  Если нет выбранного салона, то показываем выбор
+        if (state.hasData &&
+            state.currentSalon == null &&
+            isSalonChoiceShowed == false) {
+          isSalonChoiceShowed = true;
+          ModalPopup.show(
+            isDismissible: false,
+            context: context,
+            child: const SalonChoiceScreen(),
+          );
+        }
+      },
       listenWhen: (previous, current) {
         previous.currentSalon?.id != current.currentSalon?.id
             ? _fetchSalonEmployees()
             : null;
 
-        return false;
+        return true;
       },
       builder: (context, state) => CustomScrollView(
         slivers: [
@@ -90,9 +108,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Text('Ошибка'),
                       IconButton(
                         icon: const Icon(Icons.refresh_rounded),
-                        onPressed: () => context
-                            .read<SalonBLoC>()
-                            .add(const SalonEvent.fetchAll()),
+                        onPressed: () =>
+                            salonBloc.add(const SalonEvent.fetchAll()),
                       ),
                     ],
                   ),
@@ -264,7 +281,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ///
   void _fetchSalonEmployees() {
-    final salonBloc = context.read<SalonBLoC>();
     if (salonBloc.state.currentSalon != null) {
       employeeBloc.add(
         EmployeeEvent.fetchEmployees(

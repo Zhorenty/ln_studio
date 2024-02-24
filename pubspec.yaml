@@ -49,6 +49,7 @@ dependencies:
   # Widgets
   table_calendar: ^3.0.9
   flutter_svg: ^2.0.9
+  collection: ^1.18.0
 
 dev_dependencies:
   # Testing

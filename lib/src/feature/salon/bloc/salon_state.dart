@@ -121,7 +121,7 @@ abstract base class _$SalonStateBase {
   final String message;
 
   /// Has data?
-  bool get hasData => data != null;
+  bool get hasData => data?.isNotEmpty ?? false;
 
   /// If an error has occurred?
   bool get hasError => maybeMap<bool>(orElse: () => false, error: (_) => true);
