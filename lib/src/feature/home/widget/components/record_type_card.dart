@@ -8,7 +8,7 @@ import 'package:ln_studio/src/common/widget/animated_button.dart';
 class RecordTypeCard extends StatelessWidget {
   const RecordTypeCard({
     super.key,
-    required this.image,
+    required this.imageName,
     this.description,
     this.onTap,
     this.ignoring = false,
@@ -18,7 +18,7 @@ class RecordTypeCard extends StatelessWidget {
   final bool ignoring;
 
   ///
-  final Image image;
+  final String imageName;
 
   ///
   final String? description;
@@ -33,7 +33,7 @@ class RecordTypeCard extends StatelessWidget {
       child: AnimatedButton(
         onPressed: onTap,
         child: Container(
-          width: 100,
+          width: MediaQuery.sizeOf(context).width * 0.3,
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: context.colorScheme.onBackground,
@@ -46,7 +46,10 @@ class RecordTypeCard extends StatelessWidget {
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      image,
+                      Image.asset(
+                        imageName,
+                        width: MediaQuery.sizeOf(context).width * 0.2,
+                      ),
                       const SizedBox(height: 4),
                       if (description != null)
                         Text(
