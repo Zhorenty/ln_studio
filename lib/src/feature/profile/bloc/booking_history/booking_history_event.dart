@@ -13,6 +13,12 @@ sealed class BookingHistoryEvent extends _$BookingHistoryEventBase {
   /// Factory for cancel booking.
   const factory BookingHistoryEvent.cancelBooking(int bookingId) =
       BookingHistoryEvent$Cancel;
+
+  /// Factory for add review.
+  const factory BookingHistoryEvent.addReview({
+    required int bookingId,
+    required String text,
+  }) = BookingHistoryEvent$AddReview;
 }
 
 /// [BookingHistoryEvent.fetch] event.
@@ -27,6 +33,17 @@ final class BookingHistoryEvent$Cancel extends BookingHistoryEvent {
   final int bookingId;
 }
 
+/// [BookingHistoryEvent.addReview] event.
+final class BookingHistoryEvent$AddReview extends BookingHistoryEvent {
+  const BookingHistoryEvent$AddReview({
+    required this.bookingId,
+    required this.text,
+  }) : super();
+
+  final int bookingId;
+  final String text;
+}
+
 /// BookingHistory events base class.
 abstract base class _$BookingHistoryEventBase {
   const _$BookingHistoryEventBase();
@@ -35,10 +52,12 @@ abstract base class _$BookingHistoryEventBase {
   R map<R>({
     required PatternMatch<R, BookingHistoryEvent$Fetch> fetch,
     required PatternMatch<R, BookingHistoryEvent$Cancel> cancel,
+    required PatternMatch<R, BookingHistoryEvent$AddReview> addReview,
   }) =>
       switch (this) {
         final BookingHistoryEvent$Fetch s => fetch(s),
         final BookingHistoryEvent$Cancel s => cancel(s),
+        final BookingHistoryEvent$AddReview s => addReview(s),
         _ => throw AssertionError(),
       };
 
@@ -47,19 +66,23 @@ abstract base class _$BookingHistoryEventBase {
     required R Function() orElse,
     PatternMatch<R, BookingHistoryEvent$Fetch>? fetch,
     PatternMatch<R, BookingHistoryEvent$Cancel>? cancel,
+    PatternMatch<R, BookingHistoryEvent$AddReview>? addReview,
   }) =>
       map<R>(
         fetch: fetch ?? (_) => orElse(),
         cancel: cancel ?? (_) => orElse(),
+        addReview: addReview ?? (_) => orElse(),
       );
 
   /// Map over state union or return null if no match.
   R? mapOrNull<R>({
     PatternMatch<R, BookingHistoryEvent$Fetch>? fetch,
     PatternMatch<R, BookingHistoryEvent$Cancel>? cancel,
+    PatternMatch<R, BookingHistoryEvent$AddReview>? addReview,
   }) =>
       map<R?>(
         fetch: fetch ?? (_) => null,
         cancel: cancel ?? (_) => null,
+        addReview: addReview ?? (_) => null,
       );
 }

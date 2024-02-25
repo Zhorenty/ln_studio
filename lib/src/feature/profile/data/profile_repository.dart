@@ -13,6 +13,12 @@ abstract interface class ProfileRepository {
 
   ///
   Future<ProfileModel> editProfile(ProfileModel profile);
+
+  /// Добавить отзыв
+  Future<void> addReview({
+    required int bookingId,
+    required String text,
+  });
 }
 
 /// Implementation of the employee repository.
@@ -31,4 +37,14 @@ final class ProfileRepositoryImpl implements ProfileRepository {
   @override
   Future<ProfileModel> editProfile(ProfileModel profile) =>
       _dataSource.editProfile(profile);
+
+  @override
+  Future<void> addReview({
+    required int bookingId,
+    required String text,
+  }) =>
+      _dataSource.addReview(
+        bookingId: bookingId,
+        text: text,
+      );
 }

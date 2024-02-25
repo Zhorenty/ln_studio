@@ -17,6 +17,7 @@ class BookingHistoryBloc
       (event, emit) => event.map(
         fetch: (event) => _fetchAllBookings(event, emit),
         cancel: (event) => _cancelBooking(event, emit),
+        addReview: (event) => _addReview(event, emit),
       ),
     );
   }
@@ -57,6 +58,31 @@ class BookingHistoryBloc
         (e) => e.id == event.bookingId,
       )]
           .copyWith(isCanceled: true);
+
+      emit(BookingHistoryState.loaded(bookingHistory: state.bookingHistory));
+    } on Object catch (e) {
+      emit(BookingHistoryState.idle(
+        bookingHistory: state.bookingHistory,
+        error: ErrorUtil.formatError(e),
+      ));
+      rethrow;
+    }
+  }
+
+  /// Add review from repository.
+  Future<void> _addReview(
+    BookingHistoryEvent$AddReview event,
+    Emitter<BookingHistoryState> emit,
+  ) async {
+    try {
+      await repository.addReview(bookingId: event.bookingId, text: event.text);
+      // TODO: Ставить значение isHasReview на true (когда будет приходить)
+      // state.bookingHistory[state.bookingHistory.indexWhere(
+      //   (e) => e.id == event.bookingId,
+      // )] = state.bookingHistory[state.bookingHistory.indexWhere(
+      //   (e) => e.id == event.bookingId,
+      // )]
+      //     .copyWith(isCanceled: true);
 
       emit(BookingHistoryState.loaded(bookingHistory: state.bookingHistory));
     } on Object catch (e) {
