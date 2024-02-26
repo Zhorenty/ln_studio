@@ -63,7 +63,7 @@ final class BookingModel {
         timeblock: EmployeeTimeblock$Response.fromJson(json['timeblock']),
         isDone: bool.tryParse(json['is_done']) ?? false,
         isCanceled: json['is_canceled'] ?? false,
-        isHasReview: json['is_has_review'] ?? false,
+        isHasReview: json['review'] != null,
       );
 
   Map<String, dynamic> toJson() => {
