@@ -77,12 +77,12 @@ class BookingHistoryBloc
     try {
       await repository.addReview(bookingId: event.bookingId, text: event.text);
       // TODO: Ставить значение isHasReview на true (когда будет приходить)
-      // state.bookingHistory[state.bookingHistory.indexWhere(
-      //   (e) => e.id == event.bookingId,
-      // )] = state.bookingHistory[state.bookingHistory.indexWhere(
-      //   (e) => e.id == event.bookingId,
-      // )]
-      //     .copyWith(isCanceled: true);
+      state.bookingHistory[state.bookingHistory.indexWhere(
+        (e) => e.id == event.bookingId,
+      )] = state.bookingHistory[state.bookingHistory.indexWhere(
+        (e) => e.id == event.bookingId,
+      )]
+          .copyWith(isHasReview: true);
 
       emit(BookingHistoryState.loaded(bookingHistory: state.bookingHistory));
     } on Object catch (e) {

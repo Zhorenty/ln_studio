@@ -19,32 +19,42 @@ class AddReviewScreen extends StatefulWidget {
 
 class _AddReviewScreenState extends State<AddReviewScreen> {
   late final TextEditingController textEditingController;
+  late final FocusNode focusNode;
+
   @override
   void initState() {
     super.initState();
     textEditingController = TextEditingController();
+    focusNode = FocusNode()..requestFocus();
   }
 
   @override
   void dispose() {
     textEditingController.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        HugeTextField(
-          controller: textEditingController,
-          focusNode: primaryFocus,
-        ),
-        const SizedBox(height: 20),
-        FilledButton(
-          onPressed: () => widget.onPressed(textEditingController.text),
-          child: const Text('Отправить'),
-        ),
-      ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Оставить отзыв', style: TextStyle(fontSize: 24)),
+          const SizedBox(height: 20),
+          HugeTextField(
+            controller: textEditingController,
+            focusNode: focusNode,
+          ),
+          const SizedBox(height: 20),
+          FilledButton(
+            onPressed: () => widget.onPressed(textEditingController.text),
+            child: const Text('Отправить'),
+          ),
+        ],
+      ),
     );
   }
 }

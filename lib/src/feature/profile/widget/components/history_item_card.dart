@@ -8,6 +8,7 @@ import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/common/widget/avatar_widget.dart';
 import 'package:ln_studio/src/common/widget/custom_alert.dart';
+import 'package:ln_studio/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_studio/src/feature/profile/bloc/booking_history/booking_history_bloc.dart';
 import 'package:ln_studio/src/feature/profile/bloc/booking_history/booking_history_event.dart';
 import 'package:ln_studio/src/feature/profile/model/booking.dart';
@@ -156,35 +157,35 @@ class HistoryItemCard extends StatelessWidget {
               'Отменено',
               style: TextStyle(color: context.colorScheme.error, fontSize: 18),
             ),
-          ] else if (booking.isDone) ...[
-            // && отзыв не оставлен
+          ] else if (booking.isDone && !booking.isHasReview) ...[
             const SizedBox(height: 4),
             FilledButton(
               onPressed: () {
-                showBottomSheet(
+                ModalPopup.show(
                   context: context,
-                  builder: (context) => AddReviewScreen(
-                    onPressed: (text) => bookingHistoryBloc.add(
-                      BookingHistoryEvent.addReview(
-                        bookingId: booking.id,
-                        text: text,
-                      ),
-                    ),
+                  child: AddReviewScreen(
+                    onPressed: (text) {
+                      bookingHistoryBloc.add(
+                        BookingHistoryEvent.addReview(
+                          bookingId: booking.id,
+                          text: text,
+                        ),
+                      );
+                      context.pop();
+                    },
                   ),
                 );
-                // context.goNamed('add_review');
               },
               child: const Text('Оставить отзыв'),
             ),
-          ]
-          // else if (booking.isDone && отзыв оставлен) ...[
-          //   const SizedBox(height: 4),
-          //   const Text(
-          //     'Спасибо, отзыв оставлен!',
-          //     // style: TextStyle(color: context.colorScheme.error, fontSize: 16),
-          //   ),
-          //   ]
-          ,
+          ] else if (booking.isDone && booking.isHasReview) ...[
+            const SizedBox(height: 4),
+            Text(
+              'Отзыв оставлен',
+              style:
+                  TextStyle(color: context.colorScheme.primary, fontSize: 18),
+            ),
+          ],
           if (kDebugMode) ...[
             const SizedBox(height: 8),
             const Text(
