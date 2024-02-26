@@ -8,9 +8,11 @@ import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/common/widget/avatar_widget.dart';
 import 'package:ln_studio/src/common/widget/custom_alert.dart';
+import 'package:ln_studio/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_studio/src/feature/profile/bloc/booking_history/booking_history_bloc.dart';
 import 'package:ln_studio/src/feature/profile/bloc/booking_history/booking_history_event.dart';
 import 'package:ln_studio/src/feature/profile/model/booking.dart';
+import 'package:ln_studio/src/feature/profile/widget/components/add_review_screen.dart';
 
 ///
 String _createTimeWithDuration(String serverTime, int duration) {
@@ -52,6 +54,7 @@ class HistoryItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bookingHistoryBloc = context.read<BookingHistoryBloc>();
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -137,9 +140,9 @@ class HistoryItemCard extends StatelessWidget {
                             description:
                                 'Извините, нельзя отменить запись, если осталось меньше часа до начала',
                           )
-                        : context.read<BookingHistoryBloc>().add(
-                              BookingHistoryEvent.cancelBooking(booking.id),
-                            );
+                        : bookingHistoryBloc.add(
+                            BookingHistoryEvent.cancelBooking(booking.id),
+                          );
                   },
                   child: Text(
                     'Отменить',
@@ -148,12 +151,39 @@ class HistoryItemCard extends StatelessWidget {
                 ),
               ],
             ),
-          ],
-          if (booking.isCanceled) ...[
+          ] else if (booking.isCanceled) ...[
             const SizedBox(height: 4),
             Text(
               'Отменено',
               style: TextStyle(color: context.colorScheme.error, fontSize: 18),
+            ),
+          ] else if (booking.isDone && !booking.isHasReview) ...[
+            const SizedBox(height: 4),
+            FilledButton(
+              onPressed: () {
+                ModalPopup.show(
+                  context: context,
+                  child: AddReviewScreen(
+                    onPressed: (text) {
+                      bookingHistoryBloc.add(
+                        BookingHistoryEvent.addReview(
+                          bookingId: booking.id,
+                          text: text,
+                        ),
+                      );
+                      context.pop();
+                    },
+                  ),
+                );
+              },
+              child: const Text('Оставить отзыв'),
+            ),
+          ] else if (booking.isDone && booking.isHasReview) ...[
+            const SizedBox(height: 4),
+            Text(
+              'Отзыв оставлен',
+              style:
+                  TextStyle(color: context.colorScheme.primary, fontSize: 18),
             ),
           ],
           if (kDebugMode) ...[

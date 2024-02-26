@@ -9,6 +9,7 @@ import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/common/widget/custom_snackbar.dart';
 import 'package:ln_studio/src/common/widget/field_button.dart';
+import 'package:ln_studio/src/common/widget/huge_text_field.dart';
 import 'package:ln_studio/src/feature/auth/widget/auth_scope.dart';
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/bloc/record/record_bloc.dart';
@@ -335,55 +336,4 @@ class _RecordScreenState extends State<RecordScreen> {
   /// Empty value validator.
   String? _emptySalonValidator(String? value) =>
       value!.isEmpty ? 'Выберите филиал на главном экране' : null;
-}
-
-/// Large text field for comments.
-class HugeTextField extends StatelessWidget {
-  const HugeTextField({super.key, this.controller, this.focusNode});
-
-  ///
-  final TextEditingController? controller;
-
-  ///
-  final FocusNode? focusNode;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSize(
-      alignment: Alignment.topCenter,
-      duration: const Duration(milliseconds: 300),
-      child: Container(
-        margin: const EdgeInsets.only(top: 8, bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        decoration: BoxDecoration(
-          color: context.colorScheme.background,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFF272727)),
-        ),
-        child: TextFormField(
-          onTapOutside: (_) =>
-              focusNode!.hasFocus ? focusNode?.unfocus() : null,
-          controller: controller,
-          focusNode: focusNode,
-          maxLines: null,
-          keyboardType: TextInputType.multiline,
-          style: context.textTheme.bodyLarge!.copyWith(
-            fontFamily: FontFamily.geologica,
-            letterSpacing: 0.5,
-          ),
-          decoration: InputDecoration(
-            isDense: true,
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: context.colorScheme.scrim,
-              ),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: context.colorScheme.scrim),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

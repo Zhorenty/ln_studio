@@ -14,6 +14,12 @@ abstract interface class ProfileDataProvider {
 
   /// Fetch .
   Future<List<BookingModel>> fetchAllBookings();
+
+  /// Добавить отзыв
+  Future<void> addReview({
+    required int bookingId,
+    required String text,
+  });
 }
 
 /// Implementation of employee datasource.
@@ -56,4 +62,16 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
 
     return bookings;
   }
+
+  @override
+  Future<void> addReview({
+    required int bookingId,
+    required String text,
+  }) =>
+      restClient.patch(
+        '/api/v1/service_sale/$bookingId/add_review',
+        data: {
+          'text': text,
+        },
+      );
 }
