@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_studio/src/common/assets/generated/assets.gen.dart';
 import 'package:ln_studio/src/common/widget/custom_app_bar.dart';
 import 'package:ln_studio/src/common/widget/information_widget.dart';
 import 'package:ln_studio/src/common/widget/pop_up_button.dart';
@@ -33,13 +34,12 @@ class StoreScreen extends StatelessWidget {
               ),
             ),
           ),
-          const SliverPadding(
-            padding: EdgeInsets.all(16),
-            sliver: SliverToBoxAdapter(
-              child: InformationWidget(
-                title: 'В разработке',
-                description: 'Магазин пока находится в разработке',
-              ),
+          SliverToBoxAdapter(
+            child: InformationWidget(
+              isNeedToShowImage: true,
+              customImagePath: Assets.images.logoWhite.path,
+              title: 'В разработке',
+              description: 'Магазин пока находится в разработке',
             ),
           ),
         ],
