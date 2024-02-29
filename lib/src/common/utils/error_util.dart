@@ -12,26 +12,22 @@ sealed class ErrorUtil {
   static String formatError(Object error) => switch (error) {
         final AuthException e => _localizeAuthException(e),
         final DioException e => formatDioError(e),
-        final Exception e => _localizeError(
-            'Произошла ошибка: $e',
-            (l) => l.exceptionOccurred(e.toString()),
+        _ => _localizeError(
+            // final Exception e
+            'Произошла ошибка, попробуйте позже',
           ),
-        final dynamic e => _localizeError(
-            'Неизвестная ошибка: $e',
-            (l) => l.unknownError(e.toString()),
-          ),
+        // final dynamic e => _localizeError(
+        //     'Произошла ошибка, попробуйте позже',
+        //   ),
       };
 
   /// Formats a Dio exceptions.
   static String formatDioError(DioException error) => switch (error.error) {
         final SocketException _ => _localizeError(
             'Отсутствует подключение к интернету',
-            null,
           ),
-        final dynamic e => _localizeError(
-            'Неизвестная ошибка: $e',
-            (l) => l.unknownError(e.toString()),
-          ),
+        _ => _localizeError(error.response?.statusMessage ??
+            'Произошла ошибка, попробуйте позже'),
       };
 
   /// Formats an `AuthException` error message based on its type.
@@ -42,16 +38,15 @@ sealed class ErrorUtil {
             (l) => l.phoneExists,
           ),
         _ => _localizeError(
-            'Unknown',
-            (l) => l.unknownError(exception.toString()),
+            'Произошла ошибка, попробуйте позже',
           ),
       };
 
   /// Localizes an error message using the provided `localize` function.
   static String _localizeError(
-    String fallback,
+    String fallback, [
     String Function(Localization l)? localize,
-  ) {
+  ]) {
     try {
       return localize!(Localization.current!);
     } on Object {
