@@ -38,7 +38,7 @@ class StoreScreen extends StatelessWidget {
             sliver: SliverToBoxAdapter(
               child: InformationWidget(
                 title: 'В разработке',
-                description: 'Магазин пока нахоится в разработке',
+                description: 'Магазин пока находится в разработке',
               ),
             ),
           ),
