@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:ln_studio/src/common/utils/extensions/date_time_extension.dart';
+import 'package:ln_studio/src/feature/home/model/review.dart';
 import 'package:ln_studio/src/feature/record/model/category.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
 import 'package:ln_studio/src/feature/record/model/timetable.dart';
@@ -19,6 +20,7 @@ final class BookingModel {
     this.comment,
     required this.isDone,
     required this.isCanceled,
+    required this.review,
     required this.isHasReview,
   });
 
@@ -50,6 +52,8 @@ final class BookingModel {
 
   final bool isCanceled;
 
+  final Review? review;
+
   final bool isHasReview;
 
   factory BookingModel.fromJson(Map<String, dynamic> json) => BookingModel(
@@ -63,6 +67,7 @@ final class BookingModel {
         timeblock: EmployeeTimeblock$Response.fromJson(json['timeblock']),
         isDone: bool.tryParse(json['is_done']) ?? false,
         isCanceled: json['is_canceled'] ?? false,
+        review: json['review'] != null ? Review.fromJson(json['review']) : null,
         isHasReview: json['review'] != null,
       );
 
@@ -89,6 +94,7 @@ final class BookingModel {
     EmployeeTimeblock$Response? timeblock,
     bool? isDone,
     bool? isCanceled,
+    Review? review,
     bool? isHasReview,
   }) =>
       BookingModel(
@@ -102,6 +108,7 @@ final class BookingModel {
         timeblock: timeblock ?? this.timeblock,
         isDone: isDone ?? this.isDone,
         isCanceled: isCanceled ?? this.isCanceled,
+        review: review ?? this.review,
         isHasReview: isHasReview ?? this.isHasReview,
       );
 }

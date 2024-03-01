@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:ln_studio/src/feature/home/model/news.dart';
 import 'package:ln_studio/src/feature/home/model/review.dart';
+import 'package:ln_studio/src/feature/profile/model/booking.dart';
 
 /// Datasource for Record HomeDataProvider.
 abstract interface class HomeDataProvider {
@@ -34,9 +35,13 @@ class HomeDataProviderImpl implements HomeDataProvider {
     final response =
         await restClient.get('/api/v1/employee/$employeeId/service_sales');
 
-    final reviews = List.from((response.data['data'] as List))
-        .map((e) => Review.fromJson(e))
+    final employeeBookings = List.from((response.data['data'] as List))
+        .map((e) => BookingModel.fromJson(e))
         .toList();
+    // TODO: Отрефачить
+    final employeeBookingsWithReviews =
+        employeeBookings.where((booking) => booking.isHasReview).toList();
+    final reviews = employeeBookingsWithReviews.map((e) => e.review!).toList();
 
     return reviews;
   }

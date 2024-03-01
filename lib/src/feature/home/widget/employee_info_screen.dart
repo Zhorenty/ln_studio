@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
@@ -7,6 +8,7 @@ import 'package:ln_studio/src/common/widget/avatar_widget.dart';
 import 'package:ln_studio/src/common/widget/star_rating.dart';
 import 'package:ln_studio/src/feature/home/bloc/employee/employee_detail_bloc.dart';
 import 'package:ln_studio/src/feature/home/bloc/employee/employee_detail_event.dart';
+import 'package:ln_studio/src/feature/home/bloc/employee/employee_detail_state.dart';
 import 'package:ln_studio/src/feature/home/widget/components/expanded_app_bar.dart';
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_studio/src/feature/record/model/employee.dart';
@@ -96,27 +98,30 @@ class _EmployeeInfoScreenState extends State<EmployeeInfoScreen> {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      if (employeeDetailBLoC.state.reviews.isEmpty)
-                        InformationWidget.empty(
-                          description: 'Отзывов пока нет',
-                        ),
-                      if (employeeDetailBLoC.state.reviews.isNotEmpty)
-                        ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: employeeDetailBLoC.state.reviews.length,
-                          itemBuilder: (context, index) {
-                            final review =
-                                employeeDetailBLoC.state.reviews[index];
-                            return ReviewContainer(
-                              title: 'Алевтина',
-                              createdAt: review.createdAt,
-                              text: review.text,
-                            );
-                          },
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 8),
-                        ),
+                      BlocBuilder<EmployeeDetailBLoC, EmployeeDetailState>(
+                        bloc: employeeDetailBLoC,
+                        builder: (context, state) => state.reviews.isEmpty
+                            ? InformationWidget.empty(
+                                description: 'Отзывов пока нет',
+                              )
+                            : ListView.separated(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: state.reviews.length,
+                                itemBuilder: (context, index) {
+                                  final review =
+                                      employeeDetailBLoC.state.reviews[index];
+                                  return ReviewContainer(
+                                    title: 'Алевтина',
+                                    createdAt: review.createdAt,
+                                    text: review.text,
+                                  );
+                                },
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(height: 8),
+                              ),
+                      ),
                       const SizedBox(height: 8)
                     ],
                   ),

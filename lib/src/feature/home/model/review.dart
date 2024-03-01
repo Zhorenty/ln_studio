@@ -13,7 +13,7 @@ class Review {
   factory Review.fromJson(Map<String, dynamic> json) {
     return Review(
       id: json['id'],
-      createdAt: DateTime.parse(json['created_at']).jsonFormat(),
+      createdAt: DateTime.parse(json['created_at']).defaultFormat(),
       text: json['text'],
     );
   }
