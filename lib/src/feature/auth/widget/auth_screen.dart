@@ -24,10 +24,6 @@ class _AuthScreenState extends State<AuthScreen> {
   ///
   late final FocusNode phoneFocusNode;
 
-  bool visible = false;
-
-  bool isAgree = false;
-
   @override
   void initState() {
     super.initState();
@@ -83,108 +79,30 @@ class _AuthScreenState extends State<AuthScreen> {
                     onChanged: _checkPhoneNumber,
                   ),
                 ),
-                GestureDetector(
-                  onTap: () => setState(() {
-                    isAgree = !isAgree;
-                    visible = !visible;
-                  }),
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        splashRadius: 0,
-                        value: isAgree,
-                        onChanged: (_) => setState(() {
-                          isAgree = !isAgree;
-                          visible = !visible;
-                        }),
-                      ),
-                      Expanded(
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              const TextSpan(
-                                text: 'Я соглашаюсь с ',
-                              ),
-                              TextSpan(
-                                text: 'политикой конфиденциальности ',
-                                style: context.textTheme.bodySmall?.copyWith(
-                                  fontFamily: FontFamily.geologica,
-                                  fontWeight: FontWeight.w300,
-                                  shadows: [
-                                    const Shadow(
-                                      color: Colors.white,
-                                      offset: Offset(0, -0.75),
-                                    )
-                                  ],
-                                  color: Colors.transparent,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor:
-                                      context.colorScheme.secondary,
-                                  decorationThickness: 1,
-                                  decorationStyle: TextDecorationStyle.dashed,
-                                ),
-                              ),
-                              const TextSpan(
-                                text: 'и ',
-                              ),
-                              TextSpan(
-                                text: 'условиями сервиса',
-                                style: context.textTheme.bodySmall?.copyWith(
-                                  fontFamily: FontFamily.geologica,
-                                  fontWeight: FontWeight.w300,
-                                  shadows: [
-                                    const Shadow(
-                                      color: Colors.white,
-                                      offset: Offset(0, -0.75),
-                                    )
-                                  ],
-                                  color: Colors.transparent,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor:
-                                      context.colorScheme.secondary,
-                                  decorationThickness: 1,
-                                  decorationStyle: TextDecorationStyle.dashed,
-                                ),
-                              ),
-                            ],
-                          ),
-                          style: context.textTheme.bodySmall?.copyWith(
-                            fontFamily: FontFamily.geologica,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
                 const Spacer(),
-                AnimatedOpacity(
-                  opacity: visible ? 1 : 0,
-                  duration: const Duration(milliseconds: 300),
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        fixedSize: Size(
-                          MediaQuery.sizeOf(context).width - 50,
-                          50,
-                        ),
-                        backgroundColor: context.colorScheme.primary,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 32),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          auth.sendCode(phoneController.text);
-                        }
-                      },
-                      child: Text(
-                        'Продолжить',
-                        style: context.textTheme.bodyLarge?.copyWith(
-                          fontFamily: FontFamily.geologica,
-                          color: context.colorScheme.onBackground,
-                        ),
+                      fixedSize: Size(
+                        MediaQuery.sizeOf(context).width - 50,
+                        50,
+                      ),
+                      backgroundColor: context.colorScheme.primary,
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        auth.sendCode(phoneController.text);
+                      }
+                    },
+                    child: Text(
+                      'Продолжить',
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        fontFamily: FontFamily.geologica,
+                        color: context.colorScheme.onBackground,
                       ),
                     ),
                   ),
