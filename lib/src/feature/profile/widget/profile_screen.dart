@@ -191,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _launchVk() async {
     final url = Uri.parse('https://vk.com/salonokolashes');
     if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $url';
     }
@@ -200,7 +200,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _launchWhatsApp() async {
     final url = Uri.parse('https://wa.me/79604875329');
     if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $url';
     }
@@ -209,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _launchTelegram() async {
     final url = Uri.parse('https://t.me/oko_lashes_keasnodar');
     if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $url';
     }
