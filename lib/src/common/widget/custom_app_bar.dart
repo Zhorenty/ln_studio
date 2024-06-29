@@ -8,7 +8,7 @@ class CustomSliverAppBar extends StatelessWidget {
   const CustomSliverAppBar({
     super.key,
     this.title,
-    required this.bottomChild,
+    this.bottomChild,
     this.actions = const <Widget>[],
     this.centerTitle = false,
   });
@@ -40,13 +40,15 @@ class CustomSliverAppBar extends StatelessWidget {
       actions: actions,
       floating: true,
       pinned: true,
-      bottom: PreferredSize(
-        preferredSize: const Size(300, 62),
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: bottomChild,
-        ),
-      ),
+      bottom: bottomChild != null
+          ? PreferredSize(
+              preferredSize: const Size(300, 62),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: bottomChild,
+              ),
+            )
+          : null,
     );
   }
 }

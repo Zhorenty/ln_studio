@@ -10,6 +10,8 @@ import 'package:ln_studio/src/feature/profile/data/profile_data_provider.dart';
 import 'package:ln_studio/src/feature/profile/data/profile_repository.dart';
 import 'package:ln_studio/src/feature/record/data/record_data_provider.dart';
 import 'package:ln_studio/src/feature/record/data/record_repository.dart';
+import 'package:ln_studio/src/feature/store/data/product_data_provider.dart';
+import 'package:ln_studio/src/feature/store/data/product_respository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/initialization/model/initialization_progress.dart';
@@ -18,7 +20,7 @@ import '/src/feature/salon/data/salon_repository.dart';
 
 typedef StepAction = FutureOr<void>? Function(InitializationProgress progress);
 
-const kBaseUrl = 'http://31.129.104.75';
+const kBaseUrl = 'http://ln-studio.ru';
 
 /// Handles initialization steps.
 mixin InitializationSteps {
@@ -74,6 +76,13 @@ mixin InitializationSteps {
       );
       final profileRepository = ProfileRepositoryImpl(profileDataProvider);
       progress.dependencies.profileRepository = profileRepository;
+    },
+    'Store repository': (progress) async {
+      final storeDataProvider = StoreDataProviderImpl(
+        progress.dependencies.restClient,
+      );
+      final storeRepository = StoreRepositoryImpl(storeDataProvider);
+      progress.dependencies.storeRepository = storeRepository;
     },
   };
 }

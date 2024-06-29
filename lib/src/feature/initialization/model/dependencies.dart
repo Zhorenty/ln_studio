@@ -3,6 +3,7 @@ import 'package:ln_studio/src/feature/auth/data/auth_repository.dart';
 import 'package:ln_studio/src/feature/home/data/home_repository.dart';
 import 'package:ln_studio/src/feature/profile/data/profile_repository.dart';
 import 'package:ln_studio/src/feature/record/data/record_repository.dart';
+import 'package:ln_studio/src/feature/store/data/product_respository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/salon/data/salon_repository.dart';
@@ -29,6 +30,9 @@ abstract interface class Dependencies {
 
   ///
   abstract final ProfileRepository profileRepository;
+
+  ///
+  abstract final StoreRepository storeRepository;
 
   /// Freeze dependencies, so they cannot be modified.
   Dependencies freeze();
@@ -62,6 +66,9 @@ final class Dependencies$Mutable implements Dependencies {
   late ProfileRepository profileRepository;
 
   @override
+  late StoreRepository storeRepository;
+
+  @override
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
         restClient: restClient,
@@ -70,6 +77,7 @@ final class Dependencies$Mutable implements Dependencies {
         homeRepository: homeRepository,
         recordRepository: recordRepository,
         profileRepository: profileRepository,
+        storeRepository: storeRepository,
       );
 }
 
@@ -85,6 +93,7 @@ final class _Dependencies$Immutable implements Dependencies {
     required this.homeRepository,
     required this.recordRepository,
     required this.profileRepository,
+    required this.storeRepository,
   });
 
   @override
@@ -107,6 +116,9 @@ final class _Dependencies$Immutable implements Dependencies {
 
   @override
   final ProfileRepository profileRepository;
+
+  @override
+  final StoreRepository storeRepository;
 
   @override
   Dependencies freeze() => this;

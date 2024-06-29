@@ -23,7 +23,8 @@ abstract interface class ProfileRepository {
 
 /// Implementation of the employee repository.
 final class ProfileRepositoryImpl implements ProfileRepository {
-  ProfileRepositoryImpl(this._dataSource);
+  ProfileRepositoryImpl(ProfileDataProvider dataSource)
+      : _dataSource = dataSource;
 
   /// Employee data provider.
   final ProfileDataProvider _dataSource;
