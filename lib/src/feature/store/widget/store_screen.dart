@@ -52,7 +52,7 @@ class _StoreScreenState extends State<StoreScreen> {
                 ),
               if (state.hasData)
                 SliverPadding(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   sliver: SliverGrid.builder(
                     itemCount: state.data?.length,
                     gridDelegate:

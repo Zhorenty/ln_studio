@@ -4,35 +4,31 @@ import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 
 class InformationWidget extends StatelessWidget {
   const InformationWidget({
-    Key? key,
+    super.key,
     this.customImagePath,
     this.isNeedToShowImage = false,
     required this.title,
     required this.description,
     this.reloadFunc,
-  }) : super(key: key);
+  });
 
   InformationWidget.empty({
-    Key? key,
+    super.key,
     String? customImagePath,
     this.isNeedToShowImage = false,
     this.title = 'Упс',
     this.description = 'Данные отсутствуют',
     this.reloadFunc,
-  })  : customImagePath =
-            customImagePath ?? Assets.images.placeholder.path, // emptyImage
-        super(key: key);
+  }) : customImagePath = customImagePath ?? Assets.images.placeholder.path;
 
   InformationWidget.error({
-    Key? key,
+    super.key,
     String? customImagePath,
     this.isNeedToShowImage = false,
     this.title = 'Ошибка',
     this.description = 'Что-то пошло не так',
     required this.reloadFunc,
-  })  : customImagePath =
-            customImagePath ?? Assets.images.placeholder.path, // errorImage
-        super(key: key);
+  }) : customImagePath = customImagePath ?? Assets.images.placeholder.path;
 
   final String? customImagePath;
   final bool isNeedToShowImage;

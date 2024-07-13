@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_studio/src/feature/store/bloc/product_event.dart';
 import 'package:ln_studio/src/feature/store/bloc/product_state.dart';
 import 'package:ln_studio/src/feature/store/data/product_respository.dart';

@@ -1,5 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:ln_studio/src/feature/store/model/product.dart';
-import 'package:meta/meta.dart';
+
 
 /// {@template product_state_placeholder}
 /// Entity placeholder for ProductState
