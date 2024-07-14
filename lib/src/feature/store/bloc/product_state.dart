@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:ln_studio/src/feature/store/model/product.dart';
 
-
 /// {@template product_state_placeholder}
 /// Entity placeholder for ProductState
 /// {@endtemplate}
@@ -54,21 +53,30 @@ final class ProductState$Idle extends ProductState with _$ProductState {
 /// {@nodoc}
 final class ProductState$Processing extends ProductState with _$ProductState {
   /// {@nodoc}
-  const ProductState$Processing({required super.data, super.message = 'Processing'});
+  const ProductState$Processing({
+    required super.data,
+    super.message = 'Processing',
+  });
 }
 
 /// Successful
 /// {@nodoc}
 final class ProductState$Successful extends ProductState with _$ProductState {
   /// {@nodoc}
-  const ProductState$Successful({required super.data, super.message = 'Successful'});
+  const ProductState$Successful({
+    required super.data,
+    super.message = 'Successful',
+  });
 }
 
 /// Error
 /// {@nodoc}
 final class ProductState$Error extends ProductState with _$ProductState {
   /// {@nodoc}
-  const ProductState$Error({required super.data, super.message = 'An error has occurred.'});
+  const ProductState$Error({
+    required super.data,
+    super.message = 'An error has occurred.',
+  });
 }
 
 /// {@nodoc}
@@ -98,7 +106,10 @@ abstract base class _$ProductStateBase {
   bool get hasError => maybeMap<bool>(orElse: () => false, error: (_) => true);
 
   /// Is in progress state?
-  bool get isProcessing => maybeMap<bool>(orElse: () => false, processing: (_) => true);
+  bool get isProcessing => maybeMap<bool>(
+        orElse: () => false,
+        processing: (_) => true,
+      );
 
   /// Is in idle state?
   bool get isIdling => !isProcessing;
