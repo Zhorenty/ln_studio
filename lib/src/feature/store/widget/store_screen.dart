@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/custom_app_bar.dart';
 import 'package:ln_studio/src/feature/initialization/widget/dependencies_scope.dart';
@@ -45,7 +47,7 @@ class _StoreScreenState extends State<StoreScreen> {
             slivers: [
               const CustomSliverAppBar(title: 'Магазин'),
               if (!state.hasData)
-                const SliverToBoxAdapter(
+                const SliverFillRemaining(
                   child: Center(
                     child: CircularProgressIndicator.adaptive(),
                   ),
@@ -57,13 +59,16 @@ class _StoreScreenState extends State<StoreScreen> {
                     itemCount: state.data?.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 0.9,
                       crossAxisCount: 2,
                       mainAxisSpacing: 8,
                       crossAxisSpacing: 8,
                     ),
                     itemBuilder: (context, index) {
                       final product = state.data![index];
-                      return ProductWidget(product: product);
+                      return ProductWidget(
+                        product: product,
+                      );
                     },
                   ),
                 ),
@@ -75,26 +80,59 @@ class _StoreScreenState extends State<StoreScreen> {
 
 class ProductWidget extends StatelessWidget {
   const ProductWidget({super.key, required this.product});
+
   final Product product;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: ShapeDecoration(
+      decoration: BoxDecoration(
         color: context.colorScheme.surfaceContainerHigh,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: context.colorScheme.outline),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(product.imageUrl),
-          Text(product.name),
-          Text(product.description),
-          Text(product.price.toString()),
+          if (product.imageUrl != null)
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(16),
+                topLeft: Radius.circular(16),
+              ),
+              child: CachedNetworkImage(
+                imageUrl: product.imageUrl!,
+              ),
+            ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              product.name,
+              style: context.textTheme.bodyLarge?.copyWith(
+                fontFamily: FontFamily.geologica,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              product.description,
+              style: context.textTheme.bodyMedium?.copyWith(
+                fontFamily: FontFamily.geologica,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              '${product.price} ₽',
+              style: context.textTheme.bodyLarge?.copyWith(
+                fontFamily: FontFamily.geologica,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
         ],
       ),
     );

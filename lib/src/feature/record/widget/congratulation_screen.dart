@@ -6,11 +6,35 @@ import 'package:ln_studio/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_studio/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_studio/src/common/widget/animated_button.dart';
 import 'package:ln_studio/src/common/widget/maps_sheet.dart';
+import 'package:ln_studio/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_studio/src/feature/salon/bloc/salon_bloc.dart';
 import 'package:map_launcher/map_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-class CongratulationScreen extends StatelessWidget {
-  const CongratulationScreen({super.key});
+class CongratulationScreen extends StatefulWidget {
+  const CongratulationScreen({super.key, required this.url});
+
+  final String url;
+
+  @override
+  State<CongratulationScreen> createState() => _CongratulationScreenState();
+}
+
+class _CongratulationScreenState extends State<CongratulationScreen> {
+  late final WebViewController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()..loadRequest(Uri.parse(widget.url));
+
+    Future.delayed(
+      Duration.zero,
+      () => ModalPopup.show(
+        context: context,
+        child: WebViewWidget(controller: _controller),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +53,7 @@ class CongratulationScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Вы успешно записаны',
+            'Запись создана! Проверяем вашу оплату.',
             style: context.textTheme.titleSmall?.copyWith(
               fontFamily: FontFamily.geologica,
             ),
@@ -46,17 +70,6 @@ class CongratulationScreen extends StatelessWidget {
             ),
             onPressed: () => context.goNamed('home'),
           ),
-          CustomButton(
-            color: context.colorScheme.onBackground,
-            border: Border.all(color: context.colorScheme.secondary),
-            child: Text(
-              'Информация о визите',
-              style: context.textTheme.bodyLarge?.copyWith(
-                fontFamily: FontFamily.geologica,
-                color: context.colorScheme.secondary,
-              ),
-            ),
-          ),
           GestureDetector(
             onTap: () => showMapsSheet(
               context: context,
@@ -68,14 +81,6 @@ class CongratulationScreen extends StatelessWidget {
               leading: Icons.location_on_outlined,
               size: 22,
             ),
-          ),
-          const InformationRow(
-            title: 'Добавить в календарь',
-            leading: Icons.edit_calendar_rounded,
-          ),
-          const InformationRow(
-            title: 'Перенести запись',
-            leading: Icons.published_with_changes_rounded,
           ),
           const SizedBox(height: 32 + 16)
         ],

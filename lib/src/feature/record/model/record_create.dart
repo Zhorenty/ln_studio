@@ -11,6 +11,7 @@ final class RecordModel$Create {
     required this.clientId,
     required this.timeblockId,
     required this.date,
+    required this.price,
     this.comment,
   });
 
@@ -27,6 +28,7 @@ final class RecordModel$Create {
   final String date;
 
   final String? comment;
+  final int price;
 
   Map<String, Object?> toJson() => {
         'date_at': date,
@@ -36,7 +38,6 @@ final class RecordModel$Create {
         'service_id': serviceId,
         'timeblock_id': timeblockId,
         'comment': comment,
-        // TODO: Заменить на реальные данные
-        'price': 0,
+        'price': price,
       };
 }

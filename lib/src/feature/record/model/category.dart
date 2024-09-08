@@ -61,7 +61,7 @@ final class ServiceModel {
   final int categoryId;
 
   ///
-  final String photo;
+  final String? photo;
 
   ///
   final String name;

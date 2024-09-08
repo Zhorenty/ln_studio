@@ -49,13 +49,13 @@ abstract interface class AuthDataProvider {
   /// Returns the current [User].
   User? getUser();
 
-  Future<String> sendCode({required String phone});
+  Future<int> sendCode({required String phone});
 
   // /// Attempts to sign in with the given [phone].
   Future<User> signInWithPhone({
     required String phone,
     required int smsCode,
-    required String uniqueRequestId,
+    required int uniqueRequestId,
   });
 
   Future<User> signUp({required User userModel});
@@ -181,7 +181,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   }
 
   @override
-  Future<String> sendCode({required String phone}) async {
+  Future<int> sendCode({required String phone}) async {
     final response = await client.post(
       '/api/auth/call/init',
       data: {
@@ -198,14 +198,14 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   Future<User> signInWithPhone({
     required String phone,
     required int smsCode,
-    required String uniqueRequestId,
+    required int uniqueRequestId,
   }) async {
     final response = await client.post<Map<String, Object?>>(
       '/api/auth/call/validate',
       data: {
         'phone': phone,
         'code': smsCode.toString(),
-        'unique_request_id': uniqueRequestId,
+        'unique_request_id': uniqueRequestId.toString(),
         'is_employee': false,
       },
     );
@@ -281,6 +281,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       return null;
     }
 
+    debugPrint(accessToken);
     return (
       accessToken: accessToken,
       refreshToken: refreshToken,
@@ -309,7 +310,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       photo: photo,
       firstName: firstName ?? 'Ошибка',
       lastName: lastName ?? '',
-      birthDate: DateTime.tryParse(birthDate ?? ''),
+      birthDate: birthDate != null ? DateTime.tryParse(birthDate) : null,
       email: email,
     );
   }

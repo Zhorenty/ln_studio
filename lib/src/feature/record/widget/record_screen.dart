@@ -160,7 +160,10 @@ class _RecordScreenState extends State<RecordScreen> {
                 ),
                 child: BlocConsumer<RecordBLoC, RecordState>(
                   listener: (context, state) => state.mapOrNull(
-                    successful: (state) => context.goNamed('congratulation'),
+                    successful: (state) => context.goNamed(
+                      'congratulation',
+                      queryParameters: {'url': state.url},
+                    ),
                     error: (state) => CustomSnackBar.showError(context),
                   ),
                   bloc: recordBLoC,

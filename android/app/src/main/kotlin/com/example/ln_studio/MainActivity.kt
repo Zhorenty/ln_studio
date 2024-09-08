@@ -1,4 +1,4 @@
-package com.example.ln_studio
+package ru.beauty.ln_studio
 
 import io.flutter.embedding.android.FlutterActivity
 

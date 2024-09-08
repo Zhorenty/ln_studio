@@ -75,7 +75,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       final user = await authRepository.signInWithPhone(
         phone: state.phone!,
         smsCode: event.smsCode,
-        uniqueRequestId: state.uniqueRequestId ?? '1',
+        uniqueRequestId: state.uniqueRequestId ?? 1,
       );
       emit(AuthState.successful(
         user: user,

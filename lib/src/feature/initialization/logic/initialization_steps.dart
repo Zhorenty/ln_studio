@@ -20,7 +20,7 @@ import '/src/feature/salon/data/salon_repository.dart';
 
 typedef StepAction = FutureOr<void>? Function(InitializationProgress progress);
 
-const kBaseUrl = 'https://ln-studio.ru';
+const kBaseUrl = 'http://ln-studio.ru';
 
 /// Handles initialization steps.
 mixin InitializationSteps {

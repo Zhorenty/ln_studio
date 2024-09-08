@@ -18,6 +18,10 @@ class AppContext extends StatefulWidget {
 }
 
 class _AppContextState extends State<AppContext> {
+  // This global key is needed for [MaterialApp]
+  // to work properly when Widgets Inspector is enabled.
+  static final _globalKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final router = AppRouterScope.of(context);
@@ -29,11 +33,16 @@ class _AppContextState extends State<AppContext> {
       theme: $lightThemeData,
       darkTheme: $darkThemeData,
       locale: const Locale('ru', 'RU'),
-      builder: (context, child) => ScopesProvider(
-        providers: const [
-          ScopeProvider(buildScope: AuthenticationScope.new),
-        ],
-        child: child!,
+      builder: (context, child) => MediaQuery.withClampedTextScaling(
+        key: _globalKey,
+        minScaleFactor: 1.0,
+        maxScaleFactor: 2.0,
+        child: ScopesProvider(
+          providers: const [
+            ScopeProvider(buildScope: AuthenticationScope.new),
+          ],
+          child: child!,
+        ),
       ),
     );
   }

@@ -21,7 +21,7 @@ sealed class AuthState extends _$AuthStateBase {
     User? user,
     String? phone,
     int? smsCode,
-    required String? uniqueRequestId,
+    required int? uniqueRequestId,
     String message,
     String? error,
   }) = AuthState$Idle;
@@ -32,7 +32,7 @@ sealed class AuthState extends _$AuthStateBase {
     required User? user,
     required String? phone,
     required int? smsCode,
-    required String? uniqueRequestId,
+    required int? uniqueRequestId,
     String message,
   }) = AuthState$Processing;
 
@@ -42,7 +42,7 @@ sealed class AuthState extends _$AuthStateBase {
     required User? user,
     required String? phone,
     required int? smsCode,
-    required String? uniqueRequestId,
+    required int? uniqueRequestId,
     String message,
   }) = AuthState$Successful;
 
@@ -52,7 +52,7 @@ sealed class AuthState extends _$AuthStateBase {
     required User? user,
     required String? phone,
     required int? smsCode,
-    required String? uniqueRequestId,
+    required int? uniqueRequestId,
     String message,
   }) = AuthState$NotRegistered;
 }
@@ -151,7 +151,7 @@ abstract base class _$AuthStateBase {
   final int? smsCode;
 
   @nonVirtual
-  final String? uniqueRequestId;
+  final int? uniqueRequestId;
 
   /// Message or state description.
   @nonVirtual

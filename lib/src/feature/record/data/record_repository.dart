@@ -39,7 +39,7 @@ abstract interface class RecordRepository {
     int? employeeId,
   });
 
-  Future<void> createRecord(RecordModel$Create recordData);
+  Future<String> createRecord(RecordModel$Create recordData);
 
   Future<void> cancelRecord(int recordId);
 
@@ -108,7 +108,7 @@ final class RecordRepositoryImpl implements RecordRepository {
       );
 
   @override
-  Future<void> createRecord(RecordModel$Create recordData) =>
+  Future<String> createRecord(RecordModel$Create recordData) =>
       _dataProvider.createRecord(recordData);
 
   @override

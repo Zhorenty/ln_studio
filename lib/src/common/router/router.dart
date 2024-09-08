@@ -261,7 +261,9 @@ final _recordRoute = GoRoute(
       name: 'congratulation',
       path: 'congratulation',
       parentNavigatorKey: _parentKey,
-      builder: (context, state) => const CongratulationScreen(),
+      builder: (context, state) => CongratulationScreen(
+        url: state.uri.queryParameters['url'] ?? '',
+      ),
     ),
   ],
 );

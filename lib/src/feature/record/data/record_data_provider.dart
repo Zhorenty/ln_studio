@@ -39,7 +39,7 @@ abstract interface class RecordDataProvider {
     int? employeeId,
   });
 
-  Future<void> createRecord(RecordModel$Create recordData);
+  Future<String> createRecord(RecordModel$Create recordData);
 
   Future<void> cancelRecord(int recordId);
 
@@ -149,17 +149,19 @@ class RecordDataProviderImpl implements RecordDataProvider {
   }
 
   @override
-  Future<void> createRecord(RecordModel$Create recordData) async {
-    final body = recordData.toJson();
-    await restClient.post(
+  Future<String> createRecord(RecordModel$Create recordData) async {
+    final response = await restClient.post(
       '/api/v1/service_sale/book_service',
-      data: body,
+      data: recordData.toJson(),
     );
+
+    return response.data['data']['payment']['payment_redirect_url'];
   }
 
   @override
-  Future<void> cancelRecord(int recordId) =>
-      restClient.get('/api/v1/book/cancel/$recordId');
+  Future<void> cancelRecord(int recordId) => restClient.get(
+        '/api/v1/book/cancel/$recordId',
+      );
 
   @override
   Future<BookingModel> fetchLastBooking() async {

@@ -16,6 +16,7 @@ class RecordBLoC extends Bloc<RecordEvent, RecordState>
   }) : super(
           initialState ??
               const RecordState.idle(
+                url: '',
                 lastBooking: null,
                 message: 'Initial idle state',
               ),
@@ -37,12 +38,15 @@ class RecordBLoC extends Bloc<RecordEvent, RecordState>
     Emitter<RecordState> emit,
   ) async {
     try {
-      emit(RecordState.processing(lastBooking: state.lastBooking));
+      emit(RecordState.processing(
+        url: state.url,
+        lastBooking: state.lastBooking,
+      ));
       // Если есть recordId, значит мы делаем перезапись и надо удалить текущую
       if (event.recordId != null) {
         await repository.cancelRecord(event.recordId!);
       }
-      await repository.createRecord(
+      final url = await repository.createRecord(
         RecordModel$Create(
           date: event.dateAt,
           serviceId: event.serviceId,
@@ -50,11 +54,18 @@ class RecordBLoC extends Bloc<RecordEvent, RecordState>
           salonId: event.salonId,
           clientId: event.clientId,
           timeblockId: event.timeblockId,
+          price: event.price,
         ),
       );
-      emit(RecordState.successful(lastBooking: state.lastBooking));
+      emit(RecordState.successful(
+        url: url,
+        lastBooking: state.lastBooking,
+      ));
     } on Object catch (err, _) {
-      emit(RecordState.error(lastBooking: state.lastBooking));
+      emit(RecordState.error(
+        url: state.url,
+        lastBooking: state.lastBooking,
+      ));
       rethrow;
     }
   }
@@ -62,11 +73,20 @@ class RecordBLoC extends Bloc<RecordEvent, RecordState>
   /// Fetch event handler
   Future<void> _fetchLastBooking(Emitter<RecordState> emit) async {
     try {
-      emit(RecordState.processing(lastBooking: state.lastBooking));
+      emit(RecordState.processing(
+        url: state.url,
+        lastBooking: state.lastBooking,
+      ));
       final lastBooking = await repository.fetchLastBooking();
-      emit(RecordState.idle(lastBooking: lastBooking));
+      emit(RecordState.idle(
+        url: state.url,
+        lastBooking: lastBooking,
+      ));
     } on Object catch (err, _) {
-      emit(RecordState.error(lastBooking: state.lastBooking));
+      emit(RecordState.error(
+        url: state.url,
+        lastBooking: state.lastBooking,
+      ));
       rethrow;
     }
   }

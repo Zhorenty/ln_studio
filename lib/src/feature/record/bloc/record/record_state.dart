@@ -8,6 +8,7 @@ sealed class RecordState extends _$RecordStateBase {
   /// Idling state
   /// {@macro record_state}
   const factory RecordState.idle({
+    required String? url,
     required BookingModel? lastBooking,
     String message,
   }) = RecordState$Idle;
@@ -15,6 +16,7 @@ sealed class RecordState extends _$RecordStateBase {
   /// Processing
   /// {@macro record_state}
   const factory RecordState.processing({
+        required String? url,
     required BookingModel? lastBooking,
     String message,
   }) = RecordState$Processing;
@@ -22,6 +24,7 @@ sealed class RecordState extends _$RecordStateBase {
   /// Successful
   /// {@macro record_state}
   const factory RecordState.successful({
+         required String? url,
     required BookingModel? lastBooking,
     String message,
   }) = RecordState$Successful;
@@ -29,12 +32,14 @@ sealed class RecordState extends _$RecordStateBase {
   /// An error has occurred
   /// {@macro record_state}
   const factory RecordState.error({
+         required String? url,
     required BookingModel? lastBooking,
     String message,
   }) = RecordState$Error;
 
   /// {@macro record_state}
   const RecordState({
+         required super.url,
     required super.lastBooking,
     required super.message,
   });
@@ -45,6 +50,7 @@ sealed class RecordState extends _$RecordStateBase {
 final class RecordState$Idle extends RecordState with _$RecordState {
   /// {@nodoc}
   const RecordState$Idle({
+             required super.url,
     required super.lastBooking,
     super.message = 'Idling',
   });
@@ -55,6 +61,7 @@ final class RecordState$Idle extends RecordState with _$RecordState {
 final class RecordState$Processing extends RecordState with _$RecordState {
   /// {@nodoc}
   const RecordState$Processing({
+             required super.url,
     required super.lastBooking,
     super.message = 'Processing',
   });
@@ -65,6 +72,7 @@ final class RecordState$Processing extends RecordState with _$RecordState {
 final class RecordState$Successful extends RecordState with _$RecordState {
   /// {@nodoc}
   const RecordState$Successful({
+             required super.url,
     required super.lastBooking,
     super.message = 'Successful',
   });
@@ -75,6 +83,7 @@ final class RecordState$Successful extends RecordState with _$RecordState {
 final class RecordState$Error extends RecordState with _$RecordState {
   /// {@nodoc}
   const RecordState$Error({
+             required super.url,
     required super.lastBooking,
     super.message = 'An error has occurred.',
   });
@@ -90,10 +99,14 @@ typedef RecordStateMatch<R, S extends RecordState> = R Function(S state);
 @immutable
 abstract base class _$RecordStateBase {
   /// {@nodoc}
-  const _$RecordStateBase({
+  const _$RecordStateBase( {
+   required this.url,
     required this.lastBooking,
     required this.message,
   });
+
+    @nonVirtual
+  final String? url;
 
   @nonVirtual
   final BookingModel? lastBooking;

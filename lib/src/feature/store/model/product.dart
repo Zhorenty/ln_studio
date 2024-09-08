@@ -12,7 +12,7 @@ class Product {
   factory Product.fromJson(Map<String, Object?> json) {
     return Product(
       id: json['id']! as int,
-      imageUrl: '$kBaseUrl/${json['photo']!}',
+      imageUrl: json['photo'] != null ? '$kBaseUrl/${json['photo']}' : null,
       name: json['name']! as String,
       description: json['description']! as String,
       price: json['price']! as int,
@@ -20,7 +20,7 @@ class Product {
   }
 
   final int id;
-  final String imageUrl;
+  final String? imageUrl;
   final String name;
   final String description;
   final int price;
