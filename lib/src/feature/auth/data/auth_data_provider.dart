@@ -54,7 +54,7 @@ abstract interface class AuthDataProvider {
   // /// Attempts to sign in with the given [phone].
   Future<User> signInWithPhone({
     required String phone,
-    required int smsCode,
+    required String smsCode,
     required int uniqueRequestId,
   });
 
@@ -197,14 +197,14 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   @override
   Future<User> signInWithPhone({
     required String phone,
-    required int smsCode,
+    required String smsCode,
     required int uniqueRequestId,
   }) async {
     final response = await client.post<Map<String, Object?>>(
       '/api/auth/call/validate',
       data: {
         'phone': phone,
-        'code': smsCode.toString(),
+        'code': smsCode,
         'unique_request_id': uniqueRequestId.toString(),
         'is_employee': false,
       },

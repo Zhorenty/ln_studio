@@ -13,7 +13,7 @@ abstract mixin class AuthenticationController {
   void sendCode(String phone);
 
   /// Sign in with [phone].
-  void signInWithPhone(int smsCode);
+  void signInWithPhone(String smsCode);
 
   /// Sign up
   void signUp({required User user});
@@ -124,7 +124,7 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
       );
 
   @override
-  void signInWithPhone(int smsCode) => _authBloc.add(
+  void signInWithPhone(String smsCode) => _authBloc.add(
         AuthEvent.signInWithPhone(smsCode),
       );
 

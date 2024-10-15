@@ -9,7 +9,7 @@ sealed class AuthEvent extends _$AuthEventBase {
   const factory AuthEvent.sendCode({required String phone}) =
       AuthEvent$SendCode;
 
-  const factory AuthEvent.signInWithPhone(int smsCode) =
+  const factory AuthEvent.signInWithPhone(String smsCode) =
       AuthEventSignInWithPhone;
 
   const factory AuthEvent.signUp({required User user}) = AuthEvent$SignUp;
@@ -26,7 +26,7 @@ final class AuthEvent$SendCode extends AuthEvent {
 final class AuthEventSignInWithPhone extends AuthEvent {
   const AuthEventSignInWithPhone(this.smsCode);
 
-  final int smsCode;
+  final String smsCode;
 
   @override
   String toString() {

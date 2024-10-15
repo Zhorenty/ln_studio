@@ -20,7 +20,7 @@ sealed class AuthState extends _$AuthStateBase {
   const factory AuthState.idle({
     User? user,
     String? phone,
-    int? smsCode,
+    String? smsCode,
     required int? uniqueRequestId,
     String message,
     String? error,
@@ -31,7 +31,7 @@ sealed class AuthState extends _$AuthStateBase {
   const factory AuthState.processing({
     required User? user,
     required String? phone,
-    required int? smsCode,
+    required String? smsCode,
     required int? uniqueRequestId,
     String message,
   }) = AuthState$Processing;
@@ -41,7 +41,7 @@ sealed class AuthState extends _$AuthStateBase {
   const factory AuthState.successful({
     required User? user,
     required String? phone,
-    required int? smsCode,
+    required String? smsCode,
     required int? uniqueRequestId,
     String message,
   }) = AuthState$Successful;
@@ -51,7 +51,7 @@ sealed class AuthState extends _$AuthStateBase {
   const factory AuthState.notRegistered({
     required User? user,
     required String? phone,
-    required int? smsCode,
+    required String? smsCode,
     required int? uniqueRequestId,
     String message,
   }) = AuthState$NotRegistered;
@@ -148,7 +148,7 @@ abstract base class _$AuthStateBase {
   final String? phone;
 
   @nonVirtual
-  final int? smsCode;
+  final String? smsCode;
 
   @nonVirtual
   final int? uniqueRequestId;

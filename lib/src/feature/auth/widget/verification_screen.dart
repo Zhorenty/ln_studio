@@ -56,7 +56,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               controller: verificationController,
               focusNode: verificationCodeFocusNode,
               onSubmit: () => auth.signInWithPhone(
-                int.parse(verificationController.text),
+                verificationController.text,
               ),
             ),
             Align(
